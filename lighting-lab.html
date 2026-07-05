@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lighting Lab — The Lightists</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&family=Raleway:wght@100;200;300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --stone: #F7F6F2;
+  --charcoal: #1A1A1A;
+  --warm: #EDECEA;
+  --mid: #8C8880;
+  --border: #C8C4BC;
+  --dark: #3D3D3A;
+  --slate: #4A5568;
+  --pale: #E8EDF2;
+  --white: #FFFFFF;
+  --success: #1D9E75;
+  --gold-soft: #B8965A;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--stone);
+  color: var(--charcoal);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px; height: 64px;
+  background: rgba(247,246,242,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid var(--border);
+}
+.nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+.nav-mark {
+  width:36px; height:36px; border:1px solid var(--charcoal);
+  display:flex; align-items:center; justify-content:center;
+}
+.nav-tl { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:500; color:var(--charcoal); letter-spacing:-0.5px; }
+.nav-wordmark { font-size:10px; font-weight:300; letter-spacing:0.22em; text-transform:uppercase; color:var(--charcoal); }
+.nav-center {
+  display:flex; align-items:center; gap:6px;
+  font-size:11px; font-weight:300; letter-spacing:0.12em; text-transform:uppercase; color:var(--mid);
+}
+.nav-sep { color:var(--border); }
+.nav-current { color:var(--charcoal); }
+.nav-actions { display:flex; gap:12px; align-items:center; }
+.btn-sm {
+  font-family:'Jost',sans-serif; font-size:10px; font-weight:300;
+  letter-spacing:0.18em; text-transform:uppercase;
+  padding:7px 18px; border:0.5px solid var(--border);
+  background:transparent; color:var(--charcoal); cursor:pointer;
+  transition:all 0.2s; white-space:nowrap;
+}
+.btn-sm:hover { background:var(--charcoal); color:var(--stone); border-color:var(--charcoal); }
+.btn-sm.solid { background:var(--charcoal); color:var(--stone); border-color:var(--charcoal); }
+.btn-sm.solid:hover { background:var(--dark); }
+
+/* ── HERO BAND ── */
+.hero-band {
+  background: var(--charcoal);
+  padding: 48px 80px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: end;
+}
+.hero-eyebrow {
+  font-size:10px; font-weight:300; letter-spacing:0.3em;
+  text-transform:uppercase; color:rgba(200,196,188,0.45);
+  margin-bottom:16px;
+  display:flex; align-items:center; gap:14px;
+}
+.hero-eyebrow::before { content:''; width:24px; height:0.5px; background:rgba(200,196,188,0.3); display:block; }
+.hero-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,3.5vw,52px);
+  font-weight:300; color:var(--stone);
+  line-height:1.05; letter-spacing:-0.01em;
+}
+.hero-title em { font-style:italic; }
+.hero-sub {
+  margin-top:16px; font-size:12px; font-weight:300;
+  line-height:1.9; color:rgba(200,196,188,0.5);
+  max-width:520px;
+}
+.hero-stats { display:flex; gap:40px; }
+.hstat-num {
+  font-family:'Cormorant Garamond',serif; font-size:32px;
+  font-weight:300; color:var(--stone); line-height:1;
+}
+.hstat-label {
+  font-size:9px; font-weight:300; letter-spacing:0.2em;
+  text-transform:uppercase; color:rgba(200,196,188,0.4); margin-top:4px;
+}
+
+/* ── LAYOUT ── */
+.lab-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  min-height: calc(100vh - 64px - 136px);
+}
+
+/* ── LEFT PANEL ── */
+.left-panel {
+  background: var(--white);
+  border-right: 0.5px solid var(--border);
+  display: flex; flex-direction: column;
+  position: sticky; top: 64px;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+}
+
+.panel-section {
+  padding: 28px 32px;
+  border-bottom: 0.5px solid var(--border);
+}
+.panel-section:last-child { border-bottom: none; }
+
+.ps-label {
+  font-size:9px; font-weight:500; letter-spacing:0.25em;
+  text-transform:uppercase; color:var(--mid);
+  margin-bottom:20px;
+  display:flex; align-items:center; gap:10px;
+}
+.ps-label::after { content:''; flex:1; height:0.5px; background:var(--border); }
+
+/* Form elements */
+.form-group { margin-bottom:18px; }
+.form-group:last-child { margin-bottom:0; }
+.form-label {
+  font-size:10px; font-weight:400; letter-spacing:0.12em;
+  text-transform:uppercase; color:var(--mid);
+  display:block; margin-bottom:8px;
+}
+.form-input, .form-select {
+  width:100%; padding:11px 14px;
+  font-family:'Jost',sans-serif; font-size:13px;
+  font-weight:300; color:var(--charcoal);
+  background:var(--stone); border:0.5px solid var(--border);
+  outline:none; transition:border-color 0.2s;
+  appearance:none; -webkit-appearance:none;
+}
+.form-input:focus, .form-select:focus { border-color:var(--charcoal); background:var(--white); }
+.form-input::placeholder { color:var(--mid); }
+
+.input-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+.input-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+/* Colour temp selector */
+.cct-options { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.cct-option {
+  padding:12px 10px; border:0.5px solid var(--border);
+  cursor:pointer; transition:all 0.2s; text-align:center;
+  background:var(--stone);
+}
+.cct-option:hover { border-color:var(--charcoal); }
+.cct-option.active { background:var(--charcoal); border-color:var(--charcoal); }
+.cct-k { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:400; color:var(--charcoal); display:block; }
+.cct-option.active .cct-k { color:var(--stone); }
+.cct-name { font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color:var(--mid); display:block; margin-top:2px; }
+.cct-option.active .cct-name { color:rgba(247,246,242,0.6); }
+.cct-desc { font-size:10px; color:var(--mid); display:block; margin-top:4px; line-height:1.4; }
+.cct-option.active .cct-desc { color:rgba(247,246,242,0.5); }
+
+/* CRI selector */
+.cri-options { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.cri-option {
+  padding:12px 10px; border:0.5px solid var(--border);
+  cursor:pointer; transition:all 0.2s; background:var(--stone);
+}
+.cri-option:hover { border-color:var(--charcoal); }
+.cri-option.active { background:var(--charcoal); border-color:var(--charcoal); }
+.cri-val { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; color:var(--charcoal); }
+.cri-option.active .cri-val { color:var(--stone); }
+.cri-label { font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color:var(--mid); display:block; margin-top:2px; }
+.cri-option.active .cri-label { color:rgba(247,246,242,0.6); }
+.cri-use { font-size:10px; color:var(--mid); display:block; margin-top:4px; line-height:1.4; }
+.cri-option.active .cri-use { color:rgba(247,246,242,0.5); }
+
+/* Toggle */
+.toggle-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.toggle-label { font-size:12px; font-weight:300; color:var(--charcoal); }
+.toggle-sub { font-size:10px; color:var(--mid); margin-top:1px; }
+.toggle {
+  width:40px; height:22px; border-radius:11px;
+  background:var(--border); cursor:pointer;
+  position:relative; transition:background 0.25s; flex-shrink:0;
+  border:none;
+}
+.toggle.on { background:var(--charcoal); }
+.toggle::after {
+  content:''; position:absolute;
+  width:16px; height:16px; border-radius:50%;
+  background:var(--white); top:3px; left:3px;
+  transition:left 0.25s;
+}
+.toggle.on::after { left:21px; }
+
+/* Wall colour */
+.wall-options { display:flex; gap:8px; }
+.wall-opt {
+  flex:1; padding:10px 6px; border:0.5px solid var(--border);
+  cursor:pointer; text-align:center; transition:all 0.2s;
+  background:var(--stone);
+}
+.wall-opt:hover { border-color:var(--charcoal); }
+.wall-opt.active { border-color:var(--charcoal); }
+.wall-swatch { width:28px; height:28px; border-radius:50%; margin:0 auto 6px; border:0.5px solid var(--border); }
+.wall-name { font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:var(--mid); }
+.wall-opt.active .wall-name { color:var(--charcoal); font-weight:400; }
+
+/* Room layer selector */
+.layer-options { display:flex; flex-direction:column; gap:6px; }
+.layer-opt {
+  padding:11px 14px; border:0.5px solid var(--border);
+  cursor:pointer; transition:all 0.2s; background:var(--stone);
+  display:flex; align-items:center; gap:12px;
+}
+.layer-opt:hover { border-color:var(--charcoal); }
+.layer-opt.active { background:var(--charcoal); border-color:var(--charcoal); }
+.layer-icon { font-size:16px; flex-shrink:0; }
+.layer-text {}
+.layer-name { font-size:12px; font-weight:400; color:var(--charcoal); }
+.layer-opt.active .layer-name { color:var(--stone); }
+.layer-desc { font-size:10px; color:var(--mid); margin-top:1px; }
+.layer-opt.active .layer-desc { color:rgba(247,246,242,0.5); }
+
+/* Calc button */
+.calc-btn {
+  width:100%; padding:16px;
+  background:var(--charcoal); color:var(--stone);
+  font-family:'Jost',sans-serif; font-size:11px;
+  font-weight:300; letter-spacing:0.2em; text-transform:uppercase;
+  border:none; cursor:pointer; transition:background 0.2s;
+  margin-top:4px;
+}
+.calc-btn:hover { background:var(--dark); }
+
+/* ── RIGHT PANEL ── */
+.right-panel { padding:48px 56px; }
+
+/* Results state */
+.empty-state {
+  height:100%; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; padding:80px 40px;
+}
+.empty-icon {
+  width:80px; height:80px; border:0.5px solid var(--border);
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  margin:0 auto 32px; font-size:32px;
+}
+.empty-title { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:300; color:var(--charcoal); margin-bottom:12px; }
+.empty-sub { font-size:13px; font-weight:300; color:var(--mid); line-height:1.8; max-width:360px; }
+
+/* Results */
+.results { display:none; }
+.results.visible { display:block; }
+
+.results-header { margin-bottom:40px; }
+.results-project {
+  font-size:10px; letter-spacing:0.25em; text-transform:uppercase;
+  color:var(--mid); margin-bottom:10px;
+}
+.results-room-name {
+  font-family:'Cormorant Garamond',serif; font-size:40px;
+  font-weight:300; color:var(--charcoal); line-height:1;
+  margin-bottom:6px;
+}
+.results-meta { font-size:12px; color:var(--mid); }
+
+/* Key metrics */
+.metrics-grid {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:2px; margin-bottom:40px;
+}
+.metric {
+  background:var(--warm); padding:28px 24px;
+  position:relative; overflow:hidden;
+}
+.metric-label {
+  font-size:9px; font-weight:400; letter-spacing:0.22em;
+  text-transform:uppercase; color:var(--mid); margin-bottom:14px;
+}
+.metric-value {
+  font-family:'Cormorant Garamond',serif; font-size:42px;
+  font-weight:300; color:var(--charcoal); line-height:1;
+}
+.metric-unit {
+  font-size:11px; font-weight:300; color:var(--mid);
+  margin-top:4px; letter-spacing:0.05em;
+}
+.metric-note { font-size:10px; color:var(--mid); margin-top:8px; line-height:1.5; }
+.metric.highlight { background:var(--charcoal); }
+.metric.highlight .metric-label { color:rgba(200,196,188,0.5); }
+.metric.highlight .metric-value { color:var(--stone); }
+.metric.highlight .metric-unit { color:rgba(200,196,188,0.5); }
+.metric.highlight .metric-note { color:rgba(200,196,188,0.4); }
+
+/* Layers breakdown */
+.layers-section { margin-bottom:40px; }
+.sec-title {
+  font-family:'Cormorant Garamond',serif; font-size:22px;
+  font-weight:300; color:var(--charcoal); margin-bottom:4px;
+}
+.sec-sub { font-size:11px; color:var(--mid); margin-bottom:24px; letter-spacing:0.03em; }
+
+.layers-grid { display:flex; flex-direction:column; gap:2px; }
+.layer-result {
+  background:var(--warm); padding:20px 24px;
+  display:grid; grid-template-columns:1fr auto;
+  gap:20px; align-items:center;
+  border-left:3px solid transparent; transition:all 0.2s;
+}
+.layer-result:hover { border-left-color:var(--charcoal); }
+.lr-type { font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--mid); margin-bottom:6px; }
+.lr-name { font-size:15px; font-weight:400; color:var(--charcoal); margin-bottom:4px; }
+.lr-detail { font-size:11px; color:var(--mid); line-height:1.6; }
+.lr-count { text-align:right; }
+.lr-num { font-family:'Cormorant Garamond',serif; font-size:36px; font-weight:300; color:var(--charcoal); line-height:1; }
+.lr-fixtures { font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--mid); }
+
+/* Colour quality card */
+.quality-card {
+  background:var(--pale); padding:32px;
+  margin-bottom:40px; display:grid;
+  grid-template-columns:1fr 1fr 1fr; gap:24px;
+}
+.qc-item {}
+.qc-label { font-size:9px; letter-spacing:0.22em; text-transform:uppercase; color:var(--slate); margin-bottom:10px; }
+.qc-value { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:300; color:var(--charcoal); margin-bottom:4px; }
+.qc-desc { font-size:11px; color:var(--slate); line-height:1.6; }
+
+/* Investment insight */
+.insight-card {
+  background:var(--charcoal); padding:32px;
+  margin-bottom:40px; display:grid;
+  grid-template-columns:auto 1fr; gap:24px; align-items:start;
+}
+.insight-icon { font-size:28px; }
+.insight-title {
+  font-family:'Cormorant Garamond',serif; font-size:20px;
+  font-weight:300; color:var(--stone); margin-bottom:8px; line-height:1.2;
+}
+.insight-body { font-size:12px; color:rgba(200,196,188,0.65); line-height:1.8; }
+.insight-highlight {
+  margin-top:12px; padding:12px 16px;
+  border:0.5px solid rgba(200,196,188,0.2);
+  font-size:12px; color:rgba(200,196,188,0.8);
+  font-style:italic; line-height:1.7;
+}
+
+/* Summary table */
+.summary-table {
+  width:100%; border-collapse:collapse; margin-bottom:40px;
+}
+.summary-table th {
+  font-size:9px; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--mid); padding:12px 16px; text-align:left;
+  border-bottom:0.5px solid var(--border);
+  background:var(--warm); font-weight:400;
+}
+.summary-table td {
+  padding:14px 16px; font-size:12px; color:var(--charcoal);
+  border-bottom:0.5px solid var(--border); font-weight:300;
+}
+.summary-table tr:last-child td { border-bottom:none; }
+.summary-table td:first-child { font-weight:400; }
+.td-val { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:400; }
+
+/* Rooms list (multi-room) */
+.rooms-section { margin-bottom:40px; }
+.room-chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:20px; }
+.room-chip {
+  padding:6px 16px; border:0.5px solid var(--border);
+  font-size:11px; font-weight:300; color:var(--charcoal);
+  cursor:pointer; transition:all 0.2s; background:var(--white);
+}
+.room-chip:hover { border-color:var(--charcoal); }
+.room-chip.active { background:var(--charcoal); color:var(--stone); border-color:var(--charcoal); }
+.room-chip.add { color:var(--mid); border-style:dashed; }
+.room-chip.add:hover { color:var(--charcoal); border-color:var(--charcoal); border-style:dashed; }
+
+/* Actions row */
+.actions-row { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+.action-btn {
+  flex:1; min-width:180px; padding:14px 24px;
+  font-family:'Jost',sans-serif; font-size:10px;
+  font-weight:300; letter-spacing:0.18em; text-transform:uppercase;
+  border:0.5px solid var(--border); background:transparent;
+  color:var(--charcoal); cursor:pointer; transition:all 0.2s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.action-btn:hover { border-color:var(--charcoal); }
+.action-btn.primary {
+  background:var(--charcoal); color:var(--stone); border-color:var(--charcoal);
+}
+.action-btn.primary:hover { background:var(--dark); }
+.action-btn.whatsapp { border-color:#25D366; color:#25D366; }
+.action-btn.whatsapp:hover { background:#25D366; color:var(--white); }
+
+/* ── PROJECT ROOMS SIDEBAR ── */
+.rooms-sidebar {
+  padding:20px 32px;
+  border-bottom:0.5px solid var(--border);
+}
+.room-list { display:flex; flex-direction:column; gap:4px; margin-top:12px; }
+.room-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:8px 12px; cursor:pointer; transition:background 0.15s;
+  border:0.5px solid transparent;
+}
+.room-item:hover { background:var(--stone); }
+.room-item.current { background:var(--stone); border-color:var(--border); }
+.ri-name { font-size:12px; font-weight:300; color:var(--charcoal); }
+.ri-type { font-size:10px; color:var(--mid); }
+.ri-delete {
+  font-size:14px; color:var(--border); cursor:pointer;
+  background:none; border:none; padding:0 0 0 8px;
+  transition:color 0.2s; line-height:1;
+}
+.ri-delete:hover { color:var(--charcoal); }
+.add-room-btn {
+  width:100%; padding:10px; margin-top:8px;
+  background:none; border:0.5px dashed var(--border);
+  font-family:'Jost',sans-serif; font-size:10px; font-weight:300;
+  letter-spacing:0.15em; text-transform:uppercase; color:var(--mid);
+  cursor:pointer; transition:all 0.2s;
+}
+.add-room-btn:hover { border-color:var(--charcoal); color:var(--charcoal); }
+
+/* ── QUOTE MODAL ── */
+.modal-overlay {
+  position:fixed; inset:0; z-index:200;
+  background:rgba(26,26,26,0.85); backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity 0.3s;
+}
+.modal-overlay.open { opacity:1; pointer-events:all; }
+.modal {
+  background:var(--stone); width:100%; max-width:560px;
+  max-height:90vh; overflow-y:auto;
+  border:0.5px solid var(--border); position:relative;
+}
+.modal-header {
+  background:var(--charcoal); padding:32px 40px 28px;
+  position:sticky; top:0;
+}
+.modal-eyebrow {
+  font-size:9px; letter-spacing:0.3em; text-transform:uppercase;
+  color:rgba(200,196,188,0.45); margin-bottom:10px;
+}
+.modal-title {
+  font-family:'Cormorant Garamond',serif; font-size:28px;
+  font-weight:300; color:var(--stone); line-height:1.1;
+}
+.modal-sub { font-size:12px; color:rgba(200,196,188,0.5); margin-top:6px; line-height:1.6; }
+.modal-close {
+  position:absolute; top:20px; right:24px;
+  background:none; border:none; color:rgba(200,196,188,0.4);
+  font-size:22px; cursor:pointer; line-height:1;
+  transition:color 0.2s;
+}
+.modal-close:hover { color:var(--stone); }
+.modal-body { padding:32px 40px; }
+.modal-section { margin-bottom:24px; }
+.modal-section-label {
+  font-size:9px; letter-spacing:0.25em; text-transform:uppercase;
+  color:var(--mid); margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.modal-section-label::after { content:''; flex:1; height:0.5px; background:var(--border); }
+
+/* Brief summary in modal */
+.brief-summary {
+  background:var(--warm); padding:16px 20px;
+  margin-bottom:24px; border:0.5px solid var(--border);
+}
+.brief-row {
+  display:flex; justify-content:space-between;
+  font-size:11px; padding:4px 0;
+  border-bottom:0.5px solid var(--border); color:var(--mid);
+}
+.brief-row:last-child { border-bottom:none; }
+.brief-row span:last-child { color:var(--charcoal); font-weight:400; }
+
+/* Budget options in modal */
+.budget-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:16px; }
+.budget-opt {
+  padding:12px 14px; border:0.5px solid var(--border);
+  cursor:pointer; transition:all 0.2s; background:var(--white);
+}
+.budget-opt:hover { border-color:var(--charcoal); }
+.budget-opt.active { background:var(--charcoal); border-color:var(--charcoal); }
+.budget-val { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:400; color:var(--charcoal); }
+.budget-opt.active .budget-val { color:var(--stone); }
+.budget-desc { font-size:10px; color:var(--mid); margin-top:2px; }
+.budget-opt.active .budget-desc { color:rgba(247,246,242,0.5); }
+
+/* Modal textarea */
+.modal-textarea {
+  width:100%; padding:14px; min-height:100px; resize:vertical;
+  font-family:'Jost',sans-serif; font-size:13px; font-weight:300;
+  color:var(--charcoal); background:var(--white);
+  border:0.5px solid var(--border); outline:none;
+  transition:border-color 0.2s; line-height:1.7;
+}
+.modal-textarea:focus { border-color:var(--charcoal); }
+.modal-textarea::placeholder { color:var(--mid); }
+
+.modal-send-row { display:flex; gap:10px; margin-top:24px; }
+.modal-send-btn {
+  flex:1; padding:15px;
+  font-family:'Jost',sans-serif; font-size:11px;
+  font-weight:300; letter-spacing:0.18em; text-transform:uppercase;
+  border:0.5px solid var(--border); background:var(--white);
+  color:var(--charcoal); cursor:pointer; transition:all 0.2s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.modal-send-btn:hover { border-color:var(--charcoal); }
+.modal-send-btn.primary-send {
+  background:var(--charcoal); color:var(--stone); border-color:var(--charcoal);
+}
+.modal-send-btn.primary-send:hover { background:var(--dark); }
+.modal-send-btn.wa-send { border-color:#25D366; color:#25D366; }
+.modal-send-btn.wa-send:hover { background:#25D366; color:#fff; }
+
+/* ── SUCCESS STATE ── */
+.success-state {
+  text-align:center; padding:48px 32px;
+}
+.success-icon {
+  width:64px; height:64px; border-radius:50%;
+  background:var(--success); display:flex; align-items:center;
+  justify-content:center; margin:0 auto 24px; font-size:28px;
+}
+.success-title {
+  font-family:'Cormorant Garamond',serif; font-size:28px;
+  font-weight:300; color:var(--charcoal); margin-bottom:8px;
+}
+.success-sub { font-size:13px; color:var(--mid); line-height:1.8; }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; bottom:32px; right:32px; z-index:300;
+  background:var(--charcoal); color:var(--stone);
+  padding:14px 22px; font-size:12px; font-weight:300; letter-spacing:0.03em;
+  border:0.5px solid rgba(200,196,188,0.2);
+  opacity:0; transform:translateY(8px);
+  transition:all 0.3s; pointer-events:none; max-width:320px;
+}
+.toast.show { opacity:1; transform:translateY(0); }
+
+/* ── PDF PREVIEW SECTION ── */
+.pdf-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:10px; letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--mid); padding:6px 12px; border:0.5px solid var(--border);
+  margin-bottom:16px;
+}
+
+/* ── HAMBURGER ── */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;z-index:200;}
+.hamburger span{display:block;width:24px;height:0.5px;background:var(--charcoal);transition:all 0.3s ease;transform-origin:center;}
+.hamburger.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg);}
+
+/* ── MOBILE DRAWER ── */
+.mobile-drawer{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:var(--stone);z-index:99;flex-direction:column;padding:40px 32px;border-top:0.5px solid var(--border);overflow-y:auto;transform:translateY(-100%);opacity:0;transition:transform 0.35s ease,opacity 0.35s ease;}
+.mobile-drawer.open{transform:translateY(0);opacity:1;}
+.mobile-nav-links{list-style:none;display:flex;flex-direction:column;gap:0;margin-bottom:40px;}
+.mobile-nav-links li{border-bottom:0.5px solid var(--border);}
+.mobile-nav-links a{display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;transition:color 0.2s;}
+.mobile-nav-links a:hover{color:var(--mid);}
+.mobile-nav-actions{display:flex;flex-direction:column;gap:12px;}
+.mobile-nav-actions .btn-sm{text-align:center;padding:14px 20px;font-size:11px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px) {
+  .nav { padding:0 24px; }
+  .nav-center { display:none; }
+  .nav-actions { display:none; }
+  .hamburger { display:flex; }
+  .mobile-drawer { display:flex; }
+  .hero-band { padding:32px 24px; grid-template-columns:1fr; }
+  .hero-stats { flex-wrap:wrap; gap:24px; }
+  .lab-layout { grid-template-columns:1fr; }
+  .left-panel { position:static; height:auto; }
+  .right-panel { padding:32px 24px; }
+  .metrics-grid { grid-template-columns:1fr 1fr; }
+  .quality-card { grid-template-columns:1fr; }
+  .insight-card { grid-template-columns:1fr; }
+  .actions-row { flex-direction:column; }
+  .input-row { grid-template-columns:1fr 1fr; }
+  .cct-options { grid-template-columns:1fr 1fr; }
+  .modal { max-width:100%; margin:0 12px; }
+  .budget-grid { grid-template-columns:1fr; }
+  .modal-send-row { flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" href="index.html">
+    <img src="Logo White.png" alt="TL" style="height:38px;width:auto;display:block;"><span style="width:0.5px;height:26px;background:var(--border);display:block;"></span><span style="font-family:Raleway,sans-serif;font-weight:200;font-size:11px;letter-spacing:0.36em;text-transform:uppercase;color:var(--charcoal);white-space:nowrap;">The Lightists</span>
+  </a>
+  <div class="nav-center">
+    <span>Platform</span>
+    <span class="nav-sep">—</span>
+    <span class="nav-current">Lighting Lab</span>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-sm" id="saveProjBtn" onclick="saveProject()" style="display:none">Save Project</button>
+    <button class="btn-sm" onclick="showPdfPreview()">Export PDF</button>
+    <button class="btn-sm solid" onclick="openQuoteModal()">Request Quote</button>
+  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:40px;padding-bottom:32px;border-bottom:0.5px solid var(--border);">
+    <img src="Logo White.png" alt="TL" style="height:32px;width:auto;">
+    <span style="width:0.5px;height:24px;background:var(--border);display:block;"></span>
+    <span style="font-family:'Raleway',sans-serif;font-weight:200;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--charcoal);">The Lightists</span>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html" onclick="closeMobileMenu()">Home</a></li>
+    <li><a href="lighting-lab.html" onclick="closeMobileMenu()">Lighting Lab</a></li>
+    <li><a href="mood-studio.html" onclick="closeMobileMenu()">Mood Studio</a></li>
+    <li><a href="mood-board.html" onclick="closeMobileMenu()">Mood Board</a></li>
+    <li><a href="design-academy.html" onclick="closeMobileMenu()">Academy</a></li>
+    <li><a href="products.html" onclick="closeMobileMenu()">Products</a></li>
+    <li><a href="about.html" onclick="closeMobileMenu()">About</a></li>
+    <li><a href="index.html#contact" onclick="closeMobileMenu()">Contact</a></li>
+  </ul>
+  <div class="mobile-nav-actions">
+    <button class="btn-sm" onclick="closeMobileMenu();showPdfPreview()">Export PDF</button>
+    <button class="btn-sm solid" onclick="closeMobileMenu();openQuoteModal()">Request Quote</button>
+  </div>
+</div>
+
+<!-- HERO BAND -->
+<div class="hero-band">
+  <div>
+    <div class="hero-eyebrow">Professional Tool</div>
+    <div class="hero-title">Lighting Lab — <em>Calculate with precision.</em></div>
+    <div class="hero-sub">
+      A professional lighting calculation tool for architects and interior designers.
+      Enter your room parameters. Get target lux, layered fixture counts, light quality specifications,
+      and a branded PDF — ready for your project file or client presentation.
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="hstat-num">10+</div>
+      <div class="hstat-label">Room Types</div>
+    </div>
+    <div>
+      <div class="hstat-num">4</div>
+      <div class="hstat-label">Light Layers</div>
+    </div>
+    <div>
+      <div class="hstat-num">IES</div>
+      <div class="hstat-label">Standards Based</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="lab-layout">
+
+  <!-- LEFT: INPUT PANEL -->
+  <div class="left-panel">
+
+    <!-- Project rooms -->
+    <div class="rooms-sidebar" id="roomsSidebar">
+      <div class="ps-label">Project Rooms</div>
+      <div class="room-list" id="roomList">
+        <!-- populated by JS -->
+      </div>
+      <button class="add-room-btn" onclick="addNewRoom()">+ Add Another Room</button>
+    </div>
+
+    <!-- Room Identity -->
+    <div class="panel-section">
+      <div class="ps-label">Room Details</div>
+      <div class="form-group">
+        <label class="form-label">Project Name</label>
+        <input class="form-input" id="projectName" type="text" placeholder="e.g. Sharma Residence, Gurugram">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Room Name / Zone</label>
+        <input class="form-input" id="roomName" type="text" placeholder="e.g. Master Bedroom">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Room Type</label>
+        <select class="form-select" id="roomType" onchange="onRoomTypeChange()">
+          <option value="">Select room type</option>
+          <option value="bedroom">Bedroom</option>
+          <option value="living">Living Room</option>
+          <option value="dining">Dining Room</option>
+          <option value="kitchen">Kitchen</option>
+          <option value="office">Home Office / Study</option>
+          <option value="bathroom">Bathroom / Vanity</option>
+          <option value="lobby">Hotel Lobby / Foyer</option>
+          <option value="restaurant">Restaurant / Café</option>
+          <option value="retail">Retail / Showroom</option>
+          <option value="corridor">Corridor / Staircase</option>
+          <option value="outdoor">Outdoor / Terrace</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Dimensions -->
+    <div class="panel-section">
+      <div class="ps-label">Dimensions</div>
+      <div class="input-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Length (m)</label>
+          <input class="form-input" id="length" type="number" placeholder="6.0" step="0.1" min="1">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Width (m)</label>
+          <input class="form-input" id="width" type="number" placeholder="4.5" step="0.1" min="1">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Height (m)</label>
+          <input class="form-input" id="height" type="number" placeholder="2.8" step="0.1" min="2">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:16px">
+        <label class="form-label">Target Lux (auto-set, override if needed)</label>
+        <input class="form-input" id="targetLux" type="number" placeholder="300" min="50" max="2000">
+      </div>
+    </div>
+
+    <!-- Room Surfaces -->
+    <div class="panel-section">
+      <div class="ps-label">Room Surfaces</div>
+      <div class="form-group">
+        <label class="form-label">Wall & Ceiling Finish</label>
+        <div class="wall-options">
+          <div class="wall-opt active" onclick="selectWall('light',this)">
+            <div class="wall-swatch" style="background:#F0EDE8;"></div>
+            <div class="wall-name">Light</div>
+          </div>
+          <div class="wall-opt" onclick="selectWall('medium',this)">
+            <div class="wall-swatch" style="background:#A89880;"></div>
+            <div class="wall-name">Medium</div>
+          </div>
+          <div class="wall-opt" onclick="selectWall('dark',this)">
+            <div class="wall-swatch" style="background:#3D3530;"></div>
+            <div class="wall-name">Dark</div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--mid);margin-top:8px;line-height:1.5;">
+          Dark walls absorb light — your space will need more fixtures to reach the same lux level.
+        </div>
+      </div>
+    </div>
+
+    <!-- Colour Temperature -->
+    <div class="panel-section">
+      <div class="ps-label">Colour Temperature</div>
+      <div class="cct-options">
+        <div class="cct-option" onclick="selectCCT('2700',this)">
+          <span class="cct-k">2700K</span>
+          <span class="cct-name">Warm White</span>
+          <span class="cct-desc">Intimate, cosy. Bedrooms, dining, restaurants, luxury hotels.</span>
+        </div>
+        <div class="cct-option active" onclick="selectCCT('3000',this)">
+          <span class="cct-k">3000K</span>
+          <span class="cct-name">Soft White</span>
+          <span class="cct-desc">Warm but bright. Living rooms, lobbies, upscale retail.</span>
+        </div>
+        <div class="cct-option" onclick="selectCCT('4000',this)">
+          <span class="cct-k">4000K</span>
+          <span class="cct-name">Neutral White</span>
+          <span class="cct-desc">Clean, focused. Kitchens, offices, bathrooms, commercial.</span>
+        </div>
+        <div class="cct-option" onclick="selectCCT('5000',this)">
+          <span class="cct-k">5000K</span>
+          <span class="cct-name">Daylight</span>
+          <span class="cct-desc">Crisp, clinical. Technical studios, showrooms, clinics.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRI -->
+    <div class="panel-section">
+      <div class="ps-label">Colour Rendering Index</div>
+      <div class="cri-options">
+        <div class="cri-option active" onclick="selectCRI(80,this)">
+          <div class="cri-val">CRI 80</div>
+          <span class="cri-label">Standard</span>
+          <span class="cri-use">Good for most residential and commercial spaces. Faithful colour reproduction.</span>
+        </div>
+        <div class="cri-option" onclick="selectCRI(90,this)">
+          <div class="cri-val">CRI 90+</div>
+          <span class="cri-label">Premium</span>
+          <span class="cri-use">Excellent for art, hospitality, retail, spaces with rich materials and finishes.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="panel-section">
+      <div class="ps-label">Lighting Controls</div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Dimmable fixtures</div>
+          <div class="toggle-sub">Required for scene control and ambience</div>
+        </div>
+        <button class="toggle" id="dimmingToggle" onclick="toggleDimming()"></button>
+      </div>
+      <div class="toggle-row" style="margin-top:12px">
+        <div>
+          <div class="toggle-label">Smart / app-controlled</div>
+          <div class="toggle-sub">DALI / Bluetooth / Lutron compatibility</div>
+        </div>
+        <button class="toggle" id="smartToggle" onclick="toggleSmart()"></button>
+      </div>
+    </div>
+
+    <!-- Calculate -->
+    <div class="panel-section">
+      <button class="calc-btn" onclick="calculate()">Calculate Lighting Scheme →</button>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: RESULTS PANEL -->
+  <div class="right-panel">
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">◎</div>
+      <div class="empty-title">Your calculation will appear here</div>
+      <div class="empty-sub">
+        Fill in the room details on the left — type, dimensions, surface finishes,
+        and light quality preferences. Click Calculate to see your full lighting scheme.
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results" id="resultsPanel">
+
+      <!-- Header -->
+      <div class="results-header">
+        <div class="results-project" id="rProject">—</div>
+        <div class="results-room-name" id="rRoomName">Room Name</div>
+        <div class="results-meta" id="rMeta">—</div>
+      </div>
+
+      <!-- Key Metrics -->
+      <div class="metrics-grid">
+        <div class="metric">
+          <div class="metric-label">Target Illuminance</div>
+          <div class="metric-value" id="mLux">—</div>
+          <div class="metric-unit">lux (lm/m²)</div>
+          <div class="metric-note" id="mLuxNote">—</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Total Lumens Required</div>
+          <div class="metric-value" id="mLumens">—</div>
+          <div class="metric-unit">lumens total</div>
+          <div class="metric-note" id="mLumensNote">—</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Floor Area</div>
+          <div class="metric-value" id="mArea">—</div>
+          <div class="metric-unit">m² · Room Index <span id="mRI">—</span></div>
+          <div class="metric-note" id="mAreaNote">—</div>
+        </div>
+        <div class="metric highlight">
+          <div class="metric-label">Total Fixtures Needed</div>
+          <div class="metric-value" id="mFixtures">—</div>
+          <div class="metric-unit">across all layers</div>
+          <div class="metric-note" id="mFixNote">—</div>
+        </div>
+      </div>
+
+      <!-- Light Quality -->
+      <div class="quality-card">
+        <div class="qc-item">
+          <div class="qc-label">Colour Temperature</div>
+          <div class="qc-value" id="qcCCT">—</div>
+          <div class="qc-desc" id="qcCCTDesc">—</div>
+        </div>
+        <div class="qc-item">
+          <div class="qc-label">Colour Rendering</div>
+          <div class="qc-value" id="qcCRI">—</div>
+          <div class="qc-desc" id="qcCRIDesc">—</div>
+        </div>
+        <div class="qc-item">
+          <div class="qc-label">Controls Specified</div>
+          <div class="qc-value" id="qcControls">—</div>
+          <div class="qc-desc" id="qcControlsDesc">—</div>
+        </div>
+      </div>
+
+      <!-- Layered Breakdown -->
+      <div class="layers-section">
+        <div class="sec-title">Layered Lighting Scheme</div>
+        <div class="sec-sub">Professional lighting uses multiple layers. Each serves a different purpose — together they create a complete scheme.</div>
+        <div class="layers-grid" id="layersGrid">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- Spacing & Installation Notes -->
+      <div class="layers-section">
+        <div class="sec-title">Installation Guidance</div>
+        <div class="sec-sub">Based on your room dimensions and ceiling height.</div>
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Value</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="installTable">
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Investment Insight -->
+      <div class="insight-card" id="insightCard">
+        <div class="insight-icon">◈</div>
+        <div>
+          <div class="insight-title" id="insightTitle">—</div>
+          <div class="insight-body" id="insightBody">—</div>
+          <div class="insight-highlight" id="insightHL">—</div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="pdf-badge">
+        <span>◎</span> Calculation complete — IES standards based
+      </div>
+      <div class="actions-row">
+        <button class="action-btn" onclick="addRoomToProject()">+ Save Room to Project</button>
+        <button class="action-btn" onclick="showPdfPreview()">↓ Export PDF</button>
+        <button class="action-btn primary" onclick="openQuoteModal()">Request Products & Quote →</button>
+      </div>
+      <div style="font-size:11px;color:var(--mid);line-height:1.7;margin-top:8px;">
+        The PDF is yours to keep and use — regardless of whether you request a quote.
+        Our team responds to quote requests within 24 hours with curated European options suited to your project and budget.
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- QUOTE MODAL -->
+<div class="modal-overlay" id="quoteModal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="modal-eyebrow">The Lightists — Expert Curation</div>
+      <div class="modal-title">Request Products & Quote</div>
+      <div class="modal-sub">Your calculation brief will be sent to our lighting team. We'll respond within 24 hours with curated European options that match your technical spec and budget.</div>
+    </div>
+    <div class="modal-body" id="modalBody">
+
+      <!-- Brief summary -->
+      <div class="modal-section">
+        <div class="modal-section-label">Your Calculation Brief</div>
+        <div class="brief-summary" id="briefSummary">
+          <!-- auto populated -->
+        </div>
+      </div>
+
+      <!-- Budget -->
+      <div class="modal-section">
+        <div class="modal-section-label">Lighting Budget for This Project</div>
+        <div class="budget-grid">
+          <div class="budget-opt" onclick="selectBudget('50K–2L',this)">
+            <div class="budget-val">₹50K – 2L</div>
+            <div class="budget-desc">Small residential project</div>
+          </div>
+          <div class="budget-opt" onclick="selectBudget('2L–8L',this)">
+            <div class="budget-val">₹2L – 8L</div>
+            <div class="budget-desc">Mid-size residential</div>
+          </div>
+          <div class="budget-opt" onclick="selectBudget('8L–25L',this)">
+            <div class="budget-val">₹8L – 25L</div>
+            <div class="budget-desc">Luxury residential / boutique commercial</div>
+          </div>
+          <div class="budget-opt" onclick="selectBudget('25L+',this)">
+            <div class="budget-val">₹25L+</div>
+            <div class="budget-desc">Hospitality / large commercial</div>
+          </div>
+          <div class="budget-opt" onclick="selectBudget('Not sure',this)" style="grid-column:1/-1;">
+            <div class="budget-val">Not sure — please advise</div>
+            <div class="budget-desc">Our team will recommend based on the project scope</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style notes -->
+      <div class="modal-section">
+        <div class="modal-section-label">Style Preferences & Notes</div>
+        <textarea class="modal-textarea" id="styleNotes" placeholder="e.g. Client has seen Louis Poulsen PH5 for the dining room and loves it. Bedroom needs to feel very warm and intimate. Open to Scandinavian and Italian brands. Site handover is March 2026 — need spec confirmed by January."></textarea>
+      </div>
+
+      <!-- Contact -->
+      <div class="modal-section">
+        <div class="modal-section-label">Your Contact Details</div>
+        <div class="input-row-2" style="gap:10px;margin-bottom:10px;">
+          <div>
+            <label class="form-label" style="display:block;margin-bottom:6px;">Name</label>
+            <input class="form-input" id="cName" type="text" placeholder="Arjun Sharma">
+          </div>
+          <div>
+            <label class="form-label" style="display:block;margin-bottom:6px;">Firm / Studio</label>
+            <input class="form-input" id="cFirm" type="text" placeholder="Sharma Associates">
+          </div>
+        </div>
+        <div class="input-row-2" style="gap:10px;">
+          <div>
+            <label class="form-label" style="display:block;margin-bottom:6px;">Email</label>
+            <input class="form-input" id="cEmail" type="email" placeholder="arjun@studio.in">
+          </div>
+          <div>
+            <label class="form-label" style="display:block;margin-bottom:6px;">WhatsApp Number</label>
+            <input class="form-input" id="cPhone" type="tel" placeholder="+91 98765 43210">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-send-row">
+        <button class="modal-send-btn wa-send" onclick="sendWhatsApp()">
+          <span>✉</span> Send via WhatsApp
+        </button>
+        <button class="modal-send-btn primary-send" onclick="sendEmail()">
+          Send Request →
+        </button>
+      </div>
+      <div style="font-size:10px;color:var(--mid);margin-top:12px;line-height:1.7;text-align:center;">
+        No obligation. Our team will respond within 24 hours. You can also call us directly at +91 99993 06667.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──
+let state = {
+  wallFinish: 'light',
+  cct: '3000',
+  cri: 80,
+  dimming: false,
+  smart: false,
+  selectedBudget: null,
+  currentRoom: null,
+  project: { name:'', rooms:[] },
+  lastResult: null
+};
+
+// ── ROOM TYPE DATA ──
+const roomData = {
+  bedroom:    { lux:150, name:'Bedroom',             ambientPct:0.6, taskPct:0.3, accentPct:0.1, decorPct:0.05, cctRec:'2700', insight:'bedside', fixtureEff:800  },
+  living:     { lux:250, name:'Living Room',          ambientPct:0.5, taskPct:0.1, accentPct:0.3, decorPct:0.15, cctRec:'3000', insight:'statement', fixtureEff:900 },
+  dining:     { lux:350, name:'Dining Room',          ambientPct:0.4, taskPct:0.0, accentPct:0.2, decorPct:0.25, cctRec:'2700', insight:'dining', fixtureEff:900  },
+  kitchen:    { lux:500, name:'Kitchen',              ambientPct:0.5, taskPct:0.4, accentPct:0.1, decorPct:0.05, cctRec:'4000', insight:'task', fixtureEff:1000 },
+  office:     { lux:500, name:'Home Office / Study',  ambientPct:0.6, taskPct:0.4, accentPct:0.0, decorPct:0.0,  cctRec:'4000', insight:'task', fixtureEff:1000 },
+  bathroom:   { lux:300, name:'Bathroom / Vanity',    ambientPct:0.5, taskPct:0.4, accentPct:0.1, decorPct:0.0,  cctRec:'3000', insight:'vanity', fixtureEff:700  },
+  lobby:      { lux:200, name:'Hotel Lobby / Foyer',  ambientPct:0.3, taskPct:0.0, accentPct:0.4, decorPct:0.3,  cctRec:'3000', insight:'statement', fixtureEff:1000},
+  restaurant: { lux:150, name:'Restaurant / Café',    ambientPct:0.3, taskPct:0.0, accentPct:0.3, decorPct:0.3,  cctRec:'2700', insight:'dining', fixtureEff:800  },
+  retail:     { lux:750, name:'Retail / Showroom',    ambientPct:0.4, taskPct:0.0, accentPct:0.5, decorPct:0.1,  cctRec:'3000', insight:'retail', fixtureEff:1200 },
+  corridor:   { lux:120, name:'Corridor / Staircase', ambientPct:0.7, taskPct:0.0, accentPct:0.3, decorPct:0.0,  cctRec:'3000', insight:'safety', fixtureEff:700  },
+  outdoor:    { lux:100, name:'Outdoor / Terrace',    ambientPct:0.5, taskPct:0.0, accentPct:0.3, decorPct:0.2,  cctRec:'3000', insight:'outdoor', fixtureEff:600  }
+};
+
+// ── UTILISATION FACTOR ──
+function getUF(ri, wallFinish) {
+  // Room Index → base UF, adjusted for surface reflectance
+  const base = ri < 1 ? 0.45 : ri < 2 ? 0.55 : ri < 3 ? 0.65 : ri < 4 ? 0.70 : 0.75;
+  const adj = wallFinish === 'light' ? 1.0 : wallFinish === 'medium' ? 0.85 : 0.70;
+  return +(base * adj).toFixed(3);
+}
+
+// ── MAINTENANCE FACTOR ──
+function getMF() { return 0.80; } // standard for LED clean environment
+
+// ── CCT DESCRIPTIONS ──
+const cctDescs = {
+  '2700': 'Warm, golden light — mimics candlelight. Creates intimacy and warmth.',
+  '3000': 'Soft white — warm but bright. The most versatile choice for luxury interiors.',
+  '4000': 'Neutral white — clean, focused, natural. Ideal for task-critical spaces.',
+  '5000': 'Daylight white — crisp and blue-toned. Technical and clinical environments.'
+};
+
+// ── INVESTMENT INSIGHTS ──
+const insights = {
+  dining: {
+    title: 'The dining pendant is your highest-impact investment in this room.',
+    body: 'In a dining room, the pendant over the table is the most-seen fixture in the entire scheme. Guests look at it throughout every meal. Clients notice it in every photograph. A single European statement pendant here — Louis Poulsen, Vibia, Gubi — makes more visual impact than any other lighting decision in the project.',
+    hl: '"In our experience, 80% of clients who see a European dining pendant in a completed project ask about it by name. It becomes the design conversation."'
+  },
+  statement: {
+    title: 'A European statement fixture here elevates the entire scheme.',
+    body: 'Living rooms and lobbies are anchor spaces — they define the tone for everything else. A considered statement fixture here (a sculptural pendant, a floor lamp with real presence) signals design intent to everyone who enters. It anchors the room and justifies the rest of the scheme.',
+    hl: '"One well-chosen European fixture can make an entire room feel intentional. The rest can be simple — the statement carries the space."'
+  },
+  task: {
+    title: 'In this space, task lighting quality directly affects how the room performs.',
+    body: 'Kitchens and offices are where poor lighting causes real, daily problems. Under-cabinet LEDs, adjustable desk lights, and island pendants that deliver genuine task illumination — not just aesthetic ones — are what make these spaces functional. CRI 90+ here ensures food colours read correctly and work surfaces are comfortable for sustained use.',
+    hl: '"Functional rooms where lighting fails become frustrating to live and work in. Invest in performance here — the aesthetic follows."'
+  },
+  vanity: {
+    title: 'Face-level lighting here prevents the shadows that make vanity lighting fail.',
+    body: 'Overhead-only bathroom lighting casts shadows under the chin, nose and eyes — making grooming genuinely difficult. Side-mounted or face-level fixtures at 1.5–1.6m eliminate this. CRI 90+ is especially important here: it ensures skin tones and makeup colours are rendered accurately.',
+    hl: '"The single most common lighting complaint in luxury bathrooms is overhead-only lighting. Face-level placement changes everything."'
+  },
+  bedside: {
+    title: 'Layer the bedroom carefully — the ambient level here should be low.',
+    body: 'Bedrooms perform best with a very low ambient base (100–150 lux) supplemented by bedside task lighting. Dimmable fixtures throughout — and especially the ambient layer — give occupants full control over the mood from bright reading light to pre-sleep warmth. 2700K throughout.',
+    hl: '"A bedroom at 150 lux with good dimming feels more luxurious than a bedroom at 300 lux without it."'
+  },
+  retail: {
+    title: 'Accent lighting in retail directly affects purchase intent.',
+    body: 'Retail lighting research consistently shows that accent lighting on merchandise — 3–5× the ambient lux level — increases dwell time and purchase intent. CRI 95+ in jewellery and clothing ensures products look their best. The ambient layer can be relatively low; the accent layer does the commercial work.',
+    hl: '"In luxury retail, accent lighting is not decorative — it is the primary sales tool."'
+  },
+  safety: {
+    title: 'Uniformity is the priority in corridors and staircases.',
+    body: 'In circulation spaces, consistent illumination without dark spots is more important than absolute lux levels. Maximum fixture spacing of 1.5× the ceiling height ensures uniform distribution. Step-lighting and handrail lighting add safety and a layer of architectural interest at low cost.',
+    hl: '"Even spacing, not quantity, is what makes a corridor feel comfortable and safe."'
+  },
+  outdoor: {
+    title: 'Outdoor lighting requires IP-rated fixtures and warmer colour temperatures.',
+    body: 'All outdoor fixtures must be IP44 minimum (splash-proof) or IP65 for exposed positions. 2700–3000K is almost always right for outdoor residential and hospitality — cooler temperatures feel harsh at night. Architectural uplighting of walls, trees and columns creates depth without raising overall lux significantly.',
+    hl: '"The best outdoor lighting schemes are almost invisible in the day and transformative at night."'
+  }
+};
+
+// ── CALCULATE ──
+function calculate() {
+  const roomType = document.getElementById('roomType').value;
+  const roomName = document.getElementById('roomName').value || 'Unnamed Room';
+  const projectName = document.getElementById('projectName').value || 'My Project';
+  const L = parseFloat(document.getElementById('length').value);
+  const W = parseFloat(document.getElementById('width').value);
+  const H = parseFloat(document.getElementById('height').value);
+  let targetLux = parseFloat(document.getElementById('targetLux').value);
+
+  if (!roomType) { showToast('Please select a room type'); return; }
+  if (!L || !W || !H) { showToast('Please enter room dimensions'); return; }
+
+  const rd = roomData[roomType];
+  if (!targetLux) targetLux = rd.lux;
+
+  const area = +(L * W).toFixed(1);
+  // Room Index (k) = L×W / H(L+W)
+  const ri = +(L * W / (H * (L + W))).toFixed(2);
+  const uf = getUF(ri, state.wallFinish);
+  const mf = getMF();
+
+  // Total lumens needed
+  const totalLumens = Math.round(targetLux * area / (uf * mf));
+
+  // Layer breakdown
+  const fixtureEff = rd.fixtureEff; // lumens per typical fixture
+
+  const layers = [];
+
+  // Ambient
+  const ambientLumens = Math.round(totalLumens * rd.ambientPct);
+  const ambientCount = Math.max(1, Math.round(ambientLumens / fixtureEff));
+  if (rd.ambientPct > 0) layers.push({
+    type:'Ambient', icon:'○',
+    name: roomType === 'dining' ? 'Ceiling / Cove Fill' : 'General Ceiling Illumination',
+    lumens: ambientLumens, count: ambientCount,
+    detail: `${ambientLumens.toLocaleString()} lm · Recessed downlights, surface-mounted or cove LED. Provides the base illumination layer. Spacing max ${(H * 1.2).toFixed(1)}m between fixtures.`,
+    lmPerFix: Math.round(ambientLumens / ambientCount)
+  });
+
+  // Task
+  if (rd.taskPct > 0) {
+    const taskLumens = Math.round(totalLumens * rd.taskPct);
+    const taskCount = Math.max(1, Math.round(taskLumens / (fixtureEff * 0.6)));
+    layers.push({
+      type:'Task', icon:'◎',
+      name: roomType === 'kitchen' ? 'Under-Cabinet & Island Task' :
+            roomType === 'office' ? 'Desk Task & Monitor Fill' :
+            roomType === 'bathroom' ? 'Face-Level Vanity Lighting' : 'Task / Focused Illumination',
+      lumens: taskLumens, count: taskCount,
+      detail: `${taskLumens.toLocaleString()} lm · Directional, focused fixtures. Delivers 20–50% additional lumens at specific work or activity zones. Positioned at or above task surface.`,
+      lmPerFix: Math.round(taskLumens / taskCount)
+    });
+  }
+
+  // Accent
+  if (rd.accentPct > 0) {
+    const accentLumens = Math.round(totalLumens * rd.accentPct);
+    const accentCount = Math.max(1, Math.round(accentLumens / 400));
+    layers.push({
+      type:'Accent', icon:'◈',
+      name: roomType === 'retail' ? 'Merchandise Accent & Wall Wash' :
+            roomType === 'corridor' ? 'Step & Architectural Accent' :
+            'Architectural Accent & Wall Washing',
+      lumens: accentLumens, count: accentCount,
+      detail: `${accentLumens.toLocaleString()} lm · Directional spotlights, adjustable track or wall washers. Highlights architecture, artwork, materials or merchandise. Creates depth and visual interest.`,
+      lmPerFix: Math.round(accentLumens / accentCount)
+    });
+  }
+
+  // Decorative / Statement
+  if (rd.decorPct > 0) {
+    const decorLumens = Math.round(totalLumens * rd.decorPct);
+    const decorCount = roomType === 'dining' || roomType === 'restaurant' ? 1 :
+                       roomType === 'lobby' ? Math.max(1, Math.round(decorLumens / 2000)) : 1;
+    layers.push({
+      type:'Decorative', icon:'◇',
+      name: roomType === 'dining' || roomType === 'restaurant' ? 'Statement Pendant — Table Centre' :
+            roomType === 'lobby' ? 'Statement Chandelier / Feature Fixture' :
+            'Decorative Statement Fixture',
+      lumens: decorLumens, count: decorCount,
+      detail: `${decorLumens.toLocaleString()} lm · The signature fixture. Counted separately — aesthetic and presence are its primary purpose. This is where European design makes the most visible difference in the scheme.`,
+      lmPerFix: Math.round(decorLumens / decorCount)
+    });
+  }
+
+  const totalFixtures = layers.reduce((s, l) => s + l.count, 0);
+
+  // Spacing
+  const maxSpacing = +(H * 1.2).toFixed(1);
+  const gridCols = Math.ceil(Math.sqrt(ambientCount * (L / W)));
+  const gridRows = Math.ceil(ambientCount / gridCols);
+  const spaceL = +(L / (gridCols + 1)).toFixed(2);
+  const spaceW = +(W / (gridRows + 1)).toFixed(2);
+
+  // Save result
+  state.lastResult = {
+    roomType, roomName, projectName,
+    L, W, H, area, ri, uf, mf,
+    targetLux, totalLumens, totalFixtures,
+    layers, cct: state.cct, cri: state.cri,
+    dimming: state.dimming, smart: state.smart,
+    wallFinish: state.wallFinish,
+    maxSpacing, spaceL, spaceW, gridCols, gridRows, ambientCount,
+    insightKey: rd.insight
+  };
+
+  renderResults(state.lastResult);
+  document.getElementById('saveProjBtn').style.display = 'flex';
+}
+
+function renderResults(r) {
+  document.getElementById('emptyState').style.display = 'none';
+  const rp = document.getElementById('resultsPanel');
+  rp.classList.add('visible');
+
+  // Header
+  document.getElementById('rProject').textContent = r.projectName;
+  document.getElementById('rRoomName').textContent = r.roomName;
+  document.getElementById('rMeta').textContent =
+    `${r.L}m × ${r.W}m × ${r.H}m ceiling · ${r.area}m² · Room Index ${r.ri} · UF ${r.uf} · MF ${r.mf}`;
+
+  // Metrics
+  document.getElementById('mLux').textContent = r.targetLux;
+  document.getElementById('mLuxNote').textContent =
+    `IES recommended for ${roomData[r.roomType]?.name}. Adjusted for ${r.wallFinish} surface finishes.`;
+  document.getElementById('mLumens').textContent = r.totalLumens.toLocaleString();
+  document.getElementById('mLumensNote').textContent =
+    `Formula: (Lux × Area) ÷ (UF × MF) = (${r.targetLux} × ${r.area}) ÷ (${r.uf} × ${r.mf})`;
+  document.getElementById('mArea').textContent = r.area;
+  document.getElementById('mRI').textContent = r.ri;
+  document.getElementById('mAreaNote').textContent =
+    `RI = L×W ÷ H(L+W). ${r.ri < 1 ? 'Small, narrow room' : r.ri < 2 ? 'Compact room' : r.ri < 3 ? 'Medium room' : 'Large, open space'}.`;
+  document.getElementById('mFixtures').textContent = r.totalFixtures;
+  document.getElementById('mFixNote').textContent =
+    `Across ${r.layers.length} lighting layers. Dimming: ${r.dimming ? 'Yes' : 'No'} · Smart: ${r.smart ? 'Yes' : 'No'}`;
+
+  // Quality card
+  document.getElementById('qcCCT').textContent = r.cct + 'K';
+  document.getElementById('qcCCTDesc').textContent = cctDescs[r.cct];
+  document.getElementById('qcCRI').textContent = 'CRI ' + r.cri + (r.cri >= 90 ? '+' : '');
+  document.getElementById('qcCRIDesc').textContent =
+    r.cri >= 90 ? 'Premium — excellent colour accuracy. Recommended for hospitality, retail and spaces with rich materials.' :
+    'Standard — good colour fidelity for most residential and commercial applications.';
+  const ctrl = [];
+  if (r.dimming) ctrl.push('Dimmable');
+  if (r.smart) ctrl.push('Smart / App');
+  document.getElementById('qcControls').textContent = ctrl.length ? ctrl.join(' + ') : 'Standard';
+  document.getElementById('qcControlsDesc').textContent =
+    r.dimming && r.smart ? 'Full scene control via app. DALI or Bluetooth dimming compatible. Lutron/KNX integration possible.' :
+    r.dimming ? 'Dimmable fixtures throughout. Manual dimmer or wall-control system.' :
+    r.smart ? 'App-controlled. Requires smart driver compatibility.' :
+    'Standard non-dimmable circuit. Consider adding dimming for ambience flexibility.';
+
+  // Layers
+  const lg = document.getElementById('layersGrid');
+  lg.innerHTML = r.layers.map(l => `
+    <div class="layer-result">
+      <div>
+        <div class="lr-type">${l.icon} ${l.type} Layer</div>
+        <div class="lr-name">${l.name}</div>
+        <div class="lr-detail">${l.detail}</div>
+      </div>
+      <div class="lr-count">
+        <div class="lr-num">${l.count}</div>
+        <div class="lr-fixtures">fixture${l.count !== 1 ? 's' : ''}</div>
+        <div style="font-size:10px;color:var(--mid);margin-top:4px;">~${l.lmPerFix} lm each</div>
+      </div>
+    </div>
+  `).join('');
+
+  // Install table
+  const it = document.getElementById('installTable');
+  it.innerHTML = `
+    <tr><td>Mounting height</td><td class="td-val">${r.H}m</td><td>Ceiling flush / pendant drop adjusted below.</td></tr>
+    <tr><td>Max fixture spacing (ambient)</td><td class="td-val">${r.maxSpacing}m</td><td>1.2 × ceiling height — ensures uniform distribution and avoids dark spots.</td></tr>
+    <tr><td>Suggested ambient grid</td><td class="td-val">${r.gridCols} × ${r.gridRows}</td><td>${r.ambientCount} fixtures. Spacing ~${r.spaceL}m (length) × ${r.spaceW}m (width).</td></tr>
+    <tr><td>Pendant drop (if applicable)</td><td class="td-val">${(r.H - 0.7).toFixed(1)}m</td><td>Pendant base at ${(r.H - 0.7).toFixed(1)}m above floor (standard for dining / living rooms).</td></tr>
+    <tr><td>Wall wash distance</td><td class="td-val">${(r.H * 0.3).toFixed(2)}m</td><td>Accent spotlights positioned ${(r.H * 0.3).toFixed(2)}m from the wall surface for even wash.</td></tr>
+    ${r.dimming ? '<tr><td>Dimming type recommended</td><td class="td-val">TRIAC / DALI</td><td>Confirm fixture compatibility. DALI preferred for smart integration.</td></tr>' : ''}
+  `;
+
+  // Insight
+  const ins = insights[r.insightKey] || insights.statement;
+  document.getElementById('insightTitle').textContent = ins.title;
+  document.getElementById('insightBody').textContent = ins.body;
+  document.getElementById('insightHL').textContent = ins.hl;
+
+  window.scrollTo({ top: 300, behavior: 'smooth' });
+}
+
+// ── MULTI-ROOM ──
+function addRoomToProject() {
+  if (!state.lastResult) { showToast('Calculate a room first'); return; }
+  const r = state.lastResult;
+  const exists = state.project.rooms.findIndex(rm => rm.roomName === r.roomName);
+  if (exists >= 0) { state.project.rooms[exists] = r; showToast('Room updated in project'); }
+  else { state.project.rooms.push({...r}); showToast(`"${r.roomName}" saved to project`); }
+  state.project.name = r.projectName;
+  renderRoomList();
+}
+
+function renderRoomList() {
+  const list = document.getElementById('roomList');
+  if (state.project.rooms.length === 0) { list.innerHTML = '<div style="font-size:11px;color:var(--mid);padding:4px 0;">No rooms yet — calculate and save.</div>'; return; }
+  list.innerHTML = state.project.rooms.map((r, i) => `
+    <div class="room-item ${state.lastResult?.roomName === r.roomName ? 'current' : ''}" onclick="loadRoom(${i})">
+      <div>
+        <div class="ri-name">${r.roomName}</div>
+        <div class="ri-type">${roomData[r.roomType]?.name} · ${r.totalFixtures} fixtures</div>
+      </div>
+      <button class="ri-delete" onclick="removeRoom(event,${i})">×</button>
+    </div>
+  `).join('');
+}
+
+function loadRoom(i) {
+  const r = state.project.rooms[i];
+  document.getElementById('roomName').value = r.roomName;
+  document.getElementById('projectName').value = r.projectName;
+  document.getElementById('roomType').value = r.roomType;
+  document.getElementById('length').value = r.L;
+  document.getElementById('width').value = r.W;
+  document.getElementById('height').value = r.H;
+  document.getElementById('targetLux').value = r.targetLux;
+  state.wallFinish = r.wallFinish;
+  state.cct = r.cct;
+  state.cri = r.cri;
+  state.dimming = r.dimming;
+  state.smart = r.smart;
+  syncUI();
+  renderResults(r);
+  state.lastResult = r;
+}
+
+function syncUI() {
+  document.querySelectorAll('.wall-opt').forEach(el => {
+    el.classList.toggle('active', el.onclick.toString().includes(`'${state.wallFinish}'`));
+  });
+  document.querySelectorAll('.cct-option').forEach(el => {
+    el.classList.toggle('active', el.onclick.toString().includes(`'${state.cct}'`));
+  });
+  document.querySelectorAll('.cri-option').forEach(el => {
+    el.classList.toggle('active', el.onclick.toString().includes(state.cri + ','));
+  });
+  document.getElementById('dimmingToggle').className = 'toggle' + (state.dimming ? ' on' : '');
+  document.getElementById('smartToggle').className = 'toggle' + (state.smart ? ' on' : '');
+}
+
+function removeRoom(e, i) {
+  e.stopPropagation();
+  state.project.rooms.splice(i, 1);
+  renderRoomList();
+  showToast('Room removed from project');
+}
+
+function addNewRoom() {
+  document.getElementById('roomName').value = '';
+  document.getElementById('roomType').value = '';
+  document.getElementById('length').value = '';
+  document.getElementById('width').value = '';
+  document.getElementById('height').value = '';
+  document.getElementById('targetLux').value = '';
+  document.getElementById('emptyState').style.display = 'flex';
+  document.getElementById('resultsPanel').classList.remove('visible');
+  state.lastResult = null;
+  showToast('Enter details for your next room');
+}
+
+function saveProject() { showToast(`Project "${state.project.name || 'My Project'}" saved — ${state.project.rooms.length} room${state.project.rooms.length !== 1 ? 's' : ''}`); }
+
+// ── QUOTE MODAL ──
+function openQuoteModal() {
+  if (!state.lastResult && state.project.rooms.length === 0) {
+    showToast('Calculate at least one room first');
+    return;
+  }
+  populateBrief();
+  document.getElementById('quoteModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function populateBrief() {
+  const rooms = state.project.rooms.length > 0 ? state.project.rooms : (state.lastResult ? [state.lastResult] : []);
+  const projName = state.project.name || state.lastResult?.projectName || 'My Project';
+  const totalFix = rooms.reduce((s, r) => s + r.totalFixtures, 0);
+  const bs = document.getElementById('briefSummary');
+  bs.innerHTML = `
+    <div class="brief-row"><span>Project</span><span>${projName}</span></div>
+    <div class="brief-row"><span>Rooms in brief</span><span>${rooms.length} room${rooms.length !== 1 ? 's' : ''}</span></div>
+    ${rooms.map(r => `<div class="brief-row"><span>${r.roomName}</span><span>${roomData[r.roomType]?.name} · ${r.targetLux}lx · ${r.cct}K · CRI ${r.cri} · ${r.totalFixtures} fixtures</span></div>`).join('')}
+    <div class="brief-row"><span>Total fixtures across project</span><span>${totalFix} fixtures</span></div>
+    <div class="brief-row"><span>Dimming required</span><span>${rooms.some(r => r.dimming) ? 'Yes' : 'No'}</span></div>
+    <div class="brief-row"><span>Smart lighting</span><span>${rooms.some(r => r.smart) ? 'Yes' : 'No'}</span></div>
+  `;
+}
+
+function closeModal() {
+  document.getElementById('quoteModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) {
+  if (e.target.id === 'quoteModal') closeModal();
+}
+
+function sendEmail() {
+  const name = document.getElementById('cName').value;
+  const firm = document.getElementById('cFirm').value;
+  const email = document.getElementById('cEmail').value;
+  const phone = document.getElementById('cPhone').value;
+  const notes = document.getElementById('styleNotes').value;
+  if (!name || !email) { showToast('Please enter your name and email'); return; }
+
+  const rooms = state.project.rooms.length > 0 ? state.project.rooms : (state.lastResult ? [state.lastResult] : []);
+  const projName = state.project.name || state.lastResult?.projectName || 'Project';
+  const body = encodeURIComponent(
+    `PRODUCT & QUOTE REQUEST — THE LIGHTISTS LIGHTING LAB\n\n` +
+    `From: ${name}${firm ? ' · ' + firm : ''}\nEmail: ${email}${phone ? '\nPhone: ' + phone : ''}\n\n` +
+    `PROJECT: ${projName}\n` +
+    `ROOMS:\n${rooms.map(r => `  • ${r.roomName} (${roomData[r.roomType]?.name}): ${r.targetLux}lx · ${r.cct}K · CRI ${r.cri} · ${r.totalFixtures} fixtures · ${r.L}×${r.W}m`).join('\n')}\n\n` +
+    `BUDGET: ${state.selectedBudget || 'Not specified'}\n\n` +
+    `STYLE NOTES:\n${notes || 'None provided'}\n\n` +
+    `Total fixtures across project: ${rooms.reduce((s, r) => s + r.totalFixtures, 0)}\n` +
+    `Dimming: ${rooms.some(r => r.dimming) ? 'Yes' : 'No'} · Smart: ${rooms.some(r => r.smart) ? 'Yes' : 'No'}\n\n` +
+    `Sent via The Lightists Lighting Lab — thelightists.com`
+  );
+
+  window.location.href = `mailto:info@thelightists.com?subject=Lighting Lab Quote Request — ${projName}&body=${body}`;
+  showSuccess();
+}
+
+function sendWhatsApp() {
+  const name = document.getElementById('cName').value || 'An architect';
+  const firm = document.getElementById('cFirm').value;
+  const notes = document.getElementById('styleNotes').value;
+  const rooms = state.project.rooms.length > 0 ? state.project.rooms : (state.lastResult ? [state.lastResult] : []);
+  const projName = state.project.name || state.lastResult?.projectName || 'Project';
+
+  const msg = encodeURIComponent(
+    `*Quote Request — The Lightists Lighting Lab*\n\n` +
+    `*From:* ${name}${firm ? ' · ' + firm : ''}\n` +
+    `*Project:* ${projName}\n` +
+    `*Budget:* ${state.selectedBudget || 'Not specified'}\n\n` +
+    `*Rooms:*\n${rooms.map(r => `• ${r.roomName}: ${r.targetLux}lx · ${r.cct}K · CRI ${r.cri} · ${r.totalFixtures} fixtures`).join('\n')}\n\n` +
+    `*Notes:* ${notes || 'None'}\n\n` +
+    `_Sent via thelightists.com Lighting Lab_`
+  );
+
+  window.open(`https://wa.me/919999306667?text=${msg}`, '_blank');
+  showSuccess();
+}
+
+function showSuccess() {
+  const mb = document.getElementById('modalBody');
+  mb.innerHTML = `
+    <div class="success-state">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Request sent.</div>
+      <div class="success-sub">
+        Our lighting team has your complete project brief.<br>
+        We'll respond within 24 hours with curated European product recommendations and a quote tailored to your project and budget.<br><br>
+        <strong>In the meantime — export your PDF calculation to keep in your project file.</strong>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:28px;flex-wrap:wrap;">
+        <button class="modal-send-btn" style="min-width:160px" onclick="showPdfPreview();closeModal()">Export PDF</button>
+        <button class="modal-send-btn" style="min-width:160px" onclick="closeModal()">Close</button>
+      </div>
+    </div>`;
+}
+
+// ── PDF PREVIEW ──
+function showPdfPreview() {
+  if (!state.lastResult && state.project.rooms.length === 0) {
+    showToast('Calculate a room first to export PDF');
+    return;
+  }
+  const r = state.lastResult || state.project.rooms[0];
+  const rooms = state.project.rooms.length > 0 ? state.project.rooms : [r];
+  const win = window.open('', '_blank');
+  const today = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Lighting Calculation — ${r.projectName}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Jost',sans-serif;font-weight:300;color:#1A1A1A;background:#fff;padding:48px;}
+    .header{display:grid;grid-template-columns:1fr auto;align-items:start;margin-bottom:40px;padding-bottom:32px;border-bottom:0.5px solid #C8C4BC;}
+    .brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;letter-spacing:0.05em;}
+    .brand-sub{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#8C8880;margin-top:4px;}
+    .doc-type{text-align:right;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#8C8880;}
+    .doc-date{font-size:12px;color:#1A1A1A;margin-top:4px;}
+    .room-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;margin-bottom:4px;}
+    .room-meta{font-size:11px;color:#8C8880;margin-bottom:32px;}
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:32px;}
+    .metric{background:#EDECEA;padding:20px;} .metric-lbl{font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:#8C8880;margin-bottom:8px;}
+    .metric-val{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;} .metric-unit{font-size:10px;color:#8C8880;margin-top:2px;}
+    .metric.dk{background:#1A1A1A;} .metric.dk .metric-lbl{color:rgba(200,196,188,0.5);} .metric.dk .metric-val{color:#F7F6F2;} .metric.dk .metric-unit{color:rgba(200,196,188,0.4);}
+    .section-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;margin:28px 0 14px;}
+    table{width:100%;border-collapse:collapse;margin-bottom:24px;}
+    th{font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:#8C8880;padding:10px 12px;text-align:left;background:#F7F6F2;border-bottom:0.5px solid #C8C4BC;}
+    td{padding:11px 12px;font-size:11px;border-bottom:0.5px solid #C8C4BC;color:#1A1A1A;}
+    tr:last-child td{border-bottom:none;}
+    .quality{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-bottom:28px;}
+    .qc{background:#E8EDF2;padding:18px;} .qc-lbl{font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:#4A5568;margin-bottom:6px;}
+    .qc-val{font-family:'Cormorant Garamond',serif;font-size:20px;color:#1A1A1A;} .qc-desc{font-size:10px;color:#4A5568;margin-top:4px;line-height:1.5;}
+    .footer{margin-top:48px;padding-top:20px;border-top:0.5px solid #C8C4BC;display:flex;justify-content:space-between;align-items:center;}
+    .footer-brand{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#8C8880;}
+    .footer-note{font-size:10px;color:#8C8880;text-align:right;}
+    .divider{height:0.5px;background:#C8C4BC;margin:32px 0;}
+    @media print{body{padding:32px;}}
+  </style></head><body>
+  <div class="header">
+    <div><div class="brand">The Lightists</div><div class="brand-sub">Professional Lighting Calculation</div></div>
+    <div class="doc-type">Lighting Specification<br><div class="doc-date">${today}</div></div>
+  </div>
+  ${rooms.map((rm, idx) => `
+    ${idx > 0 ? '<div class="divider"></div>' : ''}
+    <div class="room-title">${rm.roomName}</div>
+    <div class="room-meta">${rm.projectName} · ${roomData[rm.roomType]?.name} · ${rm.L}m × ${rm.W}m × ${rm.H}m ceiling · ${rm.area}m² · Room Index ${rm.ri}</div>
+    <div class="metrics">
+      <div class="metric"><div class="metric-lbl">Target Illuminance</div><div class="metric-val">${rm.targetLux}</div><div class="metric-unit">lux</div></div>
+      <div class="metric"><div class="metric-lbl">Total Lumens</div><div class="metric-val">${rm.totalLumens.toLocaleString()}</div><div class="metric-unit">lm required</div></div>
+      <div class="metric"><div class="metric-lbl">Floor Area</div><div class="metric-val">${rm.area}</div><div class="metric-unit">m²</div></div>
+      <div class="metric dk"><div class="metric-lbl">Total Fixtures</div><div class="metric-val">${rm.totalFixtures}</div><div class="metric-unit">across all layers</div></div>
+    </div>
+    <div class="quality">
+      <div class="qc"><div class="qc-lbl">Colour Temperature</div><div class="qc-val">${rm.cct}K</div><div class="qc-desc">${cctDescs[rm.cct]}</div></div>
+      <div class="qc"><div class="qc-lbl">Colour Rendering</div><div class="qc-val">CRI ${rm.cri}${rm.cri>=90?'+':''}</div><div class="qc-desc">${rm.cri>=90?'Premium — for spaces with rich materials and high visual standards.':'Standard — appropriate for most residential and commercial.'}</div></div>
+      <div class="qc"><div class="qc-lbl">Controls</div><div class="qc-val">${rm.dimming&&rm.smart?'Dimming + Smart':rm.dimming?'Dimmable':rm.smart?'Smart':'Standard'}</div><div class="qc-desc">Utilisation Factor: ${rm.uf} · Maintenance Factor: ${rm.mf}</div></div>
+    </div>
+    <div class="section-title">Layered Lighting Scheme</div>
+    <table>
+      <thead><tr><th>Layer</th><th>Purpose</th><th>Lumens</th><th>Fixtures</th><th>Per Fixture</th></tr></thead>
+      <tbody>${rm.layers.map(l => `<tr><td>${l.type}</td><td>${l.name}</td><td>${l.lumens.toLocaleString()} lm</td><td>${l.count}</td><td>~${l.lmPerFix} lm</td></tr>`).join('')}</tbody>
+    </table>
+    <div class="section-title">Installation Notes</div>
+    <table>
+      <thead><tr><th>Parameter</th><th>Value</th><th>Guidance</th></tr></thead>
+      <tbody>
+        <tr><td>Ceiling height</td><td>${rm.H}m</td><td>All mounting heights relative to this</td></tr>
+        <tr><td>Max fixture spacing</td><td>${rm.maxSpacing}m</td><td>For uniform ambient distribution (1.2 × ceiling height)</td></tr>
+        <tr><td>Suggested ambient grid</td><td>${rm.gridCols} × ${rm.gridRows}</td><td>Spacing ~${rm.spaceL}m (L) × ${rm.spaceW}m (W)</td></tr>
+        <tr><td>Pendant drop</td><td>${(rm.H-0.7).toFixed(1)}m</td><td>Pendant base above floor level (dining / living)</td></tr>
+        ${rm.dimming?'<tr><td>Dimming</td><td>TRIAC / DALI</td><td>Confirm compatibility with selected fixtures</td></tr>':''}
+      </tbody>
+    </table>
+  `).join('')}
+  <div class="footer">
+    <div class="footer-brand">The Lightists · thelightists.com · hello@thelightists.com · Gurugram, India</div>
+    <div class="footer-note">Calculated per IES standards. For verified photometric analysis<br>and product specification, contact The Lightists team.</div>
+  </div>
+  <script>window.print();<\/script>
+  </body></html>`);
+  win.document.close();
+  showToast('PDF opened — use browser Print to save');
+}
+
+// ── UI HANDLERS ──
+function onRoomTypeChange() {
+  const rt = document.getElementById('roomType').value;
+  if (!rt) return;
+  const rd = roomData[rt];
+  if (rd) {
+    document.getElementById('targetLux').value = rd.lux;
+    // auto-suggest CCT
+    selectCCTByValue(rd.cctRec);
+  }
+}
+
+function selectWall(val, el) {
+  state.wallFinish = val;
+  document.querySelectorAll('.wall-opt').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectCCT(val, el) {
+  state.cct = val;
+  document.querySelectorAll('.cct-option').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectCCTByValue(val) {
+  document.querySelectorAll('.cct-option').forEach(el => {
+    if (el.getAttribute('onclick')?.includes(`'${val}'`)) { selectCCT(val, el); }
+  });
+}
+
+function selectCRI(val, el) {
+  state.cri = val;
+  document.querySelectorAll('.cri-option').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toggleDimming() {
+  state.dimming = !state.dimming;
+  document.getElementById('dimmingToggle').className = 'toggle' + (state.dimming ? ' on' : '');
+}
+
+function toggleSmart() {
+  state.smart = !state.smart;
+  document.getElementById('smartToggle').className = 'toggle' + (state.smart ? ' on' : '');
+}
+
+function selectBudget(val, el) {
+  state.selectedBudget = val;
+  document.querySelectorAll('.budget-opt').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ── MOBILE MENU ──
+function toggleMobileMenu() {
+  const h = document.getElementById('hamburger');
+  const d = document.getElementById('mobileDrawer');
+  const isOpen = d.classList.contains('open');
+  if(isOpen){ closeMobileMenu(); }
+  else { h.classList.add('open'); d.classList.add('open'); document.body.style.overflow='hidden'; }
+}
+function closeMobileMenu() {
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobileDrawer').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ── INIT ──
+renderRoomList();
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeMobileMenu(); }
+});
+</script>
+</body>
+</html>

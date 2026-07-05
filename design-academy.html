@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Academy — The Lightists</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&family=Raleway:wght@100;200;300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --stone:#F7F6F2; --charcoal:#1A1A1A; --warm:#EDECEA;
+  --mid:#8C8880; --border:#C8C4BC; --dark:#3D3D3A;
+  --slate:#4A5568; --pale:#E8EDF2; --white:#FFFFFF;
+  --accent:#B8965A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--stone);color:var(--charcoal);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 56px;height:64px;background:rgba(247,246,242,0.96);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-mark{width:36px;height:36px;border:1px solid var(--charcoal);display:flex;align-items:center;justify-content:center;}
+.nav-tl{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--charcoal);letter-spacing:-0.5px;}
+.nav-wordmark{font-size:10px;font-weight:300;letter-spacing:0.22em;text-transform:uppercase;color:var(--charcoal);}
+.nav-center{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:300;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);}
+.nav-sep{color:var(--border);}
+.nav-current{color:var(--charcoal);}
+.nav-actions{display:flex;gap:10px;align-items:center;}
+.btn-nav{font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;padding:7px 16px;border:0.5px solid var(--border);background:transparent;color:var(--charcoal);cursor:pointer;transition:all 0.2s;}
+.btn-nav:hover{background:var(--charcoal);color:var(--stone);border-color:var(--charcoal);}
+.btn-nav.solid{background:var(--charcoal);color:var(--stone);border-color:var(--charcoal);}
+.btn-nav.solid:hover{background:var(--dark);}
+
+/* ── HERO ── */
+.academy-hero{
+  background:var(--charcoal);
+  padding:72px 80px 64px;
+  position:relative;overflow:hidden;
+}
+.academy-hero::before{
+  content:'DESIGN\AACADEMY';white-space:pre;
+  position:absolute;right:-40px;top:-20px;
+  font-family:'Cormorant Garamond',serif;font-size:180px;font-weight:300;
+  color:rgba(200,196,188,0.04);line-height:0.9;letter-spacing:-0.04em;
+  pointer-events:none;
+}
+.hero-eyebrow{font-size:10px;font-weight:300;letter-spacing:0.3em;text-transform:uppercase;color:rgba(200,196,188,0.45);margin-bottom:20px;display:flex;align-items:center;gap:14px;}
+.hero-eyebrow::before{content:'';width:24px;height:0.5px;background:rgba(200,196,188,0.3);}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,4vw,64px);font-weight:300;color:var(--stone);line-height:1.0;letter-spacing:-0.02em;margin-bottom:20px;}
+.hero-title em{font-style:italic;}
+.hero-sub{font-size:13px;font-weight:300;line-height:1.9;color:rgba(200,196,188,0.55);max-width:560px;margin-bottom:48px;}
+.hero-meta{display:flex;gap:48px;}
+.hm-item{}
+.hm-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--stone);line-height:1;}
+.hm-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(200,196,188,0.4);margin-top:4px;}
+
+/* ── CATEGORY TABS ── */
+.cat-tabs{background:var(--white);border-bottom:0.5px solid var(--border);padding:0 80px;display:flex;gap:0;overflow-x:auto;}
+.cat-tab{padding:18px 28px;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);cursor:pointer;border-bottom:1.5px solid transparent;transition:all 0.2s;white-space:nowrap;background:none;border-left:none;border-right:none;border-top:none;font-family:'Jost',sans-serif;}
+.cat-tab:hover{color:var(--charcoal);}
+.cat-tab.active{color:var(--charcoal);border-bottom-color:var(--charcoal);}
+
+/* ── MAIN LAYOUT ── */
+.academy-main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:80vh;}
+
+/* ── ARTICLES ── */
+.articles-col{padding:64px 80px;}
+
+/* Featured article */
+.featured-article{margin-bottom:64px;cursor:pointer;}
+.fa-tag{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--mid);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.fa-tag::before{content:'';width:16px;height:0.5px;background:var(--mid);}
+.fa-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,2.8vw,44px);font-weight:300;color:var(--charcoal);line-height:1.1;letter-spacing:-0.01em;margin-bottom:16px;}
+.fa-title em{font-style:italic;}
+.fa-excerpt{font-size:13px;font-weight:300;line-height:1.9;color:var(--mid);max-width:600px;margin-bottom:24px;}
+.fa-meta{display:flex;align-items:center;gap:20px;font-size:11px;color:var(--mid);}
+.fa-read-time{display:flex;align-items:center;gap:6px;}
+.fa-video-badge{display:flex;align-items:center;gap:6px;padding:4px 10px;border:0.5px solid var(--border);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);}
+.fa-cta{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);border-bottom:0.5px solid var(--border);padding-bottom:2px;transition:all 0.2s;margin-top:16px;}
+.fa-cta:hover{border-color:var(--charcoal);}
+
+/* Article divider */
+.section-divider{height:0.5px;background:var(--border);margin:48px 0;}
+
+/* Article grid */
+.articles-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px 48px;margin-bottom:56px;}
+.article-card{cursor:pointer;}
+.ac-category{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;}
+.ac-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--charcoal);line-height:1.2;margin-bottom:10px;letter-spacing:-0.01em;}
+.ac-title em{font-style:italic;}
+.ac-excerpt{font-size:12px;font-weight:300;line-height:1.8;color:var(--mid);margin-bottom:12px;}
+.ac-meta{font-size:10px;color:var(--mid);display:flex;gap:12px;align-items:center;}
+.ac-video{font-size:9px;padding:2px 8px;border:0.5px solid var(--border);letter-spacing:0.1em;text-transform:uppercase;}
+.ac-visual{height:180px;background:var(--warm);margin-bottom:16px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+.ac-visual svg{width:100%;height:100%;}
+
+/* Trend report card */
+.trend-report{background:var(--charcoal);padding:40px;margin-bottom:56px;cursor:pointer;position:relative;overflow:hidden;}
+.trend-report::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;border:0.5px solid rgba(200,196,188,0.06);}
+.trend-report::after{content:'';position:absolute;top:-20px;right:-20px;width:140px;height:140px;border-radius:50%;border:0.5px solid rgba(200,196,188,0.04);}
+.tr-eyebrow{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(200,196,188,0.4);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.tr-eyebrow::before{content:'';width:16px;height:0.5px;background:rgba(200,196,188,0.3);}
+.tr-badge{background:var(--accent);color:var(--stone);font-size:9px;font-weight:500;padding:3px 8px;letter-spacing:0.1em;text-transform:uppercase;margin-left:8px;}
+.tr-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--stone);line-height:1.1;margin-bottom:14px;}
+.tr-title em{font-style:italic;}
+.tr-body{font-size:12px;font-weight:300;line-height:1.8;color:rgba(200,196,188,0.55);max-width:520px;margin-bottom:24px;}
+.tr-cta{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone);border-bottom:0.5px solid rgba(200,196,188,0.3);padding-bottom:2px;transition:all 0.2s;}
+.tr-cta:hover{border-color:rgba(200,196,188,0.7);}
+.tr-highlights{display:flex;gap:32px;margin-top:28px;padding-top:24px;border-top:0.5px solid rgba(200,196,188,0.1);}
+.trh-item{}
+.trh-val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--stone);}
+.trh-label{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(200,196,188,0.35);margin-top:3px;}
+
+/* Video section */
+.video-section{margin-bottom:56px;}
+.vs-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px;}
+.vs-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--charcoal);}
+.vs-link{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mid);border-bottom:0.5px solid var(--border);padding-bottom:1px;}
+.video-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.video-card{cursor:pointer;}
+.vc-thumb{height:140px;background:var(--charcoal);position:relative;margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.vc-play{width:40px;height:40px;border-radius:50%;background:rgba(247,246,242,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(247,246,242,0.8);transition:all 0.2s;}
+.video-card:hover .vc-play{background:rgba(247,246,242,0.25);}
+.vc-duration{position:absolute;bottom:8px;right:8px;font-size:9px;color:rgba(247,246,242,0.7);background:rgba(0,0,0,0.4);padding:2px 6px;}
+.vc-category{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mid);margin-bottom:4px;}
+.vc-title{font-size:12px;font-weight:300;color:var(--charcoal);line-height:1.5;}
+
+/* ── SIDEBAR ── */
+.sidebar{padding:64px 40px 64px 0;border-left:0.5px solid var(--border);}
+.sidebar-section{padding:0 0 36px;margin-bottom:36px;border-bottom:0.5px solid var(--border);}
+.sidebar-section:last-child{border-bottom:none;}
+.ss-label{font-size:9px;font-weight:500;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.ss-label::after{content:'';flex:1;height:0.5px;background:var(--border);}
+
+/* Newsletter */
+.newsletter-box{background:var(--warm);padding:24px;border:0.5px solid var(--border);}
+.nb-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--charcoal);line-height:1.2;margin-bottom:8px;}
+.nb-title em{font-style:italic;}
+.nb-sub{font-size:11px;color:var(--mid);line-height:1.7;margin-bottom:20px;}
+.nb-input{width:100%;padding:10px 12px;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;margin-bottom:8px;transition:border-color 0.2s;}
+.nb-input:focus{border-color:var(--charcoal);}
+.nb-input::placeholder{color:var(--mid);}
+.nb-submit{width:100%;padding:11px;background:var(--charcoal);color:var(--stone);font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.18em;text-transform:uppercase;border:none;cursor:pointer;transition:background 0.2s;}
+.nb-submit:hover{background:var(--dark);}
+.nb-note{font-size:10px;color:var(--mid);margin-top:8px;line-height:1.5;}
+
+/* Popular guides */
+.guide-list{display:flex;flex-direction:column;gap:0;}
+.guide-item{display:flex;gap:14px;padding:14px 0;border-bottom:0.5px solid var(--border);cursor:pointer;align-items:flex-start;}
+.guide-item:last-child{border-bottom:none;}
+.gi-num{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--border);flex-shrink:0;line-height:1;padding-top:2px;}
+.gi-content{}
+.gi-category{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);margin-bottom:3px;}
+.gi-title{font-size:12px;font-weight:300;color:var(--charcoal);line-height:1.4;}
+.guide-item:hover .gi-title{color:var(--slate);}
+
+/* Glossary terms */
+.glossary-list{display:flex;flex-direction:column;gap:12px;}
+.glossary-item{}
+.gl-term{font-size:12px;font-weight:500;color:var(--charcoal);margin-bottom:2px;letter-spacing:0.03em;}
+.gl-def{font-size:11px;color:var(--mid);line-height:1.6;}
+
+/* Tools CTA */
+.tools-cta{background:var(--charcoal);padding:24px;}
+.tc-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--stone);margin-bottom:8px;line-height:1.2;}
+.tc-body{font-size:11px;color:rgba(200,196,188,0.5);line-height:1.7;margin-bottom:16px;}
+.tc-btn{display:block;width:100%;padding:11px;border:0.5px solid rgba(200,196,188,0.25);color:rgba(200,196,188,0.7);font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;text-align:center;cursor:pointer;transition:all 0.2s;background:transparent;margin-bottom:6px;}
+.tc-btn:hover{border-color:rgba(200,196,188,0.6);color:var(--stone);}
+
+/* ── ARTICLE MODAL ── */
+.article-overlay{position:fixed;inset:0;z-index:200;background:rgba(10,8,6,0.88);opacity:0;pointer-events:none;transition:opacity 0.3s;backdrop-filter:blur(4px);overflow-y:auto;}
+.article-overlay.open{opacity:1;pointer-events:all;}
+.article-modal{background:var(--stone);max-width:760px;margin:40px auto;position:relative;}
+.am-header{background:var(--charcoal);padding:48px 56px 40px;position:relative;}
+.am-close{position:absolute;top:20px;right:24px;background:none;border:none;color:rgba(200,196,188,0.4);font-size:22px;cursor:pointer;transition:color 0.2s;font-family:sans-serif;}
+.am-close:hover{color:var(--stone);}
+.am-eyebrow{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(200,196,188,0.4);margin-bottom:14px;}
+.am-title{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;color:var(--stone);line-height:1.1;letter-spacing:-0.01em;}
+.am-title em{font-style:italic;}
+.am-meta{margin-top:16px;display:flex;gap:20px;font-size:11px;color:rgba(200,196,188,0.4);}
+.am-body{padding:48px 56px;}
+.am-lead{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--charcoal);line-height:1.7;margin-bottom:32px;font-style:italic;}
+.am-section-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--charcoal);margin:36px 0 14px;letter-spacing:-0.01em;}
+.am-p{font-size:13px;font-weight:300;line-height:1.9;color:var(--mid);margin-bottom:18px;}
+.am-p strong{color:var(--charcoal);font-weight:400;}
+.am-callout{background:var(--warm);border-left:3px solid var(--charcoal);padding:20px 24px;margin:28px 0;font-size:13px;color:var(--charcoal);line-height:1.8;font-style:italic;}
+.am-table{width:100%;border-collapse:collapse;margin:24px 0 28px;}
+.am-table th{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mid);padding:10px 14px;text-align:left;border-bottom:0.5px solid var(--border);background:var(--warm);font-weight:400;}
+.am-table td{padding:12px 14px;font-size:12px;color:var(--charcoal);border-bottom:0.5px solid var(--border);}
+.am-table tr:last-child td{border-bottom:none;}
+.am-table td:first-child{font-weight:400;color:var(--charcoal);}
+.am-video-embed{background:var(--charcoal);height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:28px 0;position:relative;}
+.ave-play{width:56px;height:56px;border-radius:50%;border:1.5px solid rgba(200,196,188,0.35);display:flex;align-items:center;justify-content:center;font-size:18px;color:rgba(200,196,188,0.6);margin-bottom:14px;cursor:pointer;transition:all 0.2s;}
+.ave-play:hover{background:rgba(247,246,242,0.08);}
+.ave-title{font-size:11px;letter-spacing:0.1em;color:rgba(200,196,188,0.4);}
+.ave-note{font-size:9px;color:rgba(200,196,188,0.25);margin-top:6px;letter-spacing:0.1em;text-transform:uppercase;}
+.am-tool-cta{background:var(--charcoal);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;margin:32px 0;}
+.atc-text{flex:1;}
+.atc-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(200,196,188,0.4);margin-bottom:6px;}
+.atc-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--stone);line-height:1.2;}
+.atc-btn{padding:11px 22px;border:0.5px solid rgba(200,196,188,0.25);color:rgba(200,196,188,0.7);font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;background:transparent;white-space:nowrap;}
+.atc-btn:hover{border-color:rgba(200,196,188,0.6);color:var(--stone);}
+.am-signup{background:var(--warm);border:0.5px solid var(--border);padding:28px 32px;text-align:center;margin:32px 0;}
+.as-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--charcoal);margin-bottom:6px;}
+.as-sub{font-size:12px;color:var(--mid);margin-bottom:18px;line-height:1.6;}
+.as-form{display:flex;gap:0;max-width:400px;margin:0 auto;}
+.as-input{flex:1;padding:10px 14px;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;transition:border-color 0.2s;}
+.as-input:focus{border-color:var(--charcoal);}
+.as-input::placeholder{color:var(--mid);}
+.as-btn{padding:10px 20px;background:var(--charcoal);color:var(--stone);font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;border:none;cursor:pointer;white-space:nowrap;transition:background 0.2s;}
+.as-btn:hover{background:var(--dark);}
+
+/* ── FADE ANIMATIONS ── */
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.fade-in.visible{opacity:1;transform:translateY(0);}
+
+/* Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--charcoal);color:var(--stone);padding:12px 22px;font-size:12px;font-weight:300;border:0.5px solid rgba(200,196,188,0.2);opacity:0;transition:all 0.3s;pointer-events:none;z-index:500;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media(max-width:1024px){
+  .nav{padding:0 24px;}
+  .nav-center{display:none;}
+  .nav-actions{display:none;}
+  #hamburger{display:flex!important;}
+  #mobileDrawer{display:flex!important;}
+  .academy-hero{padding:48px 24px;}
+  .academy-main{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+  .articles-col{padding:40px 24px;}
+  .articles-grid{grid-template-columns:1fr;}
+  .video-grid{grid-template-columns:1fr 1fr;}
+  .cat-tabs{padding:0 24px;}
+  .am-header{padding:32px 28px 24px;}
+  .am-body{padding:32px 28px;}
+}
+@media(max-width:600px){
+  .video-grid{grid-template-columns:1fr;}
+  .tr-highlights{flex-wrap:wrap;gap:20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ARTICLE MODAL -->
+<div class="article-overlay" id="articleOverlay" onclick="closeArticleOutside(event)">
+  <div class="article-modal" id="articleModal">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" href="index.html">
+    <img src="Logo White.png" alt="TL" style="height:38px;width:auto;display:block;"><span style="width:0.5px;height:26px;background:var(--border);display:block;margin:0 14px;"></span><span style="font-family:Raleway,sans-serif;font-weight:200;font-size:11px;letter-spacing:0.36em;text-transform:uppercase;color:var(--charcoal);white-space:nowrap;">The Lightists</span>
+  </a>
+  <div class="nav-center">
+    <span>Platform</span><span class="nav-sep">—</span><span class="nav-current">Design Academy</span>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-nav" onclick="document.getElementById('newsletterEmail').focus();document.getElementById('newsletterEmail').scrollIntoView({behavior:'smooth'})">Subscribe</button>
+    <button class="btn-nav solid" onclick="window.location.href='lighting-lab.html'">Open Lighting Lab</button>
+  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu" style="display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;z-index:200;">
+    <span style="display:block;width:24px;height:0.5px;background:var(--charcoal);transition:all 0.3s ease;transform-origin:center;"></span>
+    <span style="display:block;width:24px;height:0.5px;background:var(--charcoal);transition:all 0.3s ease;"></span>
+    <span style="display:block;width:24px;height:0.5px;background:var(--charcoal);transition:all 0.3s ease;transform-origin:center;"></span>
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div id="mobileDrawer" style="display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:var(--stone);z-index:99;flex-direction:column;padding:40px 32px;border-top:0.5px solid var(--border);overflow-y:auto;transform:translateY(-100%);opacity:0;transition:transform 0.35s ease,opacity 0.35s ease;">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:40px;padding-bottom:32px;border-bottom:0.5px solid var(--border);">
+    <img src="Logo White.png" alt="TL" style="height:32px;width:auto;">
+    <span style="width:0.5px;height:24px;background:var(--border);display:block;"></span>
+    <span style="font-family:'Raleway',sans-serif;font-weight:200;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--charcoal);">The Lightists</span>
+  </div>
+  <ul style="list-style:none;display:flex;flex-direction:column;gap:0;margin-bottom:40px;">
+    <li style="border-bottom:0.5px solid var(--border);"><a href="index.html" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">Home</a></li>
+    <li style="border-bottom:0.5px solid var(--border);"><a href="lighting-lab.html" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">Lighting Lab</a></li>
+    <li style="border-bottom:0.5px solid var(--border);"><a href="mood-studio.html" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">Mood Studio</a></li>
+    <li style="border-bottom:0.5px solid var(--border);"><a href="mood-board.html" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">Mood Board</a></li>
+    <li style="border-bottom:0.5px solid var(--border);"><a href="design-academy.html" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">Academy</a></li>
+    <li style="border-bottom:0.5px solid var(--border);"><a href="products.html" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">Products</a></li>
+    <li style="border-bottom:0.5px solid var(--border);"><a href="about.html" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">About</a></li>
+    <li><a href="index.html#contact" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">Contact</a></li>
+  </ul>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <button onclick="window.location.href='lighting-lab.html'" style="padding:14px;background:var(--charcoal);color:var(--stone);font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;border:none;cursor:pointer;">Open Lighting Lab</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="academy-hero">
+  <div class="hero-eyebrow">The Lightists — Design Academy</div>
+  <h1 class="hero-title">
+    Light, <em>understood.</em><br>
+    European knowledge<br>for Indian professionals.
+  </h1>
+  <p class="hero-sub">
+    Guides, trend reports, and technical references for architects and interior designers working with premium lighting. Written from European industry research, refined for the Indian context. Free with your professional account.
+  </p>
+  <div class="hero-meta">
+    <div class="hm-item"><div class="hm-num">6</div><div class="hm-label">Complete Guides</div></div>
+    <div class="hm-item"><div class="hm-num">4</div><div class="hm-label">Video Walkthroughs</div></div>
+    <div class="hm-item"><div class="hm-num">Q2</div><div class="hm-label">2026 Trend Report</div></div>
+    <div class="hm-item"><div class="hm-num">Free</div><div class="hm-label">With Account</div></div>
+  </div>
+</div>
+
+<!-- CATEGORY TABS -->
+<div class="cat-tabs">
+  <button class="cat-tab active" onclick="filterCat('all',this)">All</button>
+  <button class="cat-tab" onclick="filterCat('fundamentals',this)">Fundamentals</button>
+  <button class="cat-tab" onclick="filterCat('rooms',this)">Room by Room</button>
+  <button class="cat-tab" onclick="filterCat('trends',this)">European Trends</button>
+  <button class="cat-tab" onclick="filterCat('hospitality',this)">Hospitality</button>
+  <button class="cat-tab" onclick="filterCat('technical',this)">Technical</button>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="academy-main">
+  <div class="articles-col">
+
+    <!-- FEATURED -->
+    <div class="featured-article fade-in" onclick="openArticle('fundamentals')">
+      <div class="fa-tag">Fundamentals · 12 min read</div>
+      <h2 class="fa-title">Lux, Lumens & CRI —<br><em>the complete guide for architects</em></h2>
+      <p class="fa-excerpt">The three numbers that define lighting quality — and why most specifications get at least one of them wrong. A plain-English explanation of how light is measured, what each metric actually affects, and how to specify confidently for any project type.</p>
+      <div class="fa-meta">
+        <span class="fa-read-time">○ 12 min read</span>
+        <span class="fa-video-badge">▶ Video included</span>
+        <span>Updated June 2026</span>
+      </div>
+      <div class="fa-cta">Read guide →</div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ARTICLE GRID -->
+    <div class="articles-grid">
+
+      <div class="article-card fade-in" onclick="openArticle('layering')">
+        <div class="ac-visual">
+          <svg viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg">
+            <rect width="340" height="180" fill="#1A1A1A"/>
+            <radialGradient id="g1" cx="50%" cy="40%" r="50%"><stop offset="0%" stop-color="rgba(255,235,180,0.2)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+            <rect width="340" height="180" fill="url(#g1)"/>
+            <!-- Room outline -->
+            <rect x="40" y="20" width="260" height="140" fill="none" stroke="rgba(200,196,188,0.08)" stroke-width="1"/>
+            <!-- Ambient layer indicators -->
+            <circle cx="100" cy="20" r="6" fill="rgba(255,235,180,0.3)"/>
+            <circle cx="170" cy="20" r="6" fill="rgba(255,235,180,0.3)"/>
+            <circle cx="240" cy="20" r="6" fill="rgba(255,235,180,0.3)"/>
+            <!-- Light cones -->
+            <path d="M100,26 L70,100 L130,100 Z" fill="rgba(255,235,180,0.05)"/>
+            <path d="M170,26 L140,100 L200,100 Z" fill="rgba(255,235,180,0.05)"/>
+            <path d="M240,26 L210,100 L270,100 Z" fill="rgba(255,235,180,0.05)"/>
+            <!-- Task light -->
+            <rect x="130" y="100" width="80" height="4" fill="rgba(255,235,180,0.4)"/>
+            <path d="M130,104 L120,140 L210,140 L200,104 Z" fill="rgba(255,235,180,0.06)"/>
+            <!-- Layer labels -->
+            <text x="55" y="75" font-family="Jost" font-size="8" fill="rgba(200,196,188,0.4)" letter-spacing="2">AMBIENT</text>
+            <text x="144" y="125" font-family="Jost" font-size="8" fill="rgba(200,196,188,0.4)" letter-spacing="2">TASK</text>
+            <!-- Accent spots -->
+            <circle cx="60" cy="120" r="3" fill="rgba(184,150,90,0.5)"/>
+            <circle cx="280" cy="120" r="3" fill="rgba(184,150,90,0.5)"/>
+            <text x="40" y="145" font-family="Jost" font-size="8" fill="rgba(184,150,90,0.4)" letter-spacing="2">ACCENT</text>
+          </svg>
+        </div>
+        <div class="ac-category">Fundamentals</div>
+        <h3 class="ac-title">The layered lighting method — <em>ambient, task, accent, decorative</em></h3>
+        <p class="ac-excerpt">Why single-source lighting fails every room, and how to build schemes in four layers that create depth, flexibility, and professional results.</p>
+        <div class="ac-meta"><span>8 min read</span><span class="ac-video">▶ Video</span></div>
+      </div>
+
+      <div class="article-card fade-in" onclick="openArticle('cct')" style="transition-delay:0.1s">
+        <div class="ac-visual">
+          <svg viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg">
+            <rect width="340" height="180" fill="#F0EDE8"/>
+            <!-- CCT spectrum bar -->
+            <defs>
+              <linearGradient id="cctGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#FF9B4E"/>
+                <stop offset="30%" stop-color="#FFD08A"/>
+                <stop offset="55%" stop-color="#FFF4E0"/>
+                <stop offset="75%" stop-color="#F0F8FF"/>
+                <stop offset="100%" stop-color="#C8E0FF"/>
+              </linearGradient>
+            </defs>
+            <rect x="32" y="70" width="276" height="28" rx="2" fill="url(#cctGrad)" opacity="0.85"/>
+            <!-- Markers -->
+            <line x1="70" y1="60" x2="70" y2="68" stroke="#8C8880" stroke-width="0.8"/>
+            <text x="70" y="57" font-family="Cormorant Garamond" font-size="12" fill="#8C8880" text-anchor="middle">2700K</text>
+            <line x1="130" y1="60" x2="130" y2="68" stroke="#8C8880" stroke-width="0.8"/>
+            <text x="130" y="57" font-family="Cormorant Garamond" font-size="12" fill="#8C8880" text-anchor="middle">3000K</text>
+            <line x1="200" y1="60" x2="200" y2="68" stroke="#8C8880" stroke-width="0.8"/>
+            <text x="200" y="57" font-family="Cormorant Garamond" font-size="12" fill="#8C8880" text-anchor="middle">4000K</text>
+            <line x1="270" y1="60" x2="270" y2="68" stroke="#8C8880" stroke-width="0.8"/>
+            <text x="270" y="57" font-family="Cormorant Garamond" font-size="12" fill="#8C8880" text-anchor="middle">5000K</text>
+            <!-- Room labels -->
+            <text x="70" y="115" font-family="Jost" font-size="8" fill="#8C8880" text-anchor="middle" letter-spacing="1">BEDROOM</text>
+            <text x="70" y="125" font-family="Jost" font-size="8" fill="#8C8880" text-anchor="middle" letter-spacing="1">DINING</text>
+            <text x="130" y="115" font-family="Jost" font-size="8" fill="#8C8880" text-anchor="middle" letter-spacing="1">LIVING</text>
+            <text x="200" y="115" font-family="Jost" font-size="8" fill="#8C8880" text-anchor="middle" letter-spacing="1">KITCHEN</text>
+            <text x="200" y="125" font-family="Jost" font-size="8" fill="#8C8880" text-anchor="middle" letter-spacing="1">OFFICE</text>
+            <text x="270" y="115" font-family="Jost" font-size="8" fill="#8C8880" text-anchor="middle" letter-spacing="1">STUDIO</text>
+            <!-- Warm/Cool labels -->
+            <text x="40" y="150" font-family="Cormorant Garamond" font-size="11" fill="#B8965A" font-style="italic">Warm · intimate</text>
+            <text x="230" y="150" font-family="Cormorant Garamond" font-size="11" fill="#4A5568" font-style="italic">Cool · clinical</text>
+          </svg>
+        </div>
+        <div class="ac-category">Fundamentals</div>
+        <h3 class="ac-title">Colour temperature by room — <em>which Kelvin for which space</em></h3>
+        <p class="ac-excerpt">2700K or 3000K? When does 4000K belong in a home? A visual guide to choosing colour temperature for every room type.</p>
+        <div class="ac-meta"><span>6 min read</span></div>
+      </div>
+
+      <div class="article-card fade-in" onclick="openArticle('dining')" style="transition-delay:0.15s">
+        <div class="ac-visual">
+          <svg viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg">
+            <rect width="340" height="180" fill="#1C1814"/>
+            <radialGradient id="dg" cx="50%" cy="30%" r="40%"><stop offset="0%" stop-color="rgba(212,168,67,0.18)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+            <rect width="340" height="180" fill="url(#dg)"/>
+            <!-- Dining table -->
+            <ellipse cx="170" cy="130" rx="90" ry="24" fill="rgba(100,80,50,0.5)"/>
+            <!-- Pendant wire -->
+            <line x1="130" y1="0" x2="130" y2="40" stroke="rgba(200,196,188,0.3)" stroke-width="0.8"/>
+            <line x1="170" y1="0" x2="170" y2="32" stroke="rgba(200,196,188,0.3)" stroke-width="0.8"/>
+            <line x1="210" y1="0" x2="210" y2="40" stroke="rgba(200,196,188,0.3)" stroke-width="0.8"/>
+            <!-- Pendant shades -->
+            <path d="M110,40 L150,40 L144,68 L116,68 Z" fill="#B8965A" opacity="0.85"/>
+            <path d="M150,32 L190,32 L184,62 L156,62 Z" fill="#D4A843" opacity="0.9"/>
+            <path d="M190,40 L230,40 L224,68 L196,68 Z" fill="#B8965A" opacity="0.85"/>
+            <!-- Glow -->
+            <radialGradient id="tableGlow" cx="50%" cy="0%" r="60%"><stop offset="0%" stop-color="rgba(212,168,67,0.22)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+            <ellipse cx="170" cy="100" rx="100" ry="60" fill="url(#tableGlow)"/>
+            <!-- Place settings suggestion -->
+            <circle cx="130" cy="130" r="10" fill="rgba(200,196,188,0.1)"/>
+            <circle cx="170" cy="128" r="12" fill="rgba(200,196,188,0.12)"/>
+            <circle cx="210" cy="130" r="10" fill="rgba(200,196,188,0.1)"/>
+          </svg>
+        </div>
+        <div class="ac-category">Room by Room</div>
+        <h3 class="ac-title">Lighting the dining room — <em>where European design earns its place</em></h3>
+        <p class="ac-excerpt">The dining room pendant is the most-noticed fixture in any home. How to specify height, quantity, CRI, and choose a European statement piece.</p>
+        <div class="ac-meta"><span>7 min read</span><span class="ac-video">▶ Video</span></div>
+      </div>
+
+      <div class="article-card fade-in" onclick="openArticle('hospitality')" style="transition-delay:0.2s">
+        <div class="ac-visual">
+          <svg viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg">
+            <rect width="340" height="180" fill="#E8EDF2"/>
+            <!-- Hotel lobby suggestion -->
+            <!-- Floor -->
+            <rect x="0" y="130" width="340" height="50" fill="rgba(200,196,188,0.3)"/>
+            <!-- Columns -->
+            <rect x="60" y="40" width="12" height="100" fill="rgba(74,85,104,0.3)"/>
+            <rect x="268" y="40" width="12" height="100" fill="rgba(74,85,104,0.3)"/>
+            <!-- Statement chandelier frame -->
+            <line x1="170" y1="10" x2="170" y2="35" stroke="rgba(74,85,104,0.4)" stroke-width="1"/>
+            <line x1="140" y1="45" x2="200" y2="45" stroke="rgba(74,85,104,0.4)" stroke-width="1"/>
+            <!-- Chandelier elements -->
+            <circle cx="140" cy="55" r="4" fill="rgba(74,85,104,0.6)"/>
+            <circle cx="155" cy="50" r="4" fill="rgba(74,85,104,0.6)"/>
+            <circle cx="170" cy="55" r="5" fill="rgba(74,85,104,0.7)"/>
+            <circle cx="185" cy="50" r="4" fill="rgba(74,85,104,0.6)"/>
+            <circle cx="200" cy="55" r="4" fill="rgba(74,85,104,0.6)"/>
+            <!-- Glow -->
+            <radialGradient id="lobbyGlow" cx="50%" cy="40%" r="50%"><stop offset="0%" stop-color="rgba(200,220,255,0.2)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+            <rect width="340" height="180" fill="url(#lobbyGlow)"/>
+            <!-- Wall sconces -->
+            <rect x="40" y="70" width="20" height="10" rx="2" fill="rgba(74,85,104,0.5)"/>
+            <radialGradient id="sg1" cx="50%" cy="0%" r="80%"><stop offset="0%" stop-color="rgba(200,220,255,0.15)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+            <ellipse cx="50" cy="80" rx="30" ry="40" fill="url(#sg1)"/>
+            <rect x="280" y="70" width="20" height="10" rx="2" fill="rgba(74,85,104,0.5)"/>
+            <!-- Labels -->
+            <text x="170" y="110" font-family="Jost" font-size="8" fill="rgba(74,85,104,0.5)" text-anchor="middle" letter-spacing="2">LOBBY SCHEME</text>
+            <text x="170" y="122" font-family="Cormorant Garamond" font-size="11" fill="rgba(74,85,104,0.4)" text-anchor="middle" font-style="italic">Layered hospitality lighting</text>
+          </svg>
+        </div>
+        <div class="ac-category">Hospitality</div>
+        <h3 class="ac-title">Specifying lighting for hotels & restaurants — <em>the professional's parameters</em></h3>
+        <p class="ac-excerpt">Lux levels, CRI requirements, dimming ranges, and fixture hierarchy for lobby, restaurant, guest room, and corridor. Industry-standard parameters for hospitality projects.</p>
+        <div class="ac-meta"><span>10 min read</span></div>
+      </div>
+
+    </div>
+
+    <!-- TREND REPORT -->
+    <div class="trend-report fade-in" onclick="openArticle('trends2026')">
+      <div class="tr-eyebrow">European Trend Report <span class="tr-badge">Q2 2026</span></div>
+      <h2 class="tr-title">What Europe's studios are<br><em>specifying this season</em></h2>
+      <p class="tr-body">Intentional warmth over stark minimalism. Artisan materials over polished perfection. Biophilic fixtures that reference nature without mimicking it. We track what the leading European studios — and the brands they specify — are doing right now, and what it means for Indian projects.</p>
+      <div class="tr-cta">Read the full report →</div>
+      <div class="tr-highlights">
+        <div class="trh-item"><div class="trh-val">Alabaster</div><div class="trh-label">Material of the season</div></div>
+        <div class="trh-item"><div class="trh-val">2700K</div><div class="trh-label">Dominant CCT choice</div></div>
+        <div class="trh-item"><div class="trh-val">Sculptural</div><div class="trh-label">Defining form language</div></div>
+        <div class="trh-item"><div class="trh-val">Brass</div><div class="trh-label">Still leading finish</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="video-section fade-in">
+      <div class="vs-header">
+        <div class="vs-title">Video Walkthroughs</div>
+        <span class="vs-link">All videos</span>
+      </div>
+      <div class="video-grid">
+        <div class="video-card" onclick="openArticle('video1')">
+          <div class="vc-thumb" style="background:linear-gradient(160deg,#1A1A1A,#2A2420)">
+            <div class="vc-play">▶</div>
+            <span class="vc-duration">8:24</span>
+          </div>
+          <div class="vc-category">Fundamentals</div>
+          <div class="vc-title">How to read a lighting spec sheet — lux, lumens, beam angle</div>
+        </div>
+        <div class="video-card" onclick="openArticle('video2')">
+          <div class="vc-thumb" style="background:linear-gradient(160deg,#1C1810,#2A2018)">
+            <div class="vc-play">▶</div>
+            <span class="vc-duration">12:05</span>
+          </div>
+          <div class="vc-category">Room by Room</div>
+          <div class="vc-title">Lighting a 3BHK apartment — walkthrough of a complete scheme</div>
+        </div>
+        <div class="video-card" onclick="openArticle('video3')">
+          <div class="vc-thumb" style="background:linear-gradient(160deg,#0F1420,#1A2030)">
+            <div class="vc-play">▶</div>
+            <span class="vc-duration">6:48</span>
+          </div>
+          <div class="vc-category">Hospitality</div>
+          <div class="vc-title">Boutique hotel lobby — layers, CCT, and the statement piece</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="ss-label">Newsletter</div>
+      <div class="newsletter-box">
+        <div class="nb-title">European trends,<br><em>quarterly.</em></div>
+        <p class="nb-sub">Trend reports, new guides, and product launches. No promotions. Unsubscribe anytime.</p>
+        <input class="nb-input" id="newsletterEmail" type="email" placeholder="Your studio email">
+        <button class="nb-submit" onclick="handleNewsletter()">Subscribe to Academy</button>
+        <div class="nb-note">Free. 4 issues per year. Trusted by architects across India.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="ss-label">Popular Guides</div>
+      <div class="guide-list">
+        <div class="guide-item" onclick="openArticle('fundamentals')">
+          <div class="gi-num">01</div>
+          <div class="gi-content"><div class="gi-category">Fundamentals</div><div class="gi-title">Lux, Lumens & CRI — the complete guide</div></div>
+        </div>
+        <div class="guide-item" onclick="openArticle('layering')">
+          <div class="gi-num">02</div>
+          <div class="gi-content"><div class="gi-category">Fundamentals</div><div class="gi-title">The four-layer lighting method</div></div>
+        </div>
+        <div class="guide-item" onclick="openArticle('dining')">
+          <div class="gi-num">03</div>
+          <div class="gi-content"><div class="gi-category">Room by Room</div><div class="gi-title">Lighting the dining room</div></div>
+        </div>
+        <div class="guide-item" onclick="openArticle('hospitality')">
+          <div class="gi-num">04</div>
+          <div class="gi-content"><div class="gi-category">Hospitality</div><div class="gi-title">Hotel & restaurant specification guide</div></div>
+        </div>
+        <div class="guide-item" onclick="openArticle('trends2026')">
+          <div class="gi-num">05</div>
+          <div class="gi-content"><div class="gi-category">European Trends</div><div class="gi-title">Q2 2026 European trend report</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="ss-label">Quick Glossary</div>
+      <div class="glossary-list">
+        <div class="glossary-item"><div class="gl-term">Lux (lx)</div><div class="gl-def">Lumens per square metre. How much light falls on a surface. A dining room needs 300–400 lux.</div></div>
+        <div class="glossary-item"><div class="gl-term">Lumens (lm)</div><div class="gl-def">Total light output of a fixture. A typical downlight outputs 700–1,200 lm.</div></div>
+        <div class="glossary-item"><div class="gl-term">CRI</div><div class="gl-def">Colour Rendering Index. How accurately light shows colours. CRI 90+ for hospitality and retail.</div></div>
+        <div class="glossary-item"><div class="gl-term">CCT / Kelvin (K)</div><div class="gl-def">Colour temperature — warm (2700K) to cool (5000K). 2700–3000K for most residential.</div></div>
+        <div class="glossary-item"><div class="gl-term">UGR</div><div class="gl-def">Unified Glare Rating. Lower is better. UGR ≤19 for office and task environments.</div></div>
+        <div class="glossary-item"><div class="gl-term">Room Index (k)</div><div class="gl-def">L×W ÷ H(L+W). Determines utilisation factor for lux calculations. Higher = more efficient.</div></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="ss-label">Platform Tools</div>
+      <div class="tools-cta">
+        <div class="tc-title">Put this knowledge to work.</div>
+        <div class="tc-body">Use the Lighting Lab to calculate any room — lux, lumens, fixture count, colour temperature. Takes 5 minutes. Exports a PDF spec sheet.</div>
+        <button class="tc-btn" onclick="window.location.href='lighting-lab.html'">Open Lighting Lab →</button>
+        <button class="tc-btn" onclick="window.location.href='mood-studio.html'">Open Mood Studio →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ARTICLE CONTENT DATA -->
+<script>
+const ARTICLES = {
+  fundamentals: {
+    category: 'Fundamentals',
+    readTime: '12 min read',
+    hasVideo: true,
+    title: 'Lux, Lumens & CRI — the complete guide for architects',
+    titleItalic: false,
+    lead: 'Three numbers define the quality and quantity of light in any space. Most specifications use two of them correctly. The one that gets overlooked is usually the most important.',
+    sections: [
+      {
+        title: 'What lumens actually measure',
+        content: `<p class="am-p"><strong>Lumens measure the total light output of a fixture</strong> — how much light it emits in all directions. A standard LED downlight might output 800 lumens. A statement chandelier pendant might output 400 lumens per lamp. A commercial track spot might output 2,000 lumens.</p>
+        <p class="am-p">The confusion arises because lumens tell you how much light the fixture produces — not how much reaches the surface you care about. A 1,000-lumen downlight in a dark-walled room delivers far less effective illumination than the same fixture in a white room. The lumens are the same; the result is entirely different.</p>
+        <p class="am-p">When specifying, lumens are most useful for comparing fixtures of the same type, or for calculating how many fixtures you need using the lumen method.</p>`
+      },
+      {
+        title: 'Lux — the number that matters for specification',
+        content: `<p class="am-p"><strong>Lux is lumens per square metre</strong> — how much light actually falls on a surface. This is the number that professional specifications are built around, and the number that most free calculators get wrong because they ignore the utilisation factor and maintenance factor.</p>
+        <table class="am-table"><thead><tr><th>Room Type</th><th>Target Lux</th><th>Notes</th></tr></thead><tbody>
+          <tr><td>Bedroom</td><td>100–150 lx</td><td>Ambient only. Low base with bedside task lighting.</td></tr>
+          <tr><td>Living Room</td><td>200–300 lx</td><td>Layered scheme. Ambient + accent + decorative.</td></tr>
+          <tr><td>Dining Room</td><td>300–400 lx</td><td>Table surface lux. Statement pendant essential.</td></tr>
+          <tr><td>Kitchen</td><td>400–500 lx</td><td>Task-critical. Under-cabinet LEDs for work surfaces.</td></tr>
+          <tr><td>Home Office</td><td>500 lx</td><td>Sustained desk work. UGR ≤19 mandatory.</td></tr>
+          <tr><td>Hotel Lobby</td><td>150–200 lx</td><td>Low ambient, high accent. Drama over function.</td></tr>
+          <tr><td>Restaurant</td><td>100–200 lx</td><td>Intimate. Table pendants at 200–300mm above table.</td></tr>
+          <tr><td>Retail / Showroom</td><td>500–1000 lx</td><td>High ambient + 3:1 accent ratio on merchandise.</td></tr>
+        </tbody></table>
+        <div class="am-callout">"The correct lux level for a space is determined by its primary activity — not by how the space looks. A reading corner and a museum gallery might have the same lux target (300 lx) for completely different reasons."</div>`
+      },
+      {
+        title: 'CRI — the most overlooked specification',
+        content: `<p class="am-p"><strong>CRI (Colour Rendering Index) measures how accurately a light source renders colours</strong> compared to natural sunlight, on a scale from 0 to 100. A CRI of 100 is perfect. Most standard LED fixtures are CRI 80. Premium European fixtures are typically CRI 90–95.</p>
+        <p class="am-p">The difference is most visible in spaces with rich materials and textured surfaces — exactly the kind of interiors where The Lightists fixtures are specified. A walnut floor under CRI 80 light looks flat and unremarkable. Under CRI 90+ light, the grain, depth, and warmth of the wood become fully visible. The same applies to fabric, stone, skin tones, and food.</p>
+        <p class="am-p"><strong>When to specify CRI 90+:</strong> Dining rooms, hospitality lobbies, restaurants, luxury residential, retail, art spaces, bathrooms and dressing areas. Essentially any space where the quality of materials is central to the design intent.</p>
+        <p class="am-p"><strong>When CRI 80 is acceptable:</strong> Utilitarian spaces — corridors, storage, service areas, back-of-house. Anywhere the primary requirement is quantity of light, not quality.</p>`
+      }
+    ],
+    video: { title: 'Understanding lux, lumens and CRI — a visual explanation', duration: '8:24' },
+    toolCTA: { label: 'Lighting Lab', title: 'Calculate the exact lux for your room.', btn: 'Open Lighting Lab' }
+  },
+
+  layering: {
+    category: 'Fundamentals',
+    readTime: '8 min read',
+    hasVideo: true,
+    title: 'The layered lighting method',
+    titleEmphasis: '— ambient, task, accent, decorative',
+    lead: 'The most common lighting mistake in Indian interiors is single-source illumination — one type of fixture doing all the work. Layered lighting is what separates a professional scheme from a functional one.',
+    sections: [
+      {
+        title: 'Why single-source lighting always fails',
+        content: `<p class="am-p">A room lit with downlights alone — however well-calculated the lux level — will always feel flat. The ceiling gets attention. The walls are in shadow. Architectural details disappear. The room has no depth, no mood, and no ability to adapt from daytime function to evening atmosphere.</p>
+        <p class="am-p"><strong>Single-source illumination is the most common complaint in completed residential projects</strong>, and it is almost always the result of lighting being treated as an afterthought — specified by an electrician rather than designed by the architect or interior designer.</p>
+        <div class="am-callout">"Layered lighting creates three things single-source never can: depth, flexibility, and atmosphere. A scheme that can dim its ambient layer while maintaining accent lighting at full output gives a room ten times more design range."</div>`
+      },
+      {
+        title: 'The four layers — and what each does',
+        content: `<p class="am-p"><strong>Layer 1 — Ambient:</strong> The base layer. General ceiling illumination that fills the room to its target lux level. Recessed downlights, surface-mounted panels, cove LED strips, or large pendants. This layer should almost always be dimmable.</p>
+        <p class="am-p"><strong>Layer 2 — Task:</strong> Focused light for specific activities. Under-cabinet LEDs in kitchens. Bedside reading lights in bedrooms. Desk lamps in offices. Vanity lights in bathrooms. Task lighting adds 20–50% more lumens at the point of activity without raising the overall ambient level.</p>
+        <p class="am-p"><strong>Layer 3 — Accent:</strong> Directional light on architectural features, artwork, materials, and textures. Spotlights on a stone wall. A wall washer across a bookcase. An adjustable track spot on a sculpture. The accent layer creates visual hierarchy and depth. The ratio should be 3:1 accent to ambient lux on the highlighted surface.</p>
+        <p class="am-p"><strong>Layer 4 — Decorative:</strong> The statement fixture. The chandelier. The floor lamp by the sofa. The pendant over the dining table. Decorative fixtures are primarily aesthetic — their contribution to the lux level is secondary to their visual presence. This is where European design makes the most dramatic difference in a scheme.</p>
+        <table class="am-table"><thead><tr><th>Layer</th><th>Primary Purpose</th><th>Fixture Types</th><th>Dimmable?</th></tr></thead><tbody>
+          <tr><td>Ambient</td><td>Base illumination</td><td>Downlights, panels, cove LED</td><td>Always</td></tr>
+          <tr><td>Task</td><td>Activity-specific focus</td><td>Under-cabinet, desk, bedside</td><td>Recommended</td></tr>
+          <tr><td>Accent</td><td>Drama and depth</td><td>Spotlights, track, wall washers</td><td>Yes</td></tr>
+          <tr><td>Decorative</td><td>Visual statement</td><td>Pendants, chandeliers, floor lamps</td><td>Where possible</td></tr>
+        </tbody></table>`
+      }
+    ],
+    video: { title: 'Layered lighting walkthrough — a complete living room scheme', duration: '12:05' },
+    toolCTA: { label: 'Lighting Lab', title: 'The Lab calculates all four layers automatically.', btn: 'Open Lighting Lab' }
+  },
+
+  cct: {
+    category: 'Fundamentals',
+    readTime: '6 min read',
+    hasVideo: false,
+    title: 'Colour temperature by room',
+    titleEmphasis: '— which Kelvin for which space',
+    lead: 'Colour temperature is the single most impactful decision in a lighting scheme — more than the fixtures themselves. Get it wrong and no amount of expensive hardware will make the space feel right.',
+    sections: [
+      {
+        title: 'What Kelvin actually means in a room',
+        content: `<p class="am-p"><strong>Colour temperature is measured in Kelvin (K)</strong> and describes whether a light source appears warm (orange-red, low Kelvin) or cool (blue-white, high Kelvin). It does not describe the physical temperature of the bulb.</p>
+        <p class="am-p">The most important thing to understand is that lower Kelvin does not mean dimmer light. A 2700K fixture at 800 lumens produces the same quantity of light as a 4000K fixture at 800 lumens. The difference is entirely in the quality and character of that light.</p>
+        <div class="am-callout">"2700K in a bedroom creates intimacy. 4000K in the same bedroom creates a hospital. The fixture is identical. The Kelvin changes everything."</div>
+        <table class="am-table"><thead><tr><th>Kelvin</th><th>Appearance</th><th>Best for</th><th>Avoid in</th></tr></thead><tbody>
+          <tr><td>2700K</td><td>Warm golden white</td><td>Bedroom, dining, restaurant, luxury hotel, living room</td><td>Kitchens, offices, bathrooms (as sole source)</td></tr>
+          <tr><td>3000K</td><td>Soft warm white</td><td>Living rooms, lobbies, upscale retail, most residential</td><td>Clinical or technical environments</td></tr>
+          <tr><td>4000K</td><td>Neutral white</td><td>Kitchen, home office, bathroom, commercial</td><td>Bedrooms, dining rooms, intimate hospitality</td></tr>
+          <tr><td>5000K+</td><td>Cool daylight</td><td>Technical studios, clinical, showrooms</td><td>Almost all residential spaces</td></tr>
+        </tbody></table>`
+      },
+      {
+        title: 'The Indian context — why 2700K is almost always right for luxury residential',
+        content: `<p class="am-p">Indian luxury residential interiors are typically specified with warm materials — marble, teak, brass hardware, linen, sandstone. These materials are designed to absorb and reflect warm light. At 2700K, marble glows. At 4000K, it looks clinical and cold.</p>
+        <p class="am-p">European luxury residential — which is what The Lightists sources from — is designed almost exclusively for 2700K and 3000K use. Louis Poulsen, Gubi, Flos, and Vibia specification documents assume these colour temperatures. Most of their iconic pieces look wrong at 4000K — the warm brass and glass forms are designed to work with warm light.</p>
+        <p class="am-p"><strong>Our recommendation for Indian luxury residential:</strong> 2700K throughout living, dining, bedroom, and entrance. 3000K for corridors and transitional spaces. 4000K only in kitchens and home offices where task performance is the priority.</p>`
+      }
+    ],
+    toolCTA: { label: 'Lighting Lab', title: 'The Lab auto-suggests colour temperature by room type.', btn: 'Try the Lab' }
+  },
+
+  dining: {
+    category: 'Room by Room',
+    readTime: '7 min read',
+    hasVideo: true,
+    title: 'Lighting the dining room',
+    titleEmphasis: '— where European design earns its place',
+    lead: 'The dining room is the single space in any home where one fixture can define the entire design intent. Get this right and clients remember it for years.',
+    sections: [
+      {
+        title: 'Why the dining room is different from every other space',
+        content: `<p class="am-p">In every other room, lighting supports the design. In the dining room, <strong>lighting is the design</strong>. Guests sit around the table for hours. The pendant is at eye level. It is the most-seen, most-discussed, and most-photographed fixture in the home. A client who approves a Louis Poulsen PH5 for their dining room will refer to it by name for the rest of the project.</p>
+        <p class="am-p">This is also why the dining room is where a well-placed European fixture can justify its entire cost — because the visual impact is immediate, constant, and unmissable. The Rs. 1,50,000 pendant over a dining table is seen more often than the Rs. 10 lakh sofa beneath it.</p>`
+      },
+      {
+        title: 'The technical specification — what the numbers should be',
+        content: `<p class="am-p"><strong>Target lux at table surface: 300–400 lux.</strong> This is the task surface — lower than a kitchen because dining is not technical work, but high enough to see food, wine, and the people across the table clearly.</p>
+        <p class="am-p"><strong>Colour temperature: 2700K without exception.</strong> Warm light makes food look appetising, wine look rich, and skin tones warm and flattering. 3000K is the absolute maximum. 4000K in a dining room is a specification error.</p>
+        <p class="am-p"><strong>CRI: 90+ strongly recommended.</strong> Food colour accuracy is the primary reason. The same wine under CRI 80 light looks flat; under CRI 90+ light, the ruby depth is visible. For hospitality projects, CRI 90 is a minimum professional standard.</p>
+        <p class="am-p"><strong>Pendant height:</strong> The bottom of the pendant shade should be 700–800mm above the table surface. This places the light source at the ideal position — close enough to focus light on the table, high enough not to obstruct sight lines across it. For a table at 750mm, this means the pendant bottom sits at 1,450–1,550mm above floor level.</p>
+        <p class="am-p"><strong>Dimming:</strong> Non-negotiable in a dining room. The ability to take the ambient layer from 100% (breakfast, everyday meals) to 30% (dinner party) changes the character of the room entirely. Specify TRIAC dimmers compatible with your selected fixture.</p>
+        <div class="am-callout">"The pendant height rule of 700–800mm above the table is the most commonly violated specification in Indian dining rooms. Too high and the light doesn't focus on the table. Too low and it blocks the view across the room."</div>`
+      },
+      {
+        title: 'How to layer a dining room correctly',
+        content: `<p class="am-p"><strong>Layer 1 — The statement pendant:</strong> One or a cluster of pendants directly above the table. This is the primary light source and the visual centrepiece. European brands: Louis Poulsen PH5, Gubi Cobra, Vibia Warm, &Tradition Flowerpot.</p>
+        <p class="am-p"><strong>Layer 2 — Ambient fill:</strong> Recessed downlights around the perimeter of the room, set to 30–40% of the pendant lux level. Not to replace the pendant — to fill the dark corners and make the room feel complete, not theatrical.</p>
+        <p class="am-p"><strong>Layer 3 — Accent (optional but recommended):</strong> A wall washer across an artwork or a feature wall. A spotlight on a sideboard or console. Creates depth and visual interest without competing with the pendant.</p>`
+      }
+    ],
+    video: { title: 'Dining room lighting — pendant height, CCT, and layer scheme', duration: '7:32' },
+    toolCTA: { label: 'Mood Studio', title: 'Find your dining room statement pendant.', btn: 'Open Mood Studio' }
+  },
+
+  hospitality: {
+    category: 'Hospitality',
+    readTime: '10 min read',
+    hasVideo: false,
+    title: 'Specifying lighting for hotels & restaurants',
+    titleEmphasis: '— professional parameters',
+    lead: 'Hospitality lighting is the most demanding specification category in Indian architecture. The standards are higher, the consequences of errors are more visible, and the opportunity for European design to distinguish a property is greatest.',
+    sections: [
+      {
+        title: 'Lobby — the first impression specification',
+        content: `<p class="am-p"><strong>Target lux: 150–200 lux ambient.</strong> Lobbies are low-ambient, high-accent spaces. The ambient layer should be subtle — enough to navigate safely, not enough to wash out the dramatic fixtures above. The visual interest comes from the accent and decorative layers.</p>
+        <p class="am-p"><strong>Colour temperature: 2700–3000K throughout.</strong> Guests arrive from daylight and need the transition to feel warm and welcoming. 4000K lobbies feel corporate, not hospitality.</p>
+        <p class="am-p"><strong>CRI 90+ across all front-of-house areas.</strong> This is an industry standard for upper-upscale and luxury hospitality. Lower CRI makes guests appear unwell under lobby lighting — a perception that begins undermining the guest experience before check-in is complete.</p>
+        <table class="am-table"><thead><tr><th>Zone</th><th>Lux Target</th><th>CCT</th><th>CRI</th><th>Key fixtures</th></tr></thead><tbody>
+          <tr><td>Lobby / Reception</td><td>150–200 lx</td><td>2700–3000K</td><td>CRI 90+</td><td>Statement chandelier, wall sconces, accent spots</td></tr>
+          <tr><td>Restaurant (table)</td><td>200–300 lx</td><td>2700K</td><td>CRI 90+</td><td>Table pendants, perimeter sconces</td></tr>
+          <tr><td>Bar</td><td>100–150 lx</td><td>2700K</td><td>CRI 90+</td><td>Under-counter LED, back-bar accent, pendant</td></tr>
+          <tr><td>Guest Room</td><td>150–200 lx</td><td>2700–3000K</td><td>CRI 80+</td><td>Bedside task, ceiling ambient, bathroom vanity</td></tr>
+          <tr><td>Corridor</td><td>100–150 lx</td><td>3000K</td><td>CRI 80</td><td>Recessed downlights or wall sconces, step lighting</td></tr>
+          <tr><td>Meeting Rooms</td><td>400–500 lx</td><td>3000–4000K</td><td>CRI 80+</td><td>Recessed panels, dimmable circuits</td></tr>
+        </tbody></table>`
+      },
+      {
+        title: 'Restaurant lighting — the table is everything',
+        content: `<p class="am-p">Restaurant lighting operates under a constraint no other space faces: <strong>the light must make both the food and the guests look their best simultaneously</strong>. Food requires warm CRI 90+ light at 200–300 lux on the table surface. Guests require warm, flattering illumination that doesn't create shadows under the eyes or chin.</p>
+        <p class="am-p"><strong>Pendant height in restaurants:</strong> 750–900mm above table height, slightly lower than residential dining. Restaurant tables are the same height as residential (740–760mm), but the ambient level is lower, so the pendant needs to work harder to deliver lux to the table surface.</p>
+        <p class="am-p"><strong>Dimming is essential in restaurants.</strong> Lunch service needs 200–300 lux for visibility. Dinner service needs 80–120 lux for atmosphere. The same fixture must do both. Specify dimmer-compatible fixtures and DALI or TRIAC control systems.</p>
+        <div class="am-callout">"In our experience specifying for boutique hotels across India, the two decisions that most dramatically affect guest perception of quality are the lobby lighting scheme and the restaurant table pendant. Both are solved by European decorative lighting specified correctly."</div>`
+      }
+    ],
+    toolCTA: { label: 'Lighting Lab', title: 'Calculate hospitality lux targets room by room.', btn: 'Open Lighting Lab' }
+  },
+
+  trends2026: {
+    category: 'European Trends · Q2 2026',
+    readTime: '9 min read',
+    hasVideo: false,
+    title: "What Europe's studios are specifying this season",
+    titleEmphasis: '— Q2 2026 trend report',
+    lead: "After years of cold minimalism and chrome finishes, European lighting design has made a decisive turn toward warmth, materiality, and intentional craftsmanship. Here is what the leading studios are specifying — and what it means for Indian projects.",
+    sections: [
+      {
+        title: 'The dominant direction: intentional warmth',
+        content: `<p class="am-p"><strong>The overarching shift in European luxury interiors for 2026 is from stark minimalism to what designers are calling "intentional warmth"</strong> — spaces that feel layered, tactile, and human rather than cold and precise. This has direct implications for lighting specification.</p>
+        <p class="am-p">The fixtures defining this direction share a set of characteristics: organic or fluid silhouettes rather than geometric precision; warm metals (brass, bronze, aged gold) rather than chrome or nickel; diffused light sources rather than exposed bulbs; and materials that have inherent texture — alabaster, hand-blown glass, rattan, ceramic, linen.</p>
+        <p class="am-p">At Louis Poulsen, the PH series — always warm — continues to dominate Scandinavian specifications. At Gubi, the Cobra Pendant in brushed brass has become the definitive statement piece across European hospitality projects opened in the first half of 2026. At Vibia, the Warm series in amber glass is seeing its strongest year of specification since launch.</p>`
+      },
+      {
+        title: 'Alabaster — material of the season',
+        content: `<p class="am-p"><strong>No material is more prominent in European lighting specification right now than alabaster.</strong> The natural stone's ability to transmit warm, diffused light — while retaining its own organic texture and colour variation — makes it the defining material of the intentional warmth trend.</p>
+        <p class="am-p">Alabaster pendants, wall sconces, and table lamps are appearing across the full spectrum of European hospitality — from boutique hotels in Barcelona to luxury apartments in Copenhagen. The key specification detail: alabaster looks completely different at 2700K (warm, golden, intimate) versus 3000K (cooler, more architectural). For residential applications, 2700K is almost always correct.</p>
+        <p class="am-p">In the Indian context, alabaster works particularly well alongside warm stone floors, plaster walls, and natural wood furniture — the material palette that defines Indian luxury residential at its best.</p>`
+      },
+      {
+        title: 'What\'s out — and what it means for Indian specifications',
+        content: `<p class="am-p"><strong>Crystal chandeliers:</strong> Still present in very traditional hospitality contexts, but declining rapidly in residential specification. Being replaced by sculptural, material-led fixtures in brass and glass.</p>
+        <p class="am-p"><strong>Polished chrome and nickel:</strong> Giving way to brushed, aged, and patinated finishes across all categories. Brushed brass remains dominant. Aged bronze is gaining ground significantly in hospitality and traditional residential.</p>
+        <p class="am-p"><strong>Cool white lighting (4000K+) in residential:</strong> Essentially absent from European luxury residential specification in 2026. Even kitchens in high-end projects are moving toward 3000K for ambient, with 4000K reserved for under-cabinet task LEDs only.</p>
+        <div class="am-callout">"The most forward-thinking Indian architects and designers are already aligned with European specification trends — warm materials, warm light, fixture-as-object. The Lightists catalogue is built around exactly this direction."</div>`
+      }
+    ],
+    toolCTA: { label: 'Mood Studio', title: 'Explore this season\'s European selection.', btn: 'Browse the Catalogue' }
+  },
+
+  video1: { category:'Fundamentals', readTime:'8 min', title:'How to read a lighting spec sheet', titleEmphasis:'— lux, lumens, beam angle', lead:'A video walkthrough of a real European fixture specification sheet — what each number means and how to use it in your project.', sections:[], video:{title:'Reading a spec sheet — lux, lumens, beam angle, CRI explained',duration:'8:24'} },
+  video2: { category:'Room by Room', readTime:'12 min', title:'Lighting a 3BHK apartment', titleEmphasis:'— a complete scheme walkthrough', lead:'From entrance foyer to bedroom — a complete layer-by-layer scheme for a 2,200 sq ft luxury apartment in Gurugram.', sections:[], video:{title:'3BHK apartment lighting walkthrough — layer by layer',duration:'12:05'} },
+  video3: { category:'Hospitality', readTime:'7 min', title:'Boutique hotel lobby', titleEmphasis:'— layers, CCT, and the statement piece', lead:'A full scheme walkthrough for a 30-key boutique hotel lobby — ambient layer, accent layer, and the chandelier specification.', sections:[], video:{title:'Hotel lobby lighting — complete scheme explained',duration:'6:48'} }
+};
+
+// ── OPEN ARTICLE ──
+function openArticle(key) {
+  const a = ARTICLES[key]; if(!a) return;
+  const overlay = document.getElementById('articleOverlay');
+  const modal = document.getElementById('articleModal');
+
+  const videoBlock = a.video ? `
+    <div class="am-video-embed">
+      <div class="ave-play" onclick="showToast('Video coming soon — subscribe to be notified')">▶</div>
+      <div class="ave-title">${a.video.title}</div>
+      <div class="ave-note">${a.video.duration} · Free with account</div>
+    </div>` : '';
+
+  const toolBlock = a.toolCTA ? `
+    <div class="am-tool-cta">
+      <div class="atc-text">
+        <div class="atc-label">${a.toolCTA.label}</div>
+        <div class="atc-title">${a.toolCTA.title}</div>
+      </div>
+      <button class="atc-btn" onclick="showToast('Opening ${a.toolCTA.label}...')">${a.toolCTA.btn} →</button>
+    </div>` : '';
+
+  const sectionsHTML = a.sections.map(s => `
+    <div class="am-section-title">${s.title}</div>
+    ${s.content}`).join('');
+
+  modal.innerHTML = `
+    <div class="am-header">
+      <button class="am-close" onclick="closeArticle()">×</button>
+      <div class="am-eyebrow">${a.category}</div>
+      <h2 class="am-title">${a.title}${a.titleEmphasis ? `<br><em>${a.titleEmphasis}</em>` : ''}</h2>
+      <div class="am-meta">
+        <span>${a.readTime}</span>
+        ${a.hasVideo ? '<span>▶ Video included</span>' : ''}
+        <span>Free with account</span>
+      </div>
+    </div>
+    <div class="am-body">
+      <div class="am-lead">${a.lead}</div>
+      ${videoBlock}
+      ${sectionsHTML}
+      ${toolBlock}
+      <div class="am-signup">
+        <div class="as-title">Get new guides <em>quarterly.</em></div>
+        <div class="as-sub">European trend reports and new Academy guides, straight to your inbox. No promotions.</div>
+        <div class="as-form">
+          <input class="as-input" type="email" id="articleEmail" placeholder="Your studio email">
+          <button class="as-btn" onclick="handleArticleSignup()">Subscribe Free</button>
+        </div>
+      </div>
+    </div>`;
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  overlay.scrollTop = 0;
+}
+
+function closeArticle() {
+  document.getElementById('articleOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeArticleOutside(e) {
+  if(e.target.id === 'articleOverlay') closeArticle();
+}
+
+// ── CATEGORY FILTER ──
+function filterCat(cat, el) {
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  showToast(cat === 'all' ? 'Showing all guides' : `Showing ${cat} guides`);
+}
+
+// ── NEWSLETTER ──
+function handleNewsletter() {
+  const email = document.getElementById('newsletterEmail').value;
+  if(!email) { showToast('Enter your email address'); return; }
+  showToast('Subscribed. First report arrives Q3 2026.');
+  document.getElementById('newsletterEmail').value = '';
+}
+
+function handleArticleSignup() {
+  const email = document.getElementById('articleEmail')?.value;
+  if(!email) { showToast('Enter your email address'); return; }
+  showToast('Subscribed. Welcome to The Lightists Academy.');
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── SCROLL ANIMATIONS ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ESC closes modal
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeArticle(); });
+</script>
+<script>
+function toggleMobileMenu() {
+  const h = document.getElementById('hamburger');
+  const d = document.getElementById('mobileDrawer');
+  const isOpen = d.style.transform === 'translateY(0px)' || d.style.transform === 'translateY(0)';
+  if(isOpen) {
+    d.style.transform = 'translateY(-100%)'; d.style.opacity = '0';
+    document.body.style.overflow = '';
+  } else {
+    d.style.transform = 'translateY(0)'; d.style.opacity = '1';
+    document.body.style.overflow = 'hidden';
+  }
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') { document.getElementById('mobileDrawer').style.transform='translateY(-100%)'; document.getElementById('mobileDrawer').style.opacity='0'; document.body.style.overflow=''; }});
+</script>
+</body>
+</html>

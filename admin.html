@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — The Lightists</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&family=Raleway:wght@100;200;300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --stone:#F7F6F2; --charcoal:#1A1A1A; --warm:#EDECEA;
+  --mid:#8C8880; --border:#C8C4BC; --dark:#3D3D3A;
+  --white:#FFFFFF; --accent:#B8965A;
+  --success:#1D9E75; --error:#D85A30;
+  --bg:#0F0E0D; --panel:#1A1816; --panel2:#221F1C;
+  --txt:rgba(247,246,242,0.85); --txt2:rgba(200,196,188,0.55);
+  --bdr:rgba(200,196,188,0.1); --bdr2:rgba(200,196,188,0.06);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-weight:300;display:flex;flex-direction:column;}
+
+/* ── LOGIN SCREEN ── */
+.login-screen{
+  position:fixed;inset:0;z-index:1000;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+}
+.login-box{
+  width:380px;padding:48px 40px;
+  background:var(--panel);
+  border:0.5px solid var(--bdr);
+}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:40px;}
+.login-mark{width:38px;height:38px;border:0.5px solid rgba(200,196,188,0.3);display:flex;align-items:center;justify-content:center;}
+.login-tl{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--txt);letter-spacing:-0.5px;}
+.login-wordmark{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--txt2);}
+.login-eyebrow{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--txt2);margin-bottom:12px;}
+.login-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--txt);margin-bottom:32px;line-height:1.1;}
+.login-field{margin-bottom:14px;}
+.login-label{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--txt2);display:block;margin-bottom:7px;}
+.login-input{
+  width:100%;padding:11px 14px;
+  background:rgba(255,255,255,0.04);
+  border:0.5px solid var(--bdr);
+  font-family:'Jost',sans-serif;font-size:12px;font-weight:300;
+  color:var(--txt);outline:none;transition:border-color 0.2s;
+}
+.login-input:focus{border-color:rgba(200,196,188,0.35);}
+.login-input::placeholder{color:rgba(200,196,188,0.2);}
+.login-btn{
+  width:100%;padding:13px;margin-top:8px;
+  background:rgba(247,246,242,0.9);color:var(--charcoal);
+  font-family:'Jost',sans-serif;font-size:10px;font-weight:400;
+  letter-spacing:0.2em;text-transform:uppercase;border:none;cursor:pointer;
+  transition:all 0.2s;
+}
+.login-btn:hover{background:var(--white);}
+.login-error{font-size:11px;color:var(--error);margin-top:10px;text-align:center;display:none;}
+
+/* ── MAIN APP ── */
+.app{display:none;height:100%;flex-direction:column;}
+.app.visible{display:flex;}
+
+/* TOP BAR */
+.topbar{
+  height:52px;background:var(--panel);
+  border-bottom:0.5px solid var(--bdr);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;flex-shrink:0;
+}
+.tb-left{display:flex;align-items:center;gap:12px;}
+.tb-mark{width:30px;height:30px;border:0.5px solid rgba(200,196,188,0.25);display:flex;align-items:center;justify-content:center;}
+.tb-tl{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;color:var(--txt);letter-spacing:-0.5px;}
+.tb-divider{width:0.5px;height:16px;background:var(--bdr);}
+.tb-section{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt2);}
+.tb-right{display:flex;align-items:center;gap:12px;}
+.tb-site-link{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--txt2);text-decoration:none;padding:6px 12px;border:0.5px solid var(--bdr);transition:all 0.2s;}
+.tb-site-link:hover{color:var(--txt);border-color:rgba(200,196,188,0.3);}
+.tb-logout{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(216,90,48,0.6);background:none;border:0.5px solid rgba(216,90,48,0.2);padding:6px 12px;cursor:pointer;transition:all 0.2s;font-family:'Jost',sans-serif;}
+.tb-logout:hover{color:var(--error);border-color:rgba(216,90,48,0.4);}
+.tb-status{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--success);}
+.tb-dot{width:6px;height:6px;border-radius:50%;background:var(--success);}
+
+/* MAIN LAYOUT */
+.main{display:flex;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;background:var(--panel);
+  border-right:0.5px solid var(--bdr);
+  display:flex;flex-direction:column;
+  padding:20px 0;flex-shrink:0;
+  overflow-y:auto;
+}
+.sb-section-label{
+  font-size:8px;letter-spacing:0.25em;text-transform:uppercase;
+  color:rgba(200,196,188,0.25);padding:0 20px;margin:16px 0 8px;
+}
+.sb-section-label:first-child{margin-top:0;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:10px 20px;
+  cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;
+}
+.nav-item:hover{background:rgba(255,255,255,0.04);}
+.nav-item.active{background:rgba(255,255,255,0.06);border-left-color:rgba(200,196,188,0.4);}
+.nav-icon{font-size:14px;color:rgba(200,196,188,0.4);flex-shrink:0;width:18px;text-align:center;}
+.nav-item.active .nav-icon{color:rgba(200,196,188,0.75);}
+.nav-label{font-size:11px;font-weight:300;color:rgba(200,196,188,0.5);letter-spacing:0.05em;}
+.nav-item.active .nav-label{color:rgba(247,246,242,0.85);}
+.nav-badge{margin-left:auto;font-size:9px;background:var(--accent);color:var(--white);padding:1px 6px;border-radius:8px;font-weight:500;}
+
+.sb-bottom{margin-top:auto;padding:16px 20px;border-top:0.5px solid var(--bdr);}
+.sb-version{font-size:9px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;}
+
+/* CONTENT AREA */
+.content{flex:1;overflow-y:auto;background:var(--bg);}
+.page{display:none;padding:32px 40px;}
+.page.active{display:block;}
+
+/* Page header */
+.page-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;}
+.ph-left{}
+.ph-eyebrow{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--txt2);margin-bottom:8px;}
+.ph-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--txt);line-height:1;}
+.ph-right{display:flex;gap:8px;}
+
+/* Buttons */
+.btn{
+  padding:8px 18px;font-family:'Jost',sans-serif;font-size:10px;font-weight:300;
+  letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;
+}
+.btn-primary{background:rgba(247,246,242,0.9);color:var(--charcoal);border:none;}
+.btn-primary:hover{background:var(--white);}
+.btn-secondary{background:transparent;color:var(--txt2);border:0.5px solid var(--bdr);}
+.btn-secondary:hover{border-color:rgba(200,196,188,0.35);color:var(--txt);}
+.btn-danger{background:transparent;color:rgba(216,90,48,0.6);border:0.5px solid rgba(216,90,48,0.2);}
+.btn-danger:hover{color:var(--error);border-color:rgba(216,90,48,0.4);}
+.btn-success{background:var(--success);color:#fff;border:none;}
+.btn-sm{padding:5px 12px;font-size:9px;}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px;}
+.stat-card{background:var(--panel);border:0.5px solid var(--bdr);padding:20px 22px;}
+.stat-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--txt2);margin-bottom:10px;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--txt);line-height:1;}
+.stat-sub{font-size:10px;color:var(--txt2);margin-top:4px;}
+.stat-card.highlight .stat-num{color:var(--accent);}
+
+/* Table */
+.data-table-wrap{background:var(--panel);border:0.5px solid var(--bdr);overflow:hidden;margin-bottom:24px;}
+.dt-header{padding:16px 20px;border-bottom:0.5px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
+.dt-title{font-size:11px;font-weight:400;color:var(--txt);letter-spacing:0.05em;}
+.dt-count{font-size:10px;color:var(--txt2);}
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{
+  font-size:8px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--txt2);padding:11px 16px;text-align:left;
+  border-bottom:0.5px solid var(--bdr);background:rgba(255,255,255,0.02);
+  font-weight:400;
+}
+.data-table td{
+  padding:13px 16px;font-size:12px;color:rgba(200,196,188,0.65);
+  border-bottom:0.5px solid var(--bdr2);vertical-align:middle;
+}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(255,255,255,0.02);}
+.data-table td:first-child{color:var(--txt);}
+.td-actions{display:flex;gap:6px;align-items:center;}
+
+/* Tag pill */
+.tag{font-size:9px;padding:2px 8px;border-radius:10px;display:inline-block;}
+.tag-type{background:rgba(200,196,188,0.08);color:rgba(200,196,188,0.55);}
+.tag-new{background:rgba(29,158,117,0.15);color:#1D9E75;}
+.tag-featured{background:rgba(184,150,90,0.15);color:var(--accent);}
+.tag-active{background:rgba(29,158,117,0.1);color:rgba(29,158,117,0.8);}
+.tag-inactive{background:rgba(216,90,48,0.1);color:rgba(216,90,48,0.7);}
+.tag-new-enq{background:rgba(216,90,48,0.12);color:rgba(216,90,48,0.8);}
+.tag-read{background:rgba(200,196,188,0.08);color:var(--txt2);}
+
+/* Form panel */
+.form-panel{background:var(--panel);border:0.5px solid var(--bdr);padding:28px 32px;margin-bottom:24px;}
+.fp-title{font-size:13px;font-weight:400;color:var(--txt);margin-bottom:24px;padding-bottom:16px;border-bottom:0.5px solid var(--bdr);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;}
+.form-full{grid-column:1/-1;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--txt2);font-weight:400;}
+.form-input,.form-select,.form-textarea{
+  padding:10px 12px;background:rgba(255,255,255,0.04);
+  border:0.5px solid var(--bdr);font-family:'Jost',sans-serif;
+  font-size:12px;font-weight:300;color:var(--txt);
+  outline:none;transition:border-color 0.2s;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:rgba(200,196,188,0.35);}
+.form-input::placeholder,.form-textarea::placeholder{color:rgba(200,196,188,0.2);}
+.form-select option{background:#1A1A1A;}
+.form-textarea{resize:vertical;min-height:100px;line-height:1.7;}
+.form-actions{display:flex;gap:10px;margin-top:20px;padding-top:20px;border-top:0.5px solid var(--bdr);}
+
+/* Image upload */
+.img-upload-zone{
+  border:0.5px dashed rgba(200,196,188,0.2);padding:24px;
+  text-align:center;cursor:pointer;transition:all 0.2s;
+  background:rgba(255,255,255,0.02);
+}
+.img-upload-zone:hover{border-color:rgba(200,196,188,0.4);}
+.iuz-icon{font-size:24px;color:rgba(200,196,188,0.25);margin-bottom:8px;}
+.iuz-text{font-size:10px;color:rgba(200,196,188,0.3);line-height:1.6;}
+.iuz-text strong{color:rgba(200,196,188,0.5);display:block;margin-bottom:2px;}
+.img-preview{width:80px;height:80px;object-fit:cover;border-radius:2px;display:none;margin:0 auto 8px;}
+
+/* Enquiry card */
+.enq-card{background:var(--panel);border:0.5px solid var(--bdr);padding:20px 24px;margin-bottom:8px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;}
+.enq-card.new-enq{border-left:2px solid var(--error);}
+.enq-card.read-enq{opacity:0.7;}
+.ec-meta{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt2);margin-bottom:6px;}
+.ec-name{font-size:14px;font-weight:400;color:var(--txt);margin-bottom:3px;}
+.ec-product{font-size:11px;color:var(--accent);margin-bottom:8px;}
+.ec-notes{font-size:12px;color:var(--txt2);line-height:1.7;}
+.ec-contact{font-size:10px;color:var(--txt2);margin-top:8px;line-height:1.6;}
+.ec-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
+
+/* Search bar */
+.search-bar{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);
+  padding:0 14px;margin-bottom:20px;
+}
+.sb-icon{font-size:13px;color:var(--txt2);}
+.sb-input{
+  flex:1;padding:10px 0;background:transparent;border:none;
+  font-family:'Jost',sans-serif;font-size:12px;font-weight:300;
+  color:var(--txt);outline:none;
+}
+.sb-input::placeholder{color:rgba(200,196,188,0.2);}
+
+/* Loading */
+.loading{padding:60px;text-align:center;color:var(--txt2);font-size:12px;letter-spacing:0.1em;}
+.loading-dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--txt2);margin:0 3px;animation:ldot 1.2s infinite;}
+.loading-dot:nth-child(2){animation-delay:0.2s;}
+.loading-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes ldot{0%,80%,100%{opacity:0.3}40%{opacity:1}}
+
+/* Empty state */
+.empty-state{padding:60px;text-align:center;}
+.es-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--txt);margin-bottom:8px;}
+.es-sub{font-size:12px;color:var(--txt2);line-height:1.7;}
+
+/* Notification */
+.notif{
+  position:fixed;bottom:24px;right:24px;z-index:500;
+  padding:12px 20px;font-size:12px;font-weight:300;letter-spacing:0.03em;
+  border:0.5px solid;opacity:0;transform:translateY(6px);
+  transition:all 0.25s;pointer-events:none;
+}
+.notif.show{opacity:1;transform:translateY(0);}
+.notif.success{background:rgba(29,158,117,0.12);color:#1D9E75;border-color:rgba(29,158,117,0.3);}
+.notif.error{background:rgba(216,90,48,0.12);color:var(--error);border-color:rgba(216,90,48,0.3);}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;backdrop-filter:blur(3px);}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--panel);width:100%;max-width:480px;border:0.5px solid var(--bdr);padding:28px 32px;position:relative;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--txt);margin-bottom:16px;}
+.modal-body{font-size:12px;color:var(--txt2);line-height:1.8;margin-bottom:20px;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;}
+.modal-close-btn{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--txt2);font-size:18px;cursor:pointer;}
+
+/* Toggle */
+.toggle{width:36px;height:20px;border-radius:10px;background:rgba(200,196,188,0.15);cursor:pointer;position:relative;transition:background 0.2s;border:none;flex-shrink:0;}
+.toggle.on{background:var(--success);}
+.toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:rgba(247,246,242,0.8);top:3px;left:3px;transition:left 0.2s;}
+.toggle.on::after{left:19px;}
+</style>
+</head>
+<body>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif"></div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <button class="modal-close-btn" onclick="closeConfirm()">×</button>
+    <div class="modal-title" id="confirmTitle">Confirm Action</div>
+    <div class="modal-body" id="confirmBody"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirmOkBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <img src="Logo Black.png" alt="The Lightists" style="height:48px;width:auto;display:block;margin-bottom:8px;"><div style="font-family:Raleway,sans-serif;font-weight:200;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(200,196,188,0.5);margin-top:4px;">The Lightists</div>
+    </div>
+    <div class="login-eyebrow">Admin Access</div>
+    <div class="login-title">Sign in to your<br>dashboard.</div>
+    <div class="login-field">
+      <label class="login-label">Password</label>
+      <input class="login-input" type="password" id="loginPassword" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-error" id="loginError">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app" id="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="tb-left">
+      <img src="Logo Black.png" alt="TL" style="height:28px;width:auto;display:block;">
+      <div class="tb-divider"></div>
+      <span class="tb-section" id="currentSection">Dashboard</span>
+    </div>
+    <div class="tb-right">
+      <div class="tb-status"><div class="tb-dot"></div>Supabase Connected</div>
+      <a class="tb-site-link" href="https://thelightists.netlify.app" target="_blank">View Live Site ↗</a>
+      <button class="tb-logout" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sb-section-label">Overview</div>
+      <div class="nav-item active" onclick="showPage('dashboard',this)">
+        <span class="nav-icon">◎</span>
+        <span class="nav-label">Dashboard</span>
+      </div>
+
+      <div class="sb-section-label">Catalogue</div>
+      <div class="nav-item" onclick="showPage('products',this)">
+        <span class="nav-icon">◈</span>
+        <span class="nav-label">Products</span>
+      </div>
+      <div class="nav-item" onclick="showPage('brands',this)">
+        <span class="nav-icon">◇</span>
+        <span class="nav-label">Brands</span>
+      </div>
+
+      <div class="sb-section-label">Content</div>
+      <div class="nav-item" onclick="showPage('academy',this)">
+        <span class="nav-icon">○</span>
+        <span class="nav-label">Academy</span>
+      </div>
+      <div class="nav-item" onclick="showPage('team',this)">
+        <span class="nav-icon">◉</span>
+        <span class="nav-label">Team</span>
+      </div>
+
+      <div class="sb-section-label">Enquiries</div>
+      <div class="nav-item" onclick="showPage('enquiries',this)">
+        <span class="nav-icon">✉</span>
+        <span class="nav-label">Enquiries</span>
+        <span class="nav-badge" id="enqBadge" style="display:none">0</span>
+      </div>
+
+      <div class="sb-section-label">Account</div>
+      <div class="nav-item" onclick="showPage('hero',this)">
+        <span class="nav-icon">◎</span>
+        <span class="nav-label">Hero Images</span>
+      </div>
+      <div class="nav-item" onclick="showPage('settings',this)">
+        <span class="nav-icon">⚙</span>
+        <span class="nav-label">Settings</span>
+      </div>
+
+      <div class="sb-bottom">
+        <div class="sb-version">The Lightists Admin v1.0</div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div class="ph-left">
+            <div class="ph-eyebrow">The Lightists</div>
+            <div class="ph-title">Dashboard</div>
+          </div>
+        </div>
+        <div class="stats-grid" id="dashStats">
+          <div class="stat-card"><div class="stat-label">Products</div><div class="stat-num" id="statProducts">—</div><div class="stat-sub">in catalogue</div></div>
+          <div class="stat-card"><div class="stat-label">Brands</div><div class="stat-num" id="statBrands">—</div><div class="stat-sub">European partners</div></div>
+          <div class="stat-card"><div class="stat-label">Academy Guides</div><div class="stat-num" id="statAcademy">—</div><div class="stat-sub">published</div></div>
+          <div class="stat-card highlight"><div class="stat-label">New Enquiries</div><div class="stat-num" id="statEnquiries">—</div><div class="stat-sub">unread</div></div>
+        </div>
+        <div class="data-table-wrap">
+          <div class="dt-header"><span class="dt-title">Recent Enquiries</span><button class="btn btn-secondary btn-sm" onclick="showPage('enquiries',document.querySelector('.nav-item:nth-child(8))'))">View all</button></div>
+          <div id="recentEnquiries"><div class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div></div>
+        </div>
+      </div>
+
+      <!-- ── PRODUCTS ── -->
+      <div class="page" id="page-products">
+        <div class="page-header">
+          <div class="ph-left">
+            <div class="ph-eyebrow">Catalogue</div>
+            <div class="ph-title">Products</div>
+          </div>
+          <div class="ph-right">
+            <button class="btn btn-secondary" onclick="toggleAddForm('productForm')">+ Add Product</button>
+          </div>
+        </div>
+
+        <!-- Add Product Form -->
+        <div class="form-panel" id="productForm" style="display:none;">
+          <div class="fp-title" id="productFormTitle">Add New Product</div>
+          <input type="hidden" id="editProductId">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Brand</label>
+              <input class="form-input" id="pBrand" placeholder="e.g. Foscarini">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Product Name</label>
+              <input class="form-input" id="pName" placeholder="e.g. Caboche Pendant">
+            </div>
+          </div>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label">Fixture Type</label>
+              <select class="form-select" id="pType">
+                <option value="">Select type</option>
+                <option>pendant</option><option>floor</option><option>wall</option>
+                <option>table</option><option>chandelier</option><option>ceiling</option><option>outdoor</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Colour Temp (comma separated)</label>
+              <input class="form-input" id="pCCT" placeholder="e.g. 2700, 3000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Badge</label>
+              <select class="form-select" id="pBadge">
+                <option value="">None</option>
+                <option value="new">New</option>
+                <option value="featured">Featured</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Materials (comma separated)</label>
+              <input class="form-input" id="pMaterials" placeholder="e.g. brass, glass, alabaster">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Image URL</label>
+              <input class="form-input" id="pImageUrl" placeholder="https://... or upload below">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">Description</label>
+            <textarea class="form-textarea" id="pDesc" placeholder="Product description — designer, year, materials, what makes it distinctive..."></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">Upload Product Image</label>
+            <div class="img-upload-zone" onclick="document.getElementById('pImageFile').click()">
+              <img id="pImagePreview" class="img-preview">
+              <div class="iuz-icon">⬆</div>
+              <div class="iuz-text"><strong>Click to upload product image</strong>JPG, PNG — will be stored in Supabase</div>
+            </div>
+            <input type="file" id="pImageFile" accept="image/*" style="display:none" onchange="previewImage(event,'pImagePreview')">
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="saveProduct()">Save Product</button>
+            <button class="btn btn-secondary" onclick="toggleAddForm('productForm')">Cancel</button>
+          </div>
+        </div>
+
+        <div class="search-bar">
+          <span class="sb-icon">◎</span>
+          <input class="sb-input" placeholder="Search products..." oninput="filterTable('productsTable',this.value)">
+        </div>
+
+        <div class="data-table-wrap">
+          <div class="dt-header">
+            <span class="dt-title">All Products</span>
+            <span class="dt-count" id="productsCount">Loading...</span>
+          </div>
+          <div id="productsTable"><div class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div></div>
+        </div>
+      </div>
+
+      <!-- ── BRANDS ── -->
+      <div class="page" id="page-brands">
+        <div class="page-header">
+          <div class="ph-left">
+            <div class="ph-eyebrow">Catalogue</div>
+            <div class="ph-title">Brands</div>
+          </div>
+          <div class="ph-right">
+            <button class="btn btn-secondary" onclick="toggleAddForm('brandForm')">+ Add Brand</button>
+          </div>
+        </div>
+
+        <div class="form-panel" id="brandForm" style="display:none;">
+          <div class="fp-title" id="brandFormTitle">Add New Brand</div>
+          <input type="hidden" id="editBrandId">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Brand Name</label>
+              <input class="form-input" id="bName" placeholder="e.g. Artemide">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Country</label>
+              <input class="form-input" id="bCountry" placeholder="e.g. Italy">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">Region</label>
+            <select class="form-select" id="bRegion">
+              <option value="">Select region</option>
+              <option value="italy">Italy</option>
+              <option value="spain-nordic">Spain & Nordic</option>
+              <option value="global">Global</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">Description</label>
+            <textarea class="form-textarea" id="bDesc" placeholder="Brand history, founding year, design philosophy, notable designers..."></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="saveBrand()">Save Brand</button>
+            <button class="btn btn-secondary" onclick="toggleAddForm('brandForm')">Cancel</button>
+          </div>
+        </div>
+
+        <div class="data-table-wrap">
+          <div class="dt-header"><span class="dt-title">All Brands</span><span class="dt-count" id="brandsCount">Loading...</span></div>
+          <div id="brandsTable"><div class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div></div>
+        </div>
+      </div>
+
+      <!-- ── ACADEMY ── -->
+      <div class="page" id="page-academy">
+        <div class="page-header">
+          <div class="ph-left">
+            <div class="ph-eyebrow">Content</div>
+            <div class="ph-title">Design Academy</div>
+          </div>
+          <div class="ph-right">
+            <button class="btn btn-secondary" onclick="toggleAddForm('academyForm')">+ Add Guide</button>
+          </div>
+        </div>
+
+        <div class="form-panel" id="academyForm" style="display:none;">
+          <div class="fp-title" id="academyFormTitle">Add New Guide</div>
+          <input type="hidden" id="editAcademyId">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Title</label>
+              <input class="form-input" id="aTitle" placeholder="e.g. Lux, Lumens & CRI — the complete guide">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select class="form-select" id="aCategory">
+                <option value="">Select category</option>
+                <option>Fundamentals</option><option>Room by Room</option>
+                <option>European Trends</option><option>Hospitality</option><option>Technical</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Read Time</label>
+              <input class="form-input" id="aReadTime" placeholder="e.g. 8 min read">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Video URL (optional)</label>
+              <input class="form-input" id="aVideo" placeholder="https://youtube.com/...">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">Content</label>
+            <textarea class="form-textarea" style="min-height:160px;" id="aContent" placeholder="Full guide content — write in plain text or HTML..."></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;flex-direction:row;align-items:center;gap:12px;">
+            <label class="form-label" style="margin:0;">Published</label>
+            <button class="toggle" id="aPublished" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="saveAcademy()">Save Guide</button>
+            <button class="btn btn-secondary" onclick="toggleAddForm('academyForm')">Cancel</button>
+          </div>
+        </div>
+
+        <div class="data-table-wrap">
+          <div class="dt-header"><span class="dt-title">All Guides</span><span class="dt-count" id="academyCount">Loading...</span></div>
+          <div id="academyTable"><div class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div></div>
+        </div>
+      </div>
+
+      <!-- ── ENQUIRIES ── -->
+      <div class="page" id="page-enquiries">
+        <div class="page-header">
+          <div class="ph-left">
+            <div class="ph-eyebrow">Inbox</div>
+            <div class="ph-title">Enquiries</div>
+          </div>
+          <div class="ph-right">
+            <button class="btn btn-secondary" onclick="loadEnquiries()">Refresh</button>
+          </div>
+        </div>
+        <div id="enquiriesList"><div class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div></div>
+      </div>
+
+      <!-- ── TEAM ── -->
+      <div class="page" id="page-team">
+        <div class="page-header">
+          <div class="ph-left">
+            <div class="ph-eyebrow">Content</div>
+            <div class="ph-title">Team</div>
+          </div>
+          <div class="ph-right">
+            <button class="btn btn-secondary" onclick="toggleAddForm('teamForm')">+ Add Member</button>
+          </div>
+        </div>
+
+        <div class="form-panel" id="teamForm" style="display:none;">
+          <div class="fp-title" id="teamFormTitle">Add Team Member</div>
+          <input type="hidden" id="editTeamId">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input class="form-input" id="tmName" placeholder="e.g. Preeti Kapoor">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Role / Title</label>
+              <input class="form-input" id="tmRole" placeholder="e.g. Head of Business Development">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Display Order</label>
+              <input class="form-input" id="tmOrder" type="number" placeholder="1, 2, 3..." value="10">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Photo URL</label>
+              <input class="form-input" id="tmPhotoUrl" placeholder="https://... or upload below">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">Bio</label>
+            <textarea class="form-textarea" id="tmBio" placeholder="2–3 sentences about this person's background, expertise, and role at The Lightists..."></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">Upload Photo</label>
+            <div class="img-upload-zone" onclick="document.getElementById('tmPhotoFile').click()">
+              <img id="tmPhotoPreview" class="img-preview">
+              <div class="iuz-icon">⬆</div>
+              <div class="iuz-text"><strong>Click to upload photo</strong>Square crop, JPG — will be stored in Supabase</div>
+            </div>
+            <input type="file" id="tmPhotoFile" accept="image/*" style="display:none" onchange="handleTeamPhotoUpload(event)">
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="saveTeamMember()">Save Member</button>
+            <button class="btn btn-secondary" onclick="toggleAddForm('teamForm')">Cancel</button>
+          </div>
+        </div>
+
+        <div class="data-table-wrap">
+          <div class="dt-header"><span class="dt-title">All Team Members</span><span class="dt-count" id="teamCount">Loading...</span></div>
+          <div id="teamTable"><div class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div></div>
+        </div>
+      </div>
+
+      <!-- ── HERO IMAGES ── -->
+      <div class="page" id="page-hero">
+        <div class="page-header">
+          <div class="ph-left">
+            <div class="ph-eyebrow">Site Settings</div>
+            <div class="ph-title">Hero Images</div>
+          </div>
+          <div class="ph-right">
+            <button class="btn btn-primary" onclick="saveHeroImages()">Save All Images</button>
+          </div>
+        </div>
+
+        <!-- Size guide -->
+        <div style="background:rgba(184,150,90,0.08);border:0.5px solid rgba(184,150,90,0.2);padding:16px 20px;margin-bottom:24px;display:flex;gap:32px;align-items:center;">
+          <div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;">Recommended Image Size</div>
+            <div style="font-size:14px;color:var(--txt);font-weight:400;">1200 × 900px</div>
+          </div>
+          <div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--txt2);margin-bottom:4px;">Format</div>
+            <div style="font-size:14px;color:var(--txt);">JPG</div>
+          </div>
+          <div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--txt2);margin-bottom:4px;">Max File Size</div>
+            <div style="font-size:14px;color:var(--txt);">500 KB</div>
+          </div>
+          <div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--txt2);margin-bottom:4px;">Aspect Ratio</div>
+            <div style="font-size:14px;color:var(--txt);">4:3 (portrait or landscape)</div>
+          </div>
+          <div style="flex:1;font-size:11px;color:var(--txt2);line-height:1.6;">
+            Dark, moody interior photography works best. Changes appear on the live website immediately after saving — no redeployment needed.
+          </div>
+        </div>
+
+        <!-- 3 Hero Image slots -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+
+          <!-- Hero 1 -->
+          <div class="form-panel" style="padding:20px;">
+            <div class="fp-title">Hero Image 1 <span style="font-size:10px;color:var(--txt2);font-weight:300;">(first shown)</span></div>
+            <div id="hero1Preview" style="width:100%;height:160px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;">
+              <span style="font-size:10px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;text-transform:uppercase;" id="hero1PreviewText">No image set</span>
+              <img id="hero1Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;" alt="Hero 1">
+            </div>
+            <div class="img-upload-zone" onclick="document.getElementById('hero1File').click()" style="margin-bottom:10px;">
+              <div class="iuz-icon">⬆</div>
+              <div class="iuz-text"><strong>Upload new image</strong>1200×900px JPG recommended</div>
+            </div>
+            <input type="file" id="hero1File" accept="image/*" style="display:none" onchange="previewHero(event,1)">
+            <div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt2);margin-bottom:6px;">Or paste image URL</div>
+            <input class="form-input" id="hero1Url" placeholder="https://..." oninput="previewHeroUrl(1)">
+          </div>
+
+          <!-- Hero 2 -->
+          <div class="form-panel" style="padding:20px;">
+            <div class="fp-title">Hero Image 2</div>
+            <div id="hero2Preview" style="width:100%;height:160px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;">
+              <span style="font-size:10px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;text-transform:uppercase;" id="hero2PreviewText">No image set</span>
+              <img id="hero2Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;" alt="Hero 2">
+            </div>
+            <div class="img-upload-zone" onclick="document.getElementById('hero2File').click()" style="margin-bottom:10px;">
+              <div class="iuz-icon">⬆</div>
+              <div class="iuz-text"><strong>Upload new image</strong>1200×900px JPG recommended</div>
+            </div>
+            <input type="file" id="hero2File" accept="image/*" style="display:none" onchange="previewHero(event,2)">
+            <div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt2);margin-bottom:6px;">Or paste image URL</div>
+            <input class="form-input" id="hero2Url" placeholder="https://..." oninput="previewHeroUrl(2)">
+          </div>
+
+          <!-- Hero 3 -->
+          <div class="form-panel" style="padding:20px;">
+            <div class="fp-title">Hero Image 3 <span style="font-size:10px;color:var(--txt2);font-weight:300;">(last shown)</span></div>
+            <div id="hero3Preview" style="width:100%;height:160px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;">
+              <span style="font-size:10px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;text-transform:uppercase;" id="hero3PreviewText">No image set</span>
+              <img id="hero3Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;" alt="Hero 3">
+            </div>
+            <div class="img-upload-zone" onclick="document.getElementById('hero3File').click()" style="margin-bottom:10px;">
+              <div class="iuz-icon">⬆</div>
+              <div class="iuz-text"><strong>Upload new image</strong>1200×900px JPG recommended</div>
+            </div>
+            <input type="file" id="hero3File" accept="image/*" style="display:none" onchange="previewHero(event,3)">
+            <div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt2);margin-bottom:6px;">Or paste image URL</div>
+            <input class="form-input" id="hero3Url" placeholder="https://..." oninput="previewHeroUrl(3)">
+          </div>
+
+        </div>
+
+        <div style="margin-top:20px;padding:16px 20px;background:rgba(255,255,255,0.03);border:0.5px solid var(--bdr);font-size:11px;color:var(--txt2);line-height:1.7;">
+          <strong style="color:var(--txt);font-weight:400;">How it works:</strong> Upload your images or paste a URL. Click "Save All Images". The homepage carousel updates live — architects and designers see your new images immediately without any redeployment.
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="page" id="page-settings">
+        <div class="page-header">
+          <div class="ph-left">
+            <div class="ph-eyebrow">Admin</div>
+            <div class="ph-title">Settings</div>
+          </div>
+        </div>
+        <div class="form-panel">
+          <div class="fp-title">Admin Password</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">New Password</label>
+              <input class="form-input" type="password" id="newPwd" placeholder="Enter new password">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm Password</label>
+              <input class="form-input" type="password" id="confirmPwd" placeholder="Confirm new password">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+          </div>
+        </div>
+        <div class="form-panel">
+          <div class="fp-title">Supabase Connection</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Project URL</label>
+              <input class="form-input" value="https://xwgbkolqltdzottdwufb.supabase.co" readonly style="opacity:0.5;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <input class="form-input" id="connStatus" value="Checking..." readonly style="opacity:0.5;">
+            </div>
+          </div>
+        </div>
+        <div class="form-panel">
+          <div class="fp-title">Site Links</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Live Site</label>
+              <input class="form-input" value="https://thelightists.netlify.app" readonly style="opacity:0.5;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp Number</label>
+              <input class="form-input" id="waNumber" placeholder="+91 99999 99999">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="showNotif('Settings saved','success')">Save Settings</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ── CONFIG ──
+const SUPABASE_URL = 'https://xwgbkolqltdzottdwufb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_gLoiEdxkGyjCfHjLBVDsgQ_LDyZHjSV';
+const ADMIN_PASSWORD = 'lightists2026'; // Change this in Settings
+
+// ── SUPABASE API ──
+async function sb(table, method='GET', body=null, id=null) {
+  const url = `${SUPABASE_URL}/rest/v1/${table}${id?`?id=eq.${id}`:''}`;
+  const opts = {
+    method,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': method==='POST'?'return=representation':'return=representation'
+    }
+  };
+  if(body) opts.body = JSON.stringify(body);
+  try {
+    const res = await fetch(url, opts);
+    if(!res.ok) throw new Error(await res.text());
+    const text = await res.text();
+    return text ? JSON.parse(text) : [];
+  } catch(e) {
+    console.error('Supabase error:', e);
+    showNotif('Database error: ' + e.message, 'error');
+    return null;
+  }
+}
+
+async function sbQuery(table, filters='', order='created_at.desc') {
+  const url = `${SUPABASE_URL}/rest/v1/${table}?${filters}&order=${order}`;
+  const res = await fetch(url, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`
+    }
+  });
+  if(!res.ok) return [];
+  return res.json();
+}
+
+// Upload image to Supabase Storage
+async function uploadImage(file, bucket='product-images') {
+  const fileName = `${Date.now()}_${file.name.replace(/\s/g,'_')}`;
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${fileName}`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': file.type
+    },
+    body: file
+  });
+  if(!res.ok) {
+    showNotif('Image upload failed — using URL instead', 'error');
+    return null;
+  }
+  return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${fileName}`;
+}
+
+// ── AUTH ──
+let isLoggedIn = false;
+let adminPwd = localStorage.getItem('tl_admin_pwd') || ADMIN_PASSWORD;
+
+function doLogin() {
+  const pwd = document.getElementById('loginPassword').value;
+  if(pwd === adminPwd || pwd === ADMIN_PASSWORD) {
+    isLoggedIn = true;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+    loadDashboard();
+    checkConnection();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginPassword').value = '';
+  }
+}
+
+function doLogout() {
+  isLoggedIn = false;
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginError').style.display = 'none';
+}
+
+function changePassword() {
+  const np = document.getElementById('newPwd').value;
+  const cp = document.getElementById('confirmPwd').value;
+  if(!np) { showNotif('Enter a new password', 'error'); return; }
+  if(np !== cp) { showNotif('Passwords do not match', 'error'); return; }
+  localStorage.setItem('tl_admin_pwd', np);
+  adminPwd = np;
+  showNotif('Password updated', 'success');
+  document.getElementById('newPwd').value = '';
+  document.getElementById('confirmPwd').value = '';
+}
+
+// ── NAVIGATION ──
+function showPage(page, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${page}`).classList.add('active');
+  if(navEl) navEl.classList.add('active');
+  document.getElementById('currentSection').textContent = page.charAt(0).toUpperCase() + page.slice(1);
+  if(page === 'products') loadProducts();
+  if(page === 'brands') loadBrands();
+  if(page === 'academy') loadAcademy();
+  if(page === 'enquiries') loadEnquiries();
+  if(page === 'hero') loadHeroImages();
+  if(page === 'team') loadTeam();
+}
+
+function toggleAddForm(id) {
+  const f = document.getElementById(id);
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+  if(f.style.display === 'block') f.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── CONNECTION CHECK ──
+async function checkConnection() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/products?limit=1`, {
+      headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
+    });
+    document.getElementById('connStatus').value = res.ok ? '✓ Connected' : '✗ Error ' + res.status;
+  } catch(e) {
+    document.getElementById('connStatus').value = '✗ Cannot connect';
+  }
+}
+
+// ── DASHBOARD ──
+async function loadDashboard() {
+  const [products, brands, academy, enquiries] = await Promise.all([
+    sbQuery('products','active=eq.true'),
+    sbQuery('brands','active=eq.true'),
+    sbQuery('academy','published=eq.true'),
+    sbQuery('enquiries','status=eq.new')
+  ]);
+  document.getElementById('statProducts').textContent = products?.length ?? '—';
+  document.getElementById('statBrands').textContent = brands?.length ?? '—';
+  document.getElementById('statAcademy').textContent = academy?.length ?? '—';
+  document.getElementById('statEnquiries').textContent = enquiries?.length ?? '—';
+  if(enquiries?.length > 0) {
+    const badge = document.getElementById('enqBadge');
+    badge.textContent = enquiries.length;
+    badge.style.display = 'inline-block';
+  }
+  // Recent enquiries
+  const all = await sbQuery('enquiries', '', 'created_at.desc');
+  const recent = (all||[]).slice(0,5);
+  const el = document.getElementById('recentEnquiries');
+  if(!recent.length) { el.innerHTML = '<div class="empty-state"><div class="es-title">No enquiries yet</div><div class="es-sub">Quote requests from the website will appear here.</div></div>'; return; }
+  el.innerHTML = `<table class="data-table"><thead><tr><th>From</th><th>Product</th><th>Email</th><th>Date</th><th>Status</th></tr></thead><tbody>${recent.map(e=>`
+    <tr><td>${e.name||'—'} ${e.firm?'· '+e.firm:''}</td><td>${e.product||'General'}</td><td>${e.email||'—'}</td>
+    <td>${new Date(e.created_at).toLocaleDateString('en-IN')}</td>
+    <td><span class="tag ${e.status==='new'?'tag-new-enq':'tag-read'}">${e.status}</span></td></tr>`).join('')}</tbody></table>`;
+}
+
+// ── PRODUCTS ──
+async function loadProducts() {
+  const products = await sbQuery('products','','created_at.desc');
+  document.getElementById('productsCount').textContent = `${products?.length||0} products`;
+  const el = document.getElementById('productsTable');
+  if(!products?.length) { el.innerHTML = '<div class="empty-state"><div class="es-title">No products yet</div><div class="es-sub">Click "+ Add Product" to add your first product to the catalogue.</div></div>'; return; }
+  el.innerHTML = `<table class="data-table"><thead><tr><th>Brand</th><th>Name</th><th>Type</th><th>CCT</th><th>Badge</th><th>Status</th><th>Actions</th></tr></thead><tbody>${products.map(p=>`
+    <tr>
+      <td>${p.brand}</td><td>${p.name}</td>
+      <td><span class="tag tag-type">${p.type||'—'}</span></td>
+      <td>${(p.cct||[]).join(', ')||'—'}</td>
+      <td>${p.badge?`<span class="tag tag-${p.badge}">${p.badge}</span>`:'—'}</td>
+      <td><span class="tag ${p.active?'tag-active':'tag-inactive'}">${p.active?'Active':'Hidden'}</span></td>
+      <td><div class="td-actions">
+        <button class="btn btn-secondary btn-sm" onclick="editProduct('${p.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDelete('products','${p.id}','${p.name}')">Delete</button>
+      </div></td>
+    </tr>`).join('')}</tbody></table>`;
+}
+
+async function saveProduct() {
+  const editId = document.getElementById('editProductId').value;
+  const file = document.getElementById('pImageFile').files[0];
+  let imageUrl = document.getElementById('pImageUrl').value;
+  if(file) {
+    showNotif('Uploading image...', 'success');
+    const uploaded = await uploadImage(file);
+    if(uploaded) imageUrl = uploaded;
+  }
+  const data = {
+    brand: document.getElementById('pBrand').value,
+    name: document.getElementById('pName').value,
+    type: document.getElementById('pType').value,
+    cct: document.getElementById('pCCT').value.split(',').map(s=>s.trim()).filter(Boolean),
+    materials: document.getElementById('pMaterials').value.split(',').map(s=>s.trim()).filter(Boolean),
+    description: document.getElementById('pDesc').value,
+    image_url: imageUrl,
+    badge: document.getElementById('pBadge').value || null,
+    active: true
+  };
+  if(!data.brand || !data.name) { showNotif('Brand and name are required', 'error'); return; }
+  let result;
+  if(editId) {
+    result = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${editId}`, {method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(data)});
+  } else {
+    result = await fetch(`${SUPABASE_URL}/rest/v1/products`, {method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(data)});
+  }
+  if(result.ok) {
+    showNotif(editId ? 'Product updated' : 'Product added', 'success');
+    clearProductForm();
+    toggleAddForm('productForm');
+    loadProducts();
+    loadDashboard();
+  } else {
+    showNotif('Error saving product', 'error');
+  }
+}
+
+async function editProduct(id) {
+  const products = await sbQuery('products', `id=eq.${id}`);
+  const p = products?.[0]; if(!p) return;
+  document.getElementById('editProductId').value = p.id;
+  document.getElementById('pBrand').value = p.brand||'';
+  document.getElementById('pName').value = p.name||'';
+  document.getElementById('pType').value = p.type||'';
+  document.getElementById('pCCT').value = (p.cct||[]).join(', ');
+  document.getElementById('pMaterials').value = (p.materials||[]).join(', ');
+  document.getElementById('pDesc').value = p.description||'';
+  document.getElementById('pImageUrl').value = p.image_url||'';
+  document.getElementById('pBadge').value = p.badge||'';
+  document.getElementById('productFormTitle').textContent = 'Edit Product';
+  document.getElementById('productForm').style.display = 'block';
+  document.getElementById('productForm').scrollIntoView({behavior:'smooth'});
+}
+
+function clearProductForm() {
+  ['editProductId','pBrand','pName','pType','pCCT','pMaterials','pDesc','pImageUrl'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pBadge').value = '';
+  document.getElementById('productFormTitle').textContent = 'Add New Product';
+  document.getElementById('pImagePreview').style.display = 'none';
+}
+
+// ── BRANDS ──
+async function loadBrands() {
+  const brands = await sbQuery('brands','','name.asc');
+  document.getElementById('brandsCount').textContent = `${brands?.length||0} brands`;
+  const el = document.getElementById('brandsTable');
+  if(!brands?.length) { el.innerHTML = '<div class="empty-state"><div class="es-title">No brands yet</div><div class="es-sub">Click "+ Add Brand" to add your European partners.</div></div>'; return; }
+  el.innerHTML = `<table class="data-table"><thead><tr><th>Name</th><th>Country</th><th>Region</th><th>Status</th><th>Actions</th></tr></thead><tbody>${brands.map(b=>`
+    <tr>
+      <td>${b.name}</td><td>${b.country||'—'}</td>
+      <td><span class="tag tag-type">${b.region||'—'}</span></td>
+      <td><span class="tag ${b.active?'tag-active':'tag-inactive'}">${b.active?'Active':'Hidden'}</span></td>
+      <td><div class="td-actions">
+        <button class="btn btn-secondary btn-sm" onclick="editBrand('${b.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDelete('brands','${b.id}','${b.name}')">Delete</button>
+      </div></td>
+    </tr>`).join('')}</tbody></table>`;
+}
+
+async function saveBrand() {
+  const editId = document.getElementById('editBrandId').value;
+  const data = {
+    name: document.getElementById('bName').value,
+    country: document.getElementById('bCountry').value,
+    region: document.getElementById('bRegion').value,
+    description: document.getElementById('bDesc').value,
+    active: true
+  };
+  if(!data.name) { showNotif('Brand name is required', 'error'); return; }
+  const method = editId ? 'PATCH' : 'POST';
+  const url = editId ? `${SUPABASE_URL}/rest/v1/brands?id=eq.${editId}` : `${SUPABASE_URL}/rest/v1/brands`;
+  const result = await fetch(url, {method,headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(data)});
+  if(result.ok) {
+    showNotif(editId ? 'Brand updated' : 'Brand added', 'success');
+    document.getElementById('editBrandId').value = '';
+    ['bName','bCountry','bDesc'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('bRegion').value = '';
+    toggleAddForm('brandForm');
+    loadBrands();
+  } else { showNotif('Error saving brand', 'error'); }
+}
+
+async function editBrand(id) {
+  const brands = await sbQuery('brands', `id=eq.${id}`);
+  const b = brands?.[0]; if(!b) return;
+  document.getElementById('editBrandId').value = b.id;
+  document.getElementById('bName').value = b.name||'';
+  document.getElementById('bCountry').value = b.country||'';
+  document.getElementById('bRegion').value = b.region||'';
+  document.getElementById('bDesc').value = b.description||'';
+  document.getElementById('brandFormTitle').textContent = 'Edit Brand';
+  document.getElementById('brandForm').style.display = 'block';
+  document.getElementById('brandForm').scrollIntoView({behavior:'smooth'});
+}
+
+// ── ACADEMY ──
+async function loadAcademy() {
+  const guides = await sbQuery('academy','','created_at.desc');
+  document.getElementById('academyCount').textContent = `${guides?.length||0} guides`;
+  const el = document.getElementById('academyTable');
+  if(!guides?.length) { el.innerHTML = '<div class="empty-state"><div class="es-title">No guides yet</div><div class="es-sub">Click "+ Add Guide" to write your first Academy article.</div></div>'; return; }
+  el.innerHTML = `<table class="data-table"><thead><tr><th>Title</th><th>Category</th><th>Read Time</th><th>Video</th><th>Status</th><th>Actions</th></tr></thead><tbody>${guides.map(g=>`
+    <tr>
+      <td>${g.title}</td>
+      <td><span class="tag tag-type">${g.category||'—'}</span></td>
+      <td>${g.read_time||'—'}</td>
+      <td>${g.video_url?'✓':'—'}</td>
+      <td><span class="tag ${g.published?'tag-active':'tag-inactive'}">${g.published?'Published':'Draft'}</span></td>
+      <td><div class="td-actions">
+        <button class="btn btn-secondary btn-sm" onclick="editAcademy('${g.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDelete('academy','${g.id}','${g.title}')">Delete</button>
+      </div></td>
+    </tr>`).join('')}</tbody></table>`;
+}
+
+async function saveAcademy() {
+  const editId = document.getElementById('editAcademyId').value;
+  const data = {
+    title: document.getElementById('aTitle').value,
+    category: document.getElementById('aCategory').value,
+    read_time: document.getElementById('aReadTime').value,
+    video_url: document.getElementById('aVideo').value,
+    content: document.getElementById('aContent').value,
+    published: document.getElementById('aPublished').classList.contains('on')
+  };
+  if(!data.title) { showNotif('Title is required', 'error'); return; }
+  const method = editId ? 'PATCH' : 'POST';
+  const url = editId ? `${SUPABASE_URL}/rest/v1/academy?id=eq.${editId}` : `${SUPABASE_URL}/rest/v1/academy`;
+  const result = await fetch(url, {method,headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(data)});
+  if(result.ok) {
+    showNotif(editId ? 'Guide updated' : 'Guide saved', 'success');
+    document.getElementById('editAcademyId').value = '';
+    ['aTitle','aReadTime','aVideo','aContent'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('aCategory').value = '';
+    document.getElementById('aPublished').classList.remove('on');
+    document.getElementById('academyFormTitle').textContent = 'Add New Guide';
+    toggleAddForm('academyForm');
+    loadAcademy();
+  } else { showNotif('Error saving guide', 'error'); }
+}
+
+async function editAcademy(id) {
+  const guides = await sbQuery('academy', `id=eq.${id}`);
+  const g = guides?.[0]; if(!g) return;
+  document.getElementById('editAcademyId').value = g.id;
+  document.getElementById('aTitle').value = g.title||'';
+  document.getElementById('aCategory').value = g.category||'';
+  document.getElementById('aReadTime').value = g.read_time||'';
+  document.getElementById('aVideo').value = g.video_url||'';
+  document.getElementById('aContent').value = g.content||'';
+  if(g.published) document.getElementById('aPublished').classList.add('on');
+  else document.getElementById('aPublished').classList.remove('on');
+  document.getElementById('academyFormTitle').textContent = 'Edit Guide';
+  document.getElementById('academyForm').style.display = 'block';
+  document.getElementById('academyForm').scrollIntoView({behavior:'smooth'});
+}
+
+// ── ENQUIRIES ──
+async function loadEnquiries() {
+  const enquiries = await sbQuery('enquiries','','created_at.desc');
+  const el = document.getElementById('enquiriesList');
+  if(!enquiries?.length) { el.innerHTML = '<div class="empty-state"><div class="es-title">No enquiries yet</div><div class="es-sub">Quote requests and product enquiries from the website will appear here in real time.</div></div>'; return; }
+  el.innerHTML = enquiries.map(e => `
+    <div class="enq-card ${e.status==='new'?'new-enq':'read-enq'}">
+      <div>
+        <div class="ec-meta">${new Date(e.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})} · <span class="tag ${e.status==='new'?'tag-new-enq':'tag-read'}">${e.status}</span></div>
+        <div class="ec-name">${e.name||'Unknown'}${e.firm?' — '+e.firm:''}</div>
+        <div class="ec-product">${e.product||'General Enquiry'}</div>
+        <div class="ec-notes">${e.notes||'No notes provided.'}</div>
+        <div class="ec-contact">
+          ${e.email?`✉ ${e.email}`:''}
+          ${e.phone?` · 📱 ${e.phone}`:''}
+        </div>
+      </div>
+      <div class="ec-actions">
+        ${e.email?`<a href="mailto:${e.email}?subject=Re: ${e.product||'Your Enquiry'} — The Lightists" class="btn btn-primary btn-sm" style="text-decoration:none;display:inline-block;">Reply via Email</a>`:''}
+        ${e.phone?`<a href="https://wa.me/${e.phone.replace(/\D/g,'')}" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none;display:inline-block;">WhatsApp</a>`:''}
+        ${e.status==='new'?`<button class="btn btn-secondary btn-sm" onclick="markRead('${e.id}')">Mark Read</button>`:''}
+        <button class="btn btn-danger btn-sm" onclick="confirmDelete('enquiries','${e.id}','this enquiry')">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+async function markRead(id) {
+  await fetch(`${SUPABASE_URL}/rest/v1/enquiries?id=eq.${id}`,{method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({status:'read'})});
+  loadEnquiries();
+  loadDashboard();
+}
+
+// ── TEAM ──
+async function loadTeam() {
+  const team = await sbQuery('team','','display_order.asc');
+  document.getElementById('teamCount').textContent = `${team?.length||0} members`;
+  const el = document.getElementById('teamTable');
+  if(!team?.length) {
+    el.innerHTML = '<div class="empty-state"><div class="es-title">No team members</div><div class="es-sub">Click "+ Add Member" to add your first team member.</div></div>';
+    return;
+  }
+  el.innerHTML = `<table class="data-table"><thead><tr><th>Photo</th><th>Name</th><th>Role</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>${team.map(m=>`
+    <tr>
+      <td>${m.photo_url?`<img src="${m.photo_url}" style="width:36px;height:36px;object-fit:cover;border-radius:2px;">` : '<div style="width:36px;height:36px;background:rgba(255,255,255,0.06);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--txt2);">◎</div>'}</td>
+      <td>${m.name}</td>
+      <td>${m.role||'—'}</td>
+      <td>${m.display_order||'—'}</td>
+      <td><span class="tag ${m.active?'tag-active':'tag-inactive'}">${m.active?'Active':'Hidden'}</span></td>
+      <td><div class="td-actions">
+        <button class="btn btn-secondary btn-sm" onclick="editTeamMember('${m.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDelete('team','${m.id}','${m.name}')">Delete</button>
+      </div></td>
+    </tr>`).join('')}</tbody></table>`;
+}
+
+async function handleTeamPhotoUpload(event) {
+  const file = event.target.files[0];
+  if(!file) return;
+  showNotif('Uploading photo...', 'success');
+  const url = await uploadImage(file, 'product-images');
+  if(url) {
+    document.getElementById('tmPhotoUrl').value = url;
+    previewImage(event, 'tmPhotoPreview');
+    showNotif('Photo uploaded ✓', 'success');
+  }
+}
+
+async function saveTeamMember() {
+  const editId = document.getElementById('editTeamId').value;
+  const data = {
+    name: document.getElementById('tmName').value,
+    role: document.getElementById('tmRole').value,
+    bio: document.getElementById('tmBio').value,
+    photo_url: document.getElementById('tmPhotoUrl').value,
+    display_order: parseInt(document.getElementById('tmOrder').value) || 10,
+    active: true
+  };
+  if(!data.name) { showNotif('Name is required', 'error'); return; }
+  const method = editId ? 'PATCH' : 'POST';
+  const url = editId ? `${SUPABASE_URL}/rest/v1/team?id=eq.${editId}` : `${SUPABASE_URL}/rest/v1/team`;
+  const result = await fetch(url, {method,headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(data)});
+  if(result.ok) {
+    showNotif(editId ? 'Team member updated' : 'Team member added', 'success');
+    clearTeamForm();
+    toggleAddForm('teamForm');
+    loadTeam();
+  } else { showNotif('Error saving team member', 'error'); }
+}
+
+async function editTeamMember(id) {
+  const members = await sbQuery('team', `id=eq.${id}`);
+  const m = members?.[0]; if(!m) return;
+  document.getElementById('editTeamId').value = m.id;
+  document.getElementById('tmName').value = m.name||'';
+  document.getElementById('tmRole').value = m.role||'';
+  document.getElementById('tmBio').value = m.bio||'';
+  document.getElementById('tmPhotoUrl').value = m.photo_url||'';
+  document.getElementById('tmOrder').value = m.display_order||10;
+  if(m.photo_url) {
+    const prev = document.getElementById('tmPhotoPreview');
+    prev.src = m.photo_url; prev.style.display = 'block';
+  }
+  document.getElementById('teamFormTitle').textContent = 'Edit Team Member';
+  document.getElementById('teamForm').style.display = 'block';
+  document.getElementById('teamForm').scrollIntoView({behavior:'smooth'});
+}
+
+function clearTeamForm() {
+  ['editTeamId','tmName','tmRole','tmBio','tmPhotoUrl'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('tmOrder').value = '10';
+  document.getElementById('tmPhotoPreview').style.display = 'none';
+  document.getElementById('teamFormTitle').textContent = 'Add Team Member';
+}
+
+// ── HERO IMAGES ──
+async function loadHeroImages() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/site_settings?id=in.(hero_1,hero_2,hero_3)`, {
+      headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
+    });
+    const settings = await res.json();
+    if(!Array.isArray(settings)) return;
+    settings.forEach(s => {
+      const num = s.id.replace('hero_','');
+      const url = s.value;
+      if(url) {
+        document.getElementById(`hero${num}Url`).value = url;
+        const img = document.getElementById(`hero${num}Img`);
+        if(img) { img.src = url; img.style.display = 'block'; }
+        const txt = document.getElementById(`hero${num}PreviewText`);
+        if(txt) txt.style.display = 'none';
+      }
+    });
+  } catch(e) { console.log('Hero load error:', e); }
+}
+
+async function previewHero(event, num) {
+  const file = event.target.files[0];
+  if(!file) return;
+  showNotif('Uploading image...', 'success');
+  const url = await uploadImage(file, 'hero-images');
+  if(url) {
+    document.getElementById(`hero${num}Url`).value = url;
+    const img = document.getElementById(`hero${num}Img`);
+    if(img) { img.src = url; img.style.display = 'block'; }
+    const txt = document.getElementById(`hero${num}PreviewText`);
+    if(txt) txt.style.display = 'none';
+    showNotif(`Hero image ${num} uploaded ✓`, 'success');
+  }
+}
+
+function previewHeroUrl(num) {
+  const url = document.getElementById(`hero${num}Url`).value;
+  if(!url) return;
+  const img = document.getElementById(`hero${num}Img`);
+  if(!img) return;
+  img.src = url;
+  img.style.display = 'block';
+  img.onerror = () => { img.style.display = 'none'; };
+  const txt = document.getElementById(`hero${num}PreviewText`);
+  if(txt) txt.style.display = 'none';
+}
+
+async function saveHeroImages() {
+  const results = await Promise.all([1,2,3].map(async num => {
+    const url = document.getElementById(`hero${num}Url`)?.value.trim() || '';
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/site_settings?id=eq.hero_${num}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({value: url, updated_at: new Date().toISOString()})
+    });
+    return res.ok;
+  }));
+  if(results.every(r => r)) {
+    showNotif('✓ Hero images saved — homepage updated live', 'success');
+  } else {
+    showNotif('Some images failed to save', 'error');
+  }
+}
+
+// ── DELETE ──
+let deleteCallback = null;
+function confirmDelete(table, id, name) {
+  document.getElementById('confirmTitle').textContent = 'Delete ' + name;
+  document.getElementById('confirmBody').textContent = `Are you sure you want to delete "${name}"? This cannot be undone.`;
+  deleteCallback = async () => {
+    await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}});
+    showNotif('Deleted successfully','success');
+    closeConfirm();
+    if(table==='products') loadProducts();
+    if(table==='brands') loadBrands();
+    if(table==='academy') loadAcademy();
+    if(table==='enquiries') loadEnquiries();
+    loadDashboard();
+  };
+  document.getElementById('confirmOkBtn').onclick = deleteCallback;
+  document.getElementById('confirmModal').classList.add('open');
+}
+function closeConfirm() { document.getElementById('confirmModal').classList.remove('open'); deleteCallback = null; }
+
+// ── UTILITIES ──
+function previewImage(event, previewId) {
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById(previewId);
+    img.src = e.target.result;
+    img.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function filterTable(tableId, query) {
+  const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+  rows.forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(query.toLowerCase()) ? '' : 'none';
+  });
+}
+
+function showNotif(msg, type='success') {
+  const n = document.getElementById('notif');
+  n.textContent = msg; n.className = `notif ${type} show`;
+  setTimeout(() => n.classList.remove('show'), 3000);
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeConfirm();
+  if(e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') doLogin();
+});
+</script>
+</body>
+</html>

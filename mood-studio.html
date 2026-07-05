@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mood Studio — The Lightists</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&family=Raleway:wght@100;200;300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --stone:#F7F6F2; --charcoal:#1A1A1A; --warm:#EDECEA;
+  --mid:#8C8880; --border:#C8C4BC; --dark:#3D3D3A;
+  --slate:#4A5568; --pale:#E8EDF2; --white:#FFFFFF;
+  --success:#1D9E75;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--stone);color:var(--charcoal);font-family:'Jost',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(247,246,242,0.96);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-mark{width:36px;height:36px;border:1px solid var(--charcoal);display:flex;align-items:center;justify-content:center;}
+.nav-tl{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--charcoal);letter-spacing:-0.5px;}
+.nav-wordmark{font-size:10px;font-weight:300;letter-spacing:0.22em;text-transform:uppercase;color:var(--charcoal);}
+.nav-center{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:300;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);}
+.nav-sep{color:var(--border);}
+.nav-current{color:var(--charcoal);}
+.nav-actions{display:flex;gap:10px;align-items:center;}
+.btn-nav{font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;padding:7px 16px;border:0.5px solid var(--border);background:transparent;color:var(--charcoal);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.btn-nav:hover{background:var(--charcoal);color:var(--stone);border-color:var(--charcoal);}
+.btn-nav.solid{background:var(--charcoal);color:var(--stone);border-color:var(--charcoal);}
+.btn-nav.solid:hover{background:var(--dark);}
+.board-count{font-size:11px;color:var(--mid);padding:0 4px;}
+
+/* HERO */
+.hero{background:var(--charcoal);padding:40px 80px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;}
+.hero-eyebrow{font-size:10px;font-weight:300;letter-spacing:0.3em;text-transform:uppercase;color:rgba(200,196,188,0.45);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
+.hero-eyebrow::before{content:'';width:20px;height:0.5px;background:rgba(200,196,188,0.3);display:block;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3vw,48px);font-weight:300;color:var(--stone);line-height:1.05;letter-spacing:-0.01em;}
+.hero-title em{font-style:italic;}
+.hero-sub{margin-top:12px;font-size:12px;font-weight:300;line-height:1.9;color:rgba(200,196,188,0.5);max-width:500px;}
+.hero-lab-data{background:rgba(255,255,255,0.05);border:0.5px solid rgba(200,196,188,0.15);padding:20px 24px;min-width:260px;}
+.hld-label{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(200,196,188,0.4);margin-bottom:12px;}
+.hld-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid rgba(200,196,188,0.08);font-size:11px;}
+.hld-row:last-child{border-bottom:none;}
+.hld-key{color:rgba(200,196,188,0.45);}
+.hld-val{color:rgba(200,196,188,0.85);font-weight:400;}
+.hld-note{font-size:10px;color:rgba(200,196,188,0.3);margin-top:10px;font-style:italic;}
+
+/* MAIN LAYOUT */
+.studio-layout{display:grid;grid-template-columns:300px 1fr 380px;min-height:calc(100vh - 64px - 120px);}
+
+/* LEFT FILTERS */
+.filters-panel{background:var(--white);border-right:0.5px solid var(--border);position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;display:flex;flex-direction:column;}
+.fp-section{padding:24px 28px;border-bottom:0.5px solid var(--border);}
+.fp-section:last-child{border-bottom:none;}
+.fp-label{font-size:9px;font-weight:500;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.fp-label::after{content:'';flex:1;height:0.5px;background:var(--border);}
+
+/* Search */
+.search-wrap{position:relative;}
+.search-input{width:100%;padding:10px 14px 10px 36px;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:var(--charcoal);background:var(--stone);border:0.5px solid var(--border);outline:none;transition:border-color 0.2s;}
+.search-input:focus{border-color:var(--charcoal);background:var(--white);}
+.search-input::placeholder{color:var(--mid);}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--mid);}
+
+/* Filter chips */
+.filter-chips{display:flex;flex-direction:column;gap:4px;}
+.chip{padding:8px 12px;border:0.5px solid var(--border);font-size:11px;font-weight:300;color:var(--mid);cursor:pointer;transition:all 0.15s;background:var(--stone);display:flex;align-items:center;justify-content:space-between;}
+.chip:hover{border-color:var(--charcoal);color:var(--charcoal);}
+.chip.active{background:var(--charcoal);border-color:var(--charcoal);color:var(--stone);}
+.chip-count{font-size:10px;opacity:0.6;}
+
+/* Material swatches */
+.mat-swatches{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.mat-swatch-btn{padding:8px 10px;border:0.5px solid var(--border);cursor:pointer;transition:all 0.15s;background:var(--stone);display:flex;align-items:center;gap:8px;}
+.mat-swatch-btn:hover{border-color:var(--charcoal);}
+.mat-swatch-btn.active{background:var(--charcoal);border-color:var(--charcoal);}
+.mat-dot{width:14px;height:14px;border-radius:50%;border:0.5px solid rgba(0,0,0,0.1);flex-shrink:0;}
+.mat-name{font-size:10px;color:var(--mid);}
+.mat-swatch-btn.active .mat-name{color:rgba(247,246,242,0.7);}
+
+/* Brand list */
+.brand-list{display:flex;flex-direction:column;gap:4px;}
+.brand-btn{padding:7px 12px;border:0.5px solid transparent;font-size:11px;font-weight:300;color:var(--mid);cursor:pointer;transition:all 0.15s;background:transparent;display:flex;align-items:center;justify-content:space-between;font-family:'Jost',sans-serif;}
+.brand-btn:hover{background:var(--stone);color:var(--charcoal);}
+.brand-btn.active{background:var(--charcoal);color:var(--stone);border-color:var(--charcoal);}
+
+/* CCT filter */
+.cct-row{display:flex;gap:5px;}
+.cct-btn{flex:1;padding:8px 4px;border:0.5px solid var(--border);font-size:10px;font-weight:300;text-align:center;cursor:pointer;transition:all 0.15s;background:var(--stone);color:var(--mid);font-family:'Jost',sans-serif;}
+.cct-btn:hover{border-color:var(--charcoal);color:var(--charcoal);}
+.cct-btn.active{background:var(--charcoal);border-color:var(--charcoal);color:var(--stone);}
+
+.clear-btn{width:100%;padding:10px;background:none;border:0.5px dashed var(--border);font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);cursor:pointer;transition:all 0.2s;margin-top:8px;}
+.clear-btn:hover{border-color:var(--charcoal);color:var(--charcoal);}
+
+/* MIDDLE — PRODUCTS */
+.products-panel{padding:36px 40px;background:var(--stone);}
+.products-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+.products-count{font-size:12px;color:var(--mid);}
+.products-sort{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--mid);}
+.sort-select{font-family:'Jost',sans-serif;font-size:11px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);padding:5px 10px;outline:none;cursor:pointer;}
+
+/* Product grid */
+.products-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;}
+.product-card{background:var(--white);position:relative;overflow:hidden;cursor:pointer;transition:all 0.2s;group;}
+.product-card:hover{z-index:2;}
+.product-card:hover .pc-overlay{opacity:1;}
+.pc-img{width:100%;height:200px;object-fit:cover;display:flex;align-items:center;justify-content:center;background:var(--warm);font-size:56px;transition:transform 0.3s;}
+.product-card:hover .pc-img{transform:scale(1.02);}
+.pc-body{padding:18px 20px;}
+.pc-brand{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:4px;}
+.pc-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:var(--charcoal);margin-bottom:8px;line-height:1.2;}
+.pc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;}
+.pc-tag{font-size:9px;padding:2px 7px;background:var(--stone);color:var(--mid);border-radius:10px;letter-spacing:0.05em;}
+.pc-spec{font-size:10px;color:var(--mid);display:flex;gap:12px;}
+.pc-overlay{position:absolute;inset:0;background:rgba(26,26,26,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;opacity:0;transition:opacity 0.2s;}
+.pin-btn{padding:11px 28px;background:var(--stone);border:none;font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.18em;text-transform:uppercase;color:var(--charcoal);cursor:pointer;transition:all 0.2s;}
+.pin-btn:hover{background:var(--white);}
+.pin-btn.pinned{background:var(--success);color:var(--white);}
+.view-btn{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,196,188,0.6);background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif;}
+.pinned-badge{position:absolute;top:12px;right:12px;background:var(--success);color:var(--white);font-size:9px;font-weight:500;padding:3px 8px;letter-spacing:0.1em;text-transform:uppercase;}
+
+.no-results{grid-column:1/-1;padding:60px;text-align:center;}
+.nr-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--charcoal);margin-bottom:8px;}
+.nr-sub{font-size:12px;color:var(--mid);line-height:1.7;}
+
+/* RIGHT — BOARD */
+.board-panel{background:var(--warm);border-left:0.5px solid var(--border);position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;display:flex;flex-direction:column;}
+.bp-section{padding:24px 28px;border-bottom:0.5px solid var(--border);}
+.bp-section:last-child{border-bottom:none;flex:1;}
+.bp-label{font-size:9px;font-weight:500;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.bp-label::after{content:'';flex:1;height:0.5px;background:var(--border);}
+
+/* Board details */
+.board-meta-input{width:100%;padding:9px 12px;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;margin-bottom:8px;transition:border-color 0.2s;}
+.board-meta-input:focus{border-color:var(--charcoal);}
+.board-meta-input::placeholder{color:var(--mid);}
+.board-textarea{width:100%;padding:9px 12px;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;resize:none;min-height:72px;transition:border-color 0.2s;line-height:1.6;}
+.board-textarea:focus{border-color:var(--charcoal);}
+.board-textarea::placeholder{color:var(--mid);}
+
+/* Room image upload */
+.img-upload-area{width:100%;height:120px;border:0.5px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;background:var(--white);position:relative;overflow:hidden;}
+.img-upload-area:hover{border-color:var(--charcoal);}
+.img-upload-area.has-img{border-style:solid;}
+.upload-text{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-top:6px;}
+.upload-icon{font-size:22px;}
+.uploaded-img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.img-clear{position:absolute;top:6px;right:6px;background:rgba(26,26,26,0.7);color:var(--white);border:none;width:20px;height:20px;border-radius:50%;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+#roomImgInput{display:none;}
+
+/* Pinned products list */
+.pinned-list{display:flex;flex-direction:column;gap:6px;}
+.pinned-item{background:var(--white);padding:12px 14px;display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;border:0.5px solid var(--border);}
+.pi-img{width:40px;height:40px;background:var(--warm);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.pi-brand{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);}
+.pi-name{font-size:12px;font-weight:400;color:var(--charcoal);margin-top:1px;}
+.pi-tags{font-size:10px;color:var(--mid);margin-top:2px;}
+.pi-qty{display:flex;align-items:center;gap:6px;}
+.qty-btn{width:22px;height:22px;border:0.5px solid var(--border);background:var(--stone);color:var(--charcoal);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;line-height:1;font-family:'Jost',sans-serif;}
+.qty-btn:hover{background:var(--charcoal);color:var(--stone);}
+.qty-num{font-size:12px;font-weight:400;color:var(--charcoal);min-width:16px;text-align:center;}
+.pi-remove{background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;transition:color 0.15s;padding:0 0 0 4px;line-height:1;}
+.pi-remove:hover{color:var(--charcoal);}
+
+.empty-board{padding:32px;text-align:center;}
+.eb-icon{font-size:32px;margin-bottom:12px;opacity:0.3;}
+.eb-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--mid);margin-bottom:6px;}
+.eb-sub{font-size:11px;color:var(--mid);line-height:1.7;}
+
+/* Design language selector */
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.dl-btn{padding:8px 10px;border:0.5px solid var(--border);cursor:pointer;transition:all 0.15s;background:var(--white);text-align:left;}
+.dl-btn:hover{border-color:var(--charcoal);}
+.dl-btn.active{background:var(--charcoal);border-color:var(--charcoal);}
+.dl-name{font-size:10px;font-weight:400;color:var(--charcoal);}
+.dl-btn.active .dl-name{color:var(--stone);}
+.dl-desc{font-size:9px;color:var(--mid);margin-top:1px;line-height:1.3;}
+.dl-btn.active .dl-desc{color:rgba(247,246,242,0.45);}
+
+/* Board actions */
+.board-actions{display:flex;flex-direction:column;gap:8px;padding:20px 28px;}
+.board-action-btn{width:100%;padding:13px;font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.18em;text-transform:uppercase;border:0.5px solid var(--border);background:transparent;color:var(--charcoal);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.board-action-btn:hover{border-color:var(--charcoal);}
+.board-action-btn.primary{background:var(--charcoal);color:var(--stone);border-color:var(--charcoal);}
+.board-action-btn.primary:hover{background:var(--dark);}
+.board-action-btn.wa{border-color:#25D366;color:#25D366;}
+.board-action-btn.wa:hover{background:#25D366;color:var(--white);}
+
+/* PRODUCT DETAIL DRAWER */
+.drawer-overlay{position:fixed;inset:0;z-index:200;background:rgba(26,26,26,0.7);opacity:0;pointer-events:none;transition:opacity 0.3s;backdrop-filter:blur(3px);}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:480px;background:var(--stone);z-index:201;transform:translateX(100%);transition:transform 0.3s ease;overflow-y:auto;display:flex;flex-direction:column;}
+.drawer.open{transform:translateX(0);}
+.drawer-close{position:absolute;top:20px;right:24px;background:none;border:none;font-size:22px;color:var(--mid);cursor:pointer;transition:color 0.2s;z-index:5;}
+.drawer-close:hover{color:var(--charcoal);}
+.drawer-img{width:100%;height:300px;background:var(--warm);display:flex;align-items:center;justify-content:center;font-size:96px;flex-shrink:0;}
+.drawer-body{padding:32px 36px;flex:1;}
+.dr-brand{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:8px;}
+.dr-name{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--charcoal);margin-bottom:4px;line-height:1.1;}
+.dr-country{font-size:11px;color:var(--mid);margin-bottom:24px;}
+.dr-section-title{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:10px;margin-top:20px;}
+.dr-spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.dr-spec{background:var(--warm);padding:12px 14px;}
+.dr-spec-label{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);margin-bottom:3px;}
+.dr-spec-val{font-size:13px;font-weight:400;color:var(--charcoal);}
+.dr-desc{font-size:12px;color:var(--mid);line-height:1.8;margin-bottom:24px;}
+.dr-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:24px;}
+.dr-tag{font-size:10px;padding:3px 10px;background:var(--warm);color:var(--mid);border-radius:12px;}
+.dr-pin-btn{width:100%;padding:15px;background:var(--charcoal);color:var(--stone);font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.2s;}
+.dr-pin-btn:hover{background:var(--dark);}
+.dr-pin-btn.pinned{background:var(--success);}
+
+/* QUOTE MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:300;background:rgba(26,26,26,0.88);opacity:0;pointer-events:none;transition:opacity 0.3s;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--stone);width:100%;max-width:580px;max-height:90vh;overflow-y:auto;border:0.5px solid var(--border);position:relative;}
+.modal-header{background:var(--charcoal);padding:32px 40px 28px;position:sticky;top:0;z-index:5;}
+.modal-eyebrow{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(200,196,188,0.45);margin-bottom:8px;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--stone);line-height:1.1;}
+.modal-sub{font-size:12px;color:rgba(200,196,188,0.5);margin-top:6px;line-height:1.6;}
+.modal-close{position:absolute;top:20px;right:24px;background:none;border:none;color:rgba(200,196,188,0.4);font-size:22px;cursor:pointer;transition:color 0.2s;}
+.modal-close:hover{color:var(--stone);}
+.modal-body{padding:32px 40px;}
+.modal-section{margin-bottom:22px;}
+.modal-section-label{font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.modal-section-label::after{content:'';flex:1;height:0.5px;background:var(--border);}
+
+/* Board summary in modal */
+.board-summary{background:var(--warm);border:0.5px solid var(--border);padding:16px 18px;margin-bottom:20px;}
+.bs-project{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);margin-bottom:8px;}
+.bs-room{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--charcoal);margin-bottom:12px;}
+.bs-products{display:flex;flex-direction:column;gap:4px;}
+.bs-product{font-size:11px;color:var(--mid);display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--border);}
+.bs-product:last-child{border-bottom:none;}
+.bs-product span:last-child{color:var(--charcoal);font-weight:400;}
+
+.modal-input{width:100%;padding:11px 14px;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;margin-bottom:10px;transition:border-color 0.2s;}
+.modal-input:focus{border-color:var(--charcoal);}
+.modal-input::placeholder{color:var(--mid);}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.modal-textarea{width:100%;padding:11px 14px;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;resize:none;min-height:90px;transition:border-color 0.2s;line-height:1.7;}
+.modal-textarea:focus{border-color:var(--charcoal);}
+.modal-textarea::placeholder{color:var(--mid);}
+.modal-send-row{display:flex;gap:10px;margin-top:20px;}
+.modal-send-btn{flex:1;padding:14px;font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.18em;text-transform:uppercase;border:0.5px solid var(--border);background:var(--white);color:var(--charcoal);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.modal-send-btn:hover{border-color:var(--charcoal);}
+.modal-send-btn.primary-send{background:var(--charcoal);color:var(--stone);border-color:var(--charcoal);}
+.modal-send-btn.primary-send:hover{background:var(--dark);}
+.modal-send-btn.wa-send{border-color:#25D366;color:#25D366;}
+.modal-send-btn.wa-send:hover{background:#25D366;color:#fff;}
+.modal-note{font-size:10px;color:var(--mid);text-align:center;margin-top:10px;line-height:1.6;}
+
+/* SUCCESS STATE */
+.success-state{text-align:center;padding:48px 32px;}
+.success-icon{width:60px;height:60px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:26px;}
+.success-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--charcoal);margin-bottom:8px;}
+.success-sub{font-size:13px;color:var(--mid);line-height:1.8;}
+.success-actions{display:flex;gap:10px;justify-content:center;margin-top:24px;flex-wrap:wrap;}
+.success-btn{padding:11px 24px;border:0.5px solid var(--border);font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;color:var(--charcoal);background:var(--white);cursor:pointer;transition:all 0.2s;}
+.success-btn:hover{border-color:var(--charcoal);}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(8px);z-index:500;background:var(--charcoal);color:var(--stone);padding:12px 22px;font-size:12px;font-weight:300;letter-spacing:0.03em;border:0.5px solid rgba(200,196,188,0.2);opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── HAMBURGER ── */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;z-index:200;}
+.hamburger span{display:block;width:24px;height:0.5px;background:var(--charcoal);transition:all 0.3s ease;transform-origin:center;}
+.hamburger.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg);}
+
+/* ── MOBILE DRAWER ── */
+.mobile-drawer{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:var(--stone);z-index:99;flex-direction:column;padding:40px 32px;border-top:0.5px solid var(--border);overflow-y:auto;transform:translateY(-100%);opacity:0;transition:transform 0.35s ease,opacity 0.35s ease;}
+.mobile-drawer.open{transform:translateY(0);opacity:1;}
+.mobile-nav-links{list-style:none;display:flex;flex-direction:column;gap:0;margin-bottom:40px;}
+.mobile-nav-links li{border-bottom:0.5px solid var(--border);}
+.mobile-nav-links a{display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;}
+.mobile-nav-actions{display:flex;flex-direction:column;gap:12px;}
+.mobile-nav-actions .btn-nav{text-align:center;padding:14px 20px;font-size:11px;}
+
+@media(max-width:1100px){
+  .studio-layout{grid-template-columns:260px 1fr;}
+  .board-panel{display:none;}
+}
+@media(max-width:800px){
+  .nav{padding:0 20px;}
+  .nav-center{display:none;}
+  .nav-actions{display:none;}
+  .hamburger{display:flex;}
+  .mobile-drawer{display:flex;}
+  .hero{padding:28px 20px;grid-template-columns:1fr;}
+  .hero-lab-data{display:none;}
+  .studio-layout{grid-template-columns:1fr;}
+  .filters-panel{position:static;height:auto;}
+  .products-panel{padding:24px 20px;}
+  .products-grid{grid-template-columns:1fr 1fr;}
+  .modal{max-width:100%;margin:0 12px;}
+  .modal-send-row{flex-direction:column;}
+}
+@media(max-width:480px){
+  .products-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- PRODUCT DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <button class="drawer-close" onclick="closeDrawer()">×</button>
+  <div class="drawer-img" id="drImg"></div>
+  <div class="drawer-body">
+    <div class="dr-brand" id="drBrand"></div>
+    <div class="dr-name" id="drName"></div>
+    <div class="dr-country" id="drCountry"></div>
+    <div class="dr-section-title">Specifications</div>
+    <div class="dr-spec-grid" id="drSpecGrid"></div>
+    <div class="dr-section-title">About this fixture</div>
+    <div class="dr-desc" id="drDesc"></div>
+    <div class="dr-section-title">Design language</div>
+    <div class="dr-tags" id="drTags"></div>
+    <button class="dr-pin-btn" id="drPinBtn" onclick="togglePinFromDrawer()">+ Pin to Mood Board</button>
+  </div>
+</div>
+
+<!-- QUOTE MODAL -->
+<div class="modal-overlay" id="quoteModal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="modal-eyebrow">The Lightists — Quote Request</div>
+      <div class="modal-title">Request a Quote</div>
+      <div class="modal-sub">Send your mood board selection to our team. We'll respond within 24 hours with availability, lead times, and a formal quote.</div>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <div class="modal-section">
+        <div class="modal-section-label">Your Mood Board Selection</div>
+        <div class="board-summary" id="boardSummary"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">Your Details</div>
+        <div class="modal-row">
+          <input class="modal-input" id="qName" type="text" placeholder="Your name">
+          <input class="modal-input" id="qFirm" type="text" placeholder="Studio / firm name">
+        </div>
+        <div class="modal-row">
+          <input class="modal-input" id="qEmail" type="email" placeholder="Email address">
+          <input class="modal-input" id="qPhone" type="tel" placeholder="WhatsApp number">
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">Project Notes</div>
+        <textarea class="modal-textarea" id="qNotes" placeholder="Any additional context — site location, installation timeline, finish preferences, budget range, or anything else that will help our team respond accurately."></textarea>
+      </div>
+      <div class="modal-send-row">
+        <button class="modal-send-btn wa-send" onclick="sendWhatsApp()">✉ Send via WhatsApp</button>
+        <button class="modal-send-btn primary-send" onclick="sendEmail()">Send Quote Request →</button>
+      </div>
+      <div class="modal-note">No obligation. Our team will respond within 24 hours with product availability, lead times from Europe, and a formal quote for your project.</div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" href="index.html">
+    <img src="Logo White.png" alt="TL" style="height:38px;width:auto;display:block;"><span style="width:0.5px;height:26px;background:var(--border);display:block;margin:0 14px;"></span><span style="font-family:Raleway,sans-serif;font-weight:200;font-size:11px;letter-spacing:0.36em;text-transform:uppercase;color:var(--charcoal);white-space:nowrap;">The Lightists</span>
+  </a>
+  <div class="nav-center">
+    <span>Platform</span><span class="nav-sep">—</span><span class="nav-current">Mood Studio</span>
+  </div>
+  <div class="nav-actions">
+    <span class="board-count" id="boardCountNav"></span>
+    <button class="btn-nav" onclick="exportPDF()">Export PDF</button>
+    <button class="btn-nav" onclick="window.open('mood-board.html','_blank')">Open Mood Board ↗</button>
+    <button class="btn-nav solid" onclick="openQuoteModal()">Request Quote</button>
+  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:40px;padding-bottom:32px;border-bottom:0.5px solid var(--border);">
+    <img src="Logo White.png" alt="TL" style="height:32px;width:auto;">
+    <span style="width:0.5px;height:24px;background:var(--border);display:block;"></span>
+    <span style="font-family:'Raleway',sans-serif;font-weight:200;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--charcoal);">The Lightists</span>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html" onclick="closeMobileMenu()">Home</a></li>
+    <li><a href="lighting-lab.html" onclick="closeMobileMenu()">Lighting Lab</a></li>
+    <li><a href="mood-studio.html" onclick="closeMobileMenu()">Mood Studio</a></li>
+    <li><a href="mood-board.html" onclick="closeMobileMenu()">Mood Board</a></li>
+    <li><a href="design-academy.html" onclick="closeMobileMenu()">Academy</a></li>
+    <li><a href="products.html" onclick="closeMobileMenu()">Products</a></li>
+    <li><a href="about.html" onclick="closeMobileMenu()">About</a></li>
+    <li><a href="index.html#contact" onclick="closeMobileMenu()">Contact</a></li>
+  </ul>
+  <div class="mobile-nav-actions">
+    <button class="btn-nav" onclick="closeMobileMenu();exportPDF()">Export PDF</button>
+    <button class="btn-nav solid" onclick="closeMobileMenu();openQuoteModal()">Request Quote</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">Professional Tool</div>
+    <div class="hero-title">Mood Studio — <em>Curate with intention.</em></div>
+    <div class="hero-sub">Filter European decorative lighting by fixture type, material, brand, and design language. Pin selections to your board, upload your room render, and export a client-ready PDF with a single quote request to The Lightists team.</div>
+  </div>
+  <div class="hero-lab-data" id="labDataPanel">
+    <div class="hld-label">From Lighting Lab</div>
+    <div class="hld-row"><span class="hld-key">Room</span><span class="hld-val" id="labRoom">—</span></div>
+    <div class="hld-row"><span class="hld-key">Colour Temp</span><span class="hld-val" id="labCCT">—</span></div>
+    <div class="hld-row"><span class="hld-key">CRI Spec</span><span class="hld-val" id="labCRI">—</span></div>
+    <div class="hld-row"><span class="hld-key">Dimming</span><span class="hld-val" id="labDim">—</span></div>
+    <div class="hld-note">Filters pre-applied from your calculation</div>
+  </div>
+</div>
+
+<!-- STUDIO LAYOUT -->
+<div class="studio-layout">
+
+  <!-- LEFT: FILTERS -->
+  <div class="filters-panel">
+
+    <!-- Search -->
+    <div class="fp-section">
+      <div class="fp-label">Search</div>
+      <div class="search-wrap">
+        <span class="search-icon">◎</span>
+        <input class="search-input" id="searchInput" type="text" placeholder="Search fixtures, brands..." oninput="applyFilters()">
+      </div>
+    </div>
+
+    <!-- Fixture Type -->
+    <div class="fp-section">
+      <div class="fp-label">Fixture Type</div>
+      <div class="filter-chips" id="typeFilters">
+        <div class="chip active" data-filter="type" data-val="all" onclick="selectType('all',this)">All Types <span class="chip-count"></span></div>
+        <div class="chip" data-filter="type" data-val="pendant" onclick="selectType('pendant',this)">Pendant</div>
+        <div class="chip" data-filter="type" data-val="floor" onclick="selectType('floor',this)">Floor Lamp</div>
+        <div class="chip" data-filter="type" data-val="wall" onclick="selectType('wall',this)">Wall Sconce</div>
+        <div class="chip" data-filter="type" data-val="table" onclick="selectType('table',this)">Table Lamp</div>
+        <div class="chip" data-filter="type" data-val="chandelier" onclick="selectType('chandelier',this)">Chandelier</div>
+        <div class="chip" data-filter="type" data-val="outdoor" onclick="selectType('outdoor',this)">Outdoor</div>
+      </div>
+    </div>
+
+    <!-- Material -->
+    <div class="fp-section">
+      <div class="fp-label">Material / Finish</div>
+      <div class="mat-swatches" id="matFilters">
+        <div class="mat-swatch-btn" onclick="toggleMat('brass',this)"><div class="mat-dot" style="background:linear-gradient(135deg,#D4A843,#8B6E2A)"></div><span class="mat-name">Brushed Brass</span></div>
+        <div class="mat-swatch-btn" onclick="toggleMat('black',this)"><div class="mat-dot" style="background:#1A1A1A"></div><span class="mat-name">Matte Black</span></div>
+        <div class="mat-swatch-btn" onclick="toggleMat('glass',this)"><div class="mat-dot" style="background:linear-gradient(135deg,#E8E4DC,#C4BCB0)"></div><span class="mat-name">Glass</span></div>
+        <div class="mat-swatch-btn" onclick="toggleMat('alabaster',this)"><div class="mat-dot" style="background:linear-gradient(135deg,#F0EDE8,#D8D0C4)"></div><span class="mat-name">Alabaster</span></div>
+        <div class="mat-swatch-btn" onclick="toggleMat('wood',this)"><div class="mat-dot" style="background:linear-gradient(135deg,#C4A882,#8B6E50)"></div><span class="mat-name">Natural Wood</span></div>
+        <div class="mat-swatch-btn" onclick="toggleMat('rattan',this)"><div class="mat-dot" style="background:linear-gradient(135deg,#8B6347,#5C3D1E)"></div><span class="mat-name">Rattan</span></div>
+        <div class="mat-swatch-btn" onclick="toggleMat('ceramic',this)"><div class="mat-dot" style="background:linear-gradient(135deg,#B87050,#7A3A20)"></div><span class="mat-name">Ceramic</span></div>
+        <div class="mat-swatch-btn" onclick="toggleMat('steel',this)"><div class="mat-dot" style="background:linear-gradient(135deg,#C0C0C0,#808080)"></div><span class="mat-name">Brushed Steel</span></div>
+        <div class="mat-swatch-btn" onclick="toggleMat('bronze',this)"><div class="mat-dot" style="background:linear-gradient(135deg,#8B7355,#5C4A28)"></div><span class="mat-name">Aged Bronze</span></div>
+        <div class="mat-swatch-btn" onclick="toggleMat('chrome',this)"><div class="mat-dot" style="background:linear-gradient(135deg,#E8E8E8,#B0B0B0)"></div><span class="mat-name">Chrome</span></div>
+      </div>
+    </div>
+
+    <!-- Brand -->
+    <div class="fp-section">
+      <div class="fp-label">Brand</div>
+      <div class="brand-list">
+        <div class="brand-btn active" onclick="selectBrand('all',this)">All Brands</div>
+        <div class="brand-btn" onclick="selectBrand('Artemide',this)">Artemide <span style="font-size:9px;color:var(--mid)">Italy</span></div>
+        <div class="brand-btn" onclick="selectBrand('Foscarini',this)">Foscarini <span style="font-size:9px;color:var(--mid)">Italy</span></div>
+        <div class="brand-btn" onclick="selectBrand('FontanaArte',this)">FontanaArte <span style="font-size:9px;color:var(--mid)">Italy</span></div>
+        <div class="brand-btn" onclick="selectBrand('Terzani',this)">Terzani <span style="font-size:9px;color:var(--mid)">Italy</span></div>
+        <div class="brand-btn" onclick="selectBrand('Axolight',this)">Axolight <span style="font-size:9px;color:var(--mid)">Italy</span></div>
+        <div class="brand-btn" onclick="selectBrand('Vibia',this)">Vibia <span style="font-size:9px;color:var(--mid)">Spain</span></div>
+        <div class="brand-btn" onclick="selectBrand('Marset',this)">Marset <span style="font-size:9px;color:var(--mid)">Spain</span></div>
+        <div class="brand-btn" onclick="selectBrand('Bover',this)">Bover <span style="font-size:9px;color:var(--mid)">Spain</span></div>
+        <div class="brand-btn" onclick="selectBrand('Brokis',this)">Brokis <span style="font-size:9px;color:var(--mid)">Czech Republic</span></div>
+        <div class="brand-btn" onclick="selectBrand('Occhio',this)">Occhio <span style="font-size:9px;color:var(--mid)">Germany</span></div>
+        <div class="brand-btn" onclick="selectBrand('Tom Dixon',this)">Tom Dixon <span style="font-size:9px;color:var(--mid)">UK</span></div>
+        <div class="brand-btn" onclick="selectBrand('Bocci',this)">Bocci <span style="font-size:9px;color:var(--mid)">Canada</span></div>
+        <div class="brand-btn" onclick="selectBrand('Muuto',this)">Muuto <span style="font-size:9px;color:var(--mid)">Denmark</span></div>
+        <div class="brand-btn" onclick="selectBrand('&Tradition',this)">&Tradition <span style="font-size:9px;color:var(--mid)">Denmark</span></div>
+      </div>
+    </div>
+
+    <!-- CCT -->
+    <div class="fp-section">
+      <div class="fp-label">Colour Temperature</div>
+      <div class="cct-row">
+        <div class="cct-btn" onclick="toggleCCT('2700',this)">2700K</div>
+        <div class="cct-btn" onclick="toggleCCT('3000',this)">3000K</div>
+        <div class="cct-btn" onclick="toggleCCT('4000',this)">4000K</div>
+      </div>
+    </div>
+
+    <!-- Design Language -->
+    <div class="fp-section">
+      <div class="fp-label">Design Language</div>
+      <div class="dl-grid">
+        <div class="dl-btn" onclick="toggleDL('scandinavian',this)"><div class="dl-name">Scandinavian</div><div class="dl-desc">Organic, warm, natural</div></div>
+        <div class="dl-btn" onclick="toggleDL('minimal',this)"><div class="dl-name">Minimal</div><div class="dl-desc">Precise, geometric</div></div>
+        <div class="dl-btn" onclick="toggleDL('luxury',this)"><div class="dl-name">Luxury</div><div class="dl-desc">Sculptural, warm metals</div></div>
+        <div class="dl-btn" onclick="toggleDL('organic',this)"><div class="dl-name">Organic</div><div class="dl-desc">Earthy, handmade</div></div>
+        <div class="dl-btn" onclick="toggleDL('industrial',this)"><div class="dl-name">Industrial</div><div class="dl-desc">Raw, bold, urban</div></div>
+        <div class="dl-btn" onclick="toggleDL('artdeco',this)"><div class="dl-name">Art Deco</div><div class="dl-desc">Glam, symmetrical</div></div>
+        <div class="dl-btn" onclick="toggleDL('mediterranean',this)"><div class="dl-name">Mediterranean</div><div class="dl-desc">Artisanal, layered</div></div>
+        <div class="dl-btn" onclick="toggleDL('commercial',this)"><div class="dl-name">Commercial</div><div class="dl-desc">Durable, high-impact</div></div>
+      </div>
+      <button class="clear-btn" onclick="clearAllFilters()">Clear All Filters</button>
+    </div>
+
+  </div>
+
+  <!-- MIDDLE: PRODUCTS -->
+  <div class="products-panel">
+    <div class="products-header">
+      <div class="products-count" id="productsCount">Loading catalogue...</div>
+      <div class="products-sort">
+        Sort by
+        <select class="sort-select" onchange="applyFilters()">
+          <option value="brand">Brand A–Z</option>
+          <option value="type">Fixture type</option>
+          <option value="newest">Newest first</option>
+        </select>
+      </div>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+
+  <!-- RIGHT: BOARD -->
+  <div class="board-panel">
+
+    <!-- Room image upload -->
+    <div class="bp-section">
+      <div class="bp-label">Room Reference</div>
+      <div class="img-upload-area" id="uploadArea" onclick="document.getElementById('roomImgInput').click()">
+        <span class="upload-icon">◎</span>
+        <span class="upload-text">Upload render or photo</span>
+        <img class="uploaded-img" id="uploadedImg" style="display:none">
+        <button class="img-clear" id="imgClear" style="display:none" onclick="clearImage(event)">×</button>
+      </div>
+      <input type="file" id="roomImgInput" accept="image/*" onchange="handleImageUpload(event)">
+    </div>
+
+    <!-- Board details -->
+    <div class="bp-section">
+      <div class="bp-label">Board Details</div>
+      <input class="board-meta-input" id="boardProject" type="text" placeholder="Project name">
+      <input class="board-meta-input" id="boardRoom" type="text" placeholder="Room / space">
+      <input class="board-meta-input" id="boardStudio" type="text" placeholder="Your studio name (for PDF)">
+      <textarea class="board-textarea" id="boardNotes" placeholder="Design notes — describe the mood, palette, or concept for this space..."></textarea>
+    </div>
+
+    <!-- Pinned products -->
+    <div class="bp-section" style="flex:1;">
+      <div class="bp-label">Pinned Fixtures <span id="pinCount" style="font-style:italic;font-weight:300;text-transform:none;letter-spacing:0;">(0)</span></div>
+      <div id="pinnedList">
+        <div class="empty-board">
+          <div class="eb-icon">◇</div>
+          <div class="eb-title">No fixtures pinned yet</div>
+          <div class="eb-sub">Hover over any product in the catalogue and click "Pin to Board" to add it here.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="board-actions">
+      <button class="board-action-btn" onclick="exportPDF()">↓ Export Board PDF</button>
+      <button class="board-action-btn primary" onclick="openQuoteModal()">Request Quote from The Lightists →</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── PRODUCT CATALOGUE ──
+// Replace these with your actual products. Each product needs:
+// id, brand, country, name, type, materials[], designLanguages[], cct[], cri, dimmable, description, emoji (placeholder for real image)
+const CATALOGUE = []; // Loaded from Supabase via Admin Panel
+const SUPABASE_URL_MS = 'https://xwgbkolqltdzottdwufb.supabase.co';
+const SUPABASE_KEY_MS = 'sb_publishable_gLoiEdxkGyjCfHjLBVDsgQ_LDyZHjSV';
+
+async function loadCatalogueFromDB() {
+  try {
+    const res = await fetch(`${SUPABASE_URL_MS}/rest/v1/products?active=eq.true&order=brand.asc`, {
+      headers:{'apikey':SUPABASE_KEY_MS,'Authorization':`Bearer ${SUPABASE_KEY_MS}`}
+    });
+    if(!res.ok) throw new Error('Failed');
+    const data = await res.json();
+    data.forEach(p => {
+      CATALOGUE.push({
+        id: p.id,
+        brand: p.brand || '',
+        country: '',
+        name: p.name || '',
+        type: p.type || 'pendant',
+        materials: Array.isArray(p.materials) ? p.materials : (p.materials||'').split(',').map(s=>s.trim()).filter(Boolean),
+        cct: Array.isArray(p.cct) ? p.cct : (p.cct||'').split(',').map(s=>s.trim()).filter(Boolean),
+        cri: 80, dimmable: false,
+        description: p.description || '',
+        svgBg: '#EDECEA', svgFg: '#1A1A1A', svgAcc: '#C8C4BC',
+        svgGlow: 'rgba(255,235,180,0.15)', svgShape: p.type === 'floor' ? 'arc' : 'dome',
+        image: p.image_url || ''
+      });
+    });
+    applyFilters();
+  } catch(e) {
+    console.log('Catalogue not loaded from DB:', e);
+    applyFilters();
+  }
+}
+
+// ── STATE ──
+let filters = {type:'all',materials:[],brand:'all',cct:[],designLanguages:[],search:''};
+let pinnedIds = new Set();
+let pinnedQty = {};
+let activeDrawerProduct = null;
+
+// Simulate lab data (in production this comes from the Lighting Lab)
+const labData = {room:'Dining Room',cct:'2700K',cri:'CRI 90+',dimming:'Yes'};
+
+// ── INIT ──
+function init() {
+  document.getElementById('labRoom').textContent = labData.room;
+  document.getElementById('labCCT').textContent = labData.cct;
+  document.getElementById('labCRI').textContent = labData.cri;
+  document.getElementById('labDim').textContent = labData.dimming;
+  loadCatalogueFromDB(); // Load products from Supabase
+}
+
+// ── FILTERS ──
+function selectType(val, el) {
+  filters.type = val;
+  document.querySelectorAll('[data-filter="type"]').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+
+function toggleMat(val, el) {
+  el.classList.toggle('active');
+  if (filters.materials.includes(val)) {
+    filters.materials = filters.materials.filter(m => m !== val);
+  } else {
+    filters.materials.push(val);
+  }
+  applyFilters();
+}
+
+function selectBrand(val, el) {
+  filters.brand = val;
+  document.querySelectorAll('.brand-btn').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+
+function toggleCCT(val, el) {
+  el.classList.toggle('active');
+  if (filters.cct.includes(val)) {
+    filters.cct = filters.cct.filter(c => c !== val);
+  } else {
+    filters.cct.push(val);
+  }
+  applyFilters();
+}
+
+function toggleDL(val, el) {
+  el.classList.toggle('active');
+  if (filters.designLanguages.includes(val)) {
+    filters.designLanguages = filters.designLanguages.filter(d => d !== val);
+  } else {
+    filters.designLanguages.push(val);
+  }
+  applyFilters();
+}
+
+function clearAllFilters() {
+  filters = {type:'all',materials:[],brand:'all',cct:[],designLanguages:[],search:''};
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.chip').forEach(e => e.classList.remove('active'));
+  document.querySelector('.chip[data-val="all"]').classList.add('active');
+  document.querySelectorAll('.mat-swatch-btn,.brand-btn,.cct-btn,.dl-btn').forEach(e => e.classList.remove('active'));
+  document.querySelector('.brand-btn').classList.add('active');
+  applyFilters();
+  showToast('All filters cleared');
+}
+
+function applyFilters() {
+  filters.search = document.getElementById('searchInput').value.toLowerCase();
+  let results = CATALOGUE.filter(p => {
+    if (filters.type !== 'all' && p.type !== filters.type) return false;
+    if (filters.materials.length > 0 && !filters.materials.some(m => p.materials.includes(m))) return false;
+    if (filters.brand !== 'all' && p.brand !== filters.brand) return false;
+    if (filters.cct.length > 0 && !filters.cct.some(c => p.cct.includes(c))) return false;
+    if (filters.designLanguages.length > 0 && !filters.designLanguages.some(d => p.designLanguages.includes(d))) return false;
+    if (filters.search) {
+      const q = filters.search;
+      if (!p.name.toLowerCase().includes(q) && !p.brand.toLowerCase().includes(q) && !p.materials.join(' ').toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+  renderProducts(results);
+}
+
+// ── SVG FIXTURE ILLUSTRATIONS ──
+function getFixtureSVG(p) {
+  const bg = p.svgBg || '#EDECEA';
+  const fg = p.svgFg || '#1A1A1A';
+  const acc = p.svgAcc || '#C8C4BC';
+  const glow = p.svgGlow || 'rgba(255,235,180,0.18)';
+  const t = p.type;
+
+  if (t === 'pendant') return `
+    <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+      <rect width="280" height="220" fill="${bg}"/>
+      <radialGradient id="g${p.id}" cx="50%" cy="65%" r="45%"><stop offset="0%" stop-color="${glow}"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+      <rect width="280" height="220" fill="url(#g${p.id})"/>
+      <line x1="140" y1="0" x2="140" y2="48" stroke="${acc}" stroke-width="1"/>
+      <ellipse cx="140" cy="50" rx="12" ry="4" fill="${fg}" opacity="0.6"/>
+      ${p.svgShape === 'artichoke' ? `
+        <g transform="translate(140,110)">
+          ${[0,30,60,90,120,150,180,210,240,270,300,330].map((a,i)=>`<ellipse cx="${Math.sin(a*Math.PI/180)*30}" cy="${Math.cos(a*Math.PI/180)*12-i%3*8}" rx="16" ry="8" fill="${fg}" opacity="${0.7-i*0.02}" transform="rotate(${a},0,0)"/>`).join('')}
+          <ellipse cx="0" cy="0" rx="18" ry="18" fill="${fg}" opacity="0.5"/>
+        </g>` :
+      p.svgShape === 'dome' ? `
+        <ellipse cx="140" cy="90" rx="52" ry="12" fill="${fg}" opacity="0.15"/>
+        <path d="M88,90 Q88,148 140,152 Q192,148 192,90 Z" fill="${fg}" opacity="0.85"/>
+        <path d="M92,90 Q92,144 140,148 Q188,144 188,90 Z" fill="${fg}" opacity="0.1"/>
+        <ellipse cx="140" cy="152" rx="20" ry="5" fill="${acc}" opacity="0.4"/>` :
+      p.svgShape === 'globe' ? `
+        <circle cx="140" cy="118" r="48" fill="${fg}" opacity="0.08"/>
+        <circle cx="140" cy="118" r="42" fill="none" stroke="${fg}" stroke-width="1.5" opacity="0.6"/>
+        <circle cx="140" cy="118" r="38" fill="${fg}" opacity="0.06"/>
+        <ellipse cx="140" cy="118" rx="42" ry="42" fill="none" stroke="${fg}" stroke-width="0.5" opacity="0.3"/>
+        <circle cx="140" cy="118" r="6" fill="${fg}" opacity="0.4"/>` :
+      p.svgShape === 'cone' ? `
+        <path d="M110,62 L170,62 L158,148 L122,148 Z" fill="${fg}" opacity="0.85"/>
+        <ellipse cx="140" cy="62" rx="30" ry="8" fill="${fg}" opacity="0.5"/>
+        <ellipse cx="140" cy="148" rx="18" ry="5" fill="${acc}" opacity="0.3"/>
+        <path d="M114,68 L166,68 L155,140 L125,140 Z" fill="${fg}" opacity="0.08"/>` :
+      p.svgShape === 'linear' ? `
+        <rect x="72" y="88" width="136" height="12" rx="2" fill="${fg}" opacity="0.85"/>
+        <rect x="80" y="100" width="120" height="3" rx="1" fill="${acc}" opacity="0.5"/>
+        <line x1="104" y1="52" x2="104" y2="88" stroke="${acc}" stroke-width="0.8"/>
+        <line x1="176" y1="52" x2="176" y2="88" stroke="${acc}" stroke-width="0.8"/>` :
+      p.svgShape === 'cluster' ? `
+        ${[[-28,-10],[0,0],[28,-10],[-14,22],[14,22]].map(([dx,dy],i)=>`
+          <line x1="${140+dx}" y1="52" x2="${140+dx}" y2="${72+dy}" stroke="${acc}" stroke-width="0.8"/>
+          <circle cx="${140+dx}" cy="${88+dy}" r="${i===1?16:12}" fill="${fg}" opacity="${i===1?0.85:0.7}"/>
+          <circle cx="${140+dx}" cy="${88+dy}" r="${i===1?12:9}" fill="${fg}" opacity="0.06"/>
+        `).join('')}` :
+      `<path d="M108,58 L172,58 L164,148 L116,148 Z" fill="${fg}" opacity="0.85"/>
+        <ellipse cx="140" cy="58" rx="32" ry="9" fill="${fg}" opacity="0.5"/>
+        <ellipse cx="140" cy="148" rx="24" ry="6" fill="${acc}" opacity="0.3"/>
+        <path d="M112,65 L168,65 L161,142 L119,142 Z" fill="${fg}" opacity="0.07"/>`}
+    </svg>`;
+
+  if (t === 'floor') return `
+    <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+      <rect width="280" height="220" fill="${bg}"/>
+      <radialGradient id="gf${p.id}" cx="40%" cy="40%" r="40%"><stop offset="0%" stop-color="${glow}"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+      <rect width="280" height="220" fill="url(#gf${p.id})"/>
+      <line x1="155" y1="200" x2="148" y2="48" stroke="${fg}" stroke-width="3" opacity="0.8"/>
+      <ellipse cx="155" cy="200" rx="30" ry="6" fill="${fg}" opacity="0.3"/>
+      ${p.svgShape === 'arc' ? `
+        <path d="M148,48 Q60,48 60,120" stroke="${fg}" stroke-width="3" fill="none" opacity="0.8"/>
+        <ellipse cx="60" cy="120" rx="28" ry="10" fill="${fg}" opacity="0.2"/>
+        <path d="M32,110 Q32,140 60,142 Q88,140 88,110 Z" fill="${fg}" opacity="0.8"/>
+        <ellipse cx="60" cy="142" rx="16" ry="4" fill="${acc}" opacity="0.3"/>` :
+      p.svgShape === 'tripod' ? `
+        <line x1="120" y1="200" x2="148" y2="80" stroke="${fg}" stroke-width="2.5" opacity="0.6"/>
+        <line x1="190" y1="200" x2="148" y2="80" stroke="${fg}" stroke-width="2.5" opacity="0.6"/>
+        <path d="M120,68 L176,68 L168,120 L128,120 Z" fill="${fg}" opacity="0.8"/>
+        <ellipse cx="148" cy="68" rx="28" ry="7" fill="${fg}" opacity="0.5"/>` :
+      `<path d="M118,40 Q118,72 148,72 Q178,72 178,40" fill="none" stroke="${fg}" stroke-width="2" opacity="0.6"/>
+        <circle cx="148" cy="78" r="26" fill="none" stroke="${fg}" stroke-width="2" opacity="0.8"/>
+        <circle cx="148" cy="78" r="20" fill="${fg}" opacity="0.07"/>`}
+    </svg>`;
+
+  if (t === 'wall') return `
+    <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+      <rect width="280" height="220" fill="${bg}"/>
+      <radialGradient id="gw${p.id}" cx="55%" cy="55%" r="38%"><stop offset="0%" stop-color="${glow}"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+      <rect width="280" height="220" fill="url(#gw${p.id})"/>
+      <rect x="0" y="0" width="52" height="220" fill="${fg}" opacity="0.06"/>
+      <rect x="0" y="0" width="2" height="220" fill="${fg}" opacity="0.2"/>
+      <rect x="36" y="96" width="16" height="28" rx="2" fill="${fg}" opacity="0.7"/>
+      <circle cx="44" cy="96" r="6" fill="${fg}" opacity="0.5"/>
+      ${p.svgShape === 'halfmoon' ? `
+        <path d="M52,72 Q52,148 52,148 L120,148 Q120,72 52,72 Z" fill="${fg}" opacity="0.8"/>
+        <path d="M56,76 Q56,144 56,144 L112,144 Q112,76 56,76 Z" fill="${fg}" opacity="0.06"/>` :
+      `<line x1="52" y1="110" x2="88" y2="110" stroke="${fg}" stroke-width="3" opacity="0.7"/>
+        <path d="M78,82 Q110,82 110,110 Q110,138 78,138 Z" fill="${fg}" opacity="0.8"/>
+        <path d="M82,86 Q106,86 106,110 Q106,134 82,134 Z" fill="${fg}" opacity="0.07"/>`}
+    </svg>`;
+
+  if (t === 'table') return `
+    <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+      <rect width="280" height="220" fill="${bg}"/>
+      <radialGradient id="gt${p.id}" cx="50%" cy="50%" r="40%"><stop offset="0%" stop-color="${glow}"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+      <rect width="280" height="220" fill="url(#gt${p.id})"/>
+      <rect x="60" y="188" width="160" height="4" rx="1" fill="${fg}" opacity="0.2"/>
+      <rect x="128" y="100" width="24" height="88" rx="2" fill="${fg}" opacity="0.6"/>
+      <ellipse cx="140" cy="192" rx="32" ry="6" fill="${fg}" opacity="0.2"/>
+      ${p.svgShape === 'globe-table' ? `
+        <circle cx="140" cy="72" r="36" fill="${fg}" opacity="0.08"/>
+        <circle cx="140" cy="72" r="30" fill="none" stroke="${fg}" stroke-width="1.5" opacity="0.7"/>
+        <circle cx="140" cy="72" r="8" fill="${fg}" opacity="0.4"/>` :
+      `<path d="M104,36 L176,36 L164,100 L116,100 Z" fill="${fg}" opacity="0.8"/>
+        <ellipse cx="140" cy="36" rx="36" ry="9" fill="${fg}" opacity="0.5"/>
+        <ellipse cx="140" cy="100" rx="24" ry="6" fill="${acc}" opacity="0.25"/>`}
+    </svg>`;
+
+  if (t === 'chandelier') return `
+    <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+      <rect width="280" height="220" fill="${bg}"/>
+      <radialGradient id="gc${p.id}" cx="50%" cy="55%" r="50%"><stop offset="0%" stop-color="${glow}"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+      <rect width="280" height="220" fill="url(#gc${p.id})"/>
+      <line x1="140" y1="0" x2="140" y2="40" stroke="${acc}" stroke-width="1.5"/>
+      <ellipse cx="140" cy="42" rx="16" ry="5" fill="${fg}" opacity="0.5"/>
+      ${[[-56,28],[-28,16],[0,0],[28,16],[56,28]].map(([dx,dy],i)=>`
+        <line x1="140" y1="48" x2="${140+dx}" y2="${68+dy}" stroke="${acc}" stroke-width="1"/>
+        <line x1="${140+dx}" y1="${68+dy}" x2="${140+dx}" y2="${100+dy}" stroke="${acc}" stroke-width="0.8"/>
+        <ellipse cx="${140+dx}" cy="${108+dy}" rx="${i===2?14:11}" ry="${i===2?22:18}" fill="${fg}" opacity="${i===2?0.85:0.7}"/>
+        <ellipse cx="${140+dx}" cy="${104+dy}" rx="${i===2?10:8}" ry="${i===2?5:4}" fill="${fg}" opacity="0.3"/>
+      `).join('')}
+    </svg>`;
+
+  if (t === 'outdoor') return `
+    <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+      <rect width="280" height="220" fill="${bg}"/>
+      <radialGradient id="go${p.id}" cx="50%" cy="60%" r="40%"><stop offset="0%" stop-color="${glow}"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+      <rect width="280" height="220" fill="url(#go${p.id})"/>
+      <rect x="128" y="80" width="24" height="120" rx="2" fill="${fg}" opacity="0.7"/>
+      <ellipse cx="140" cy="200" rx="22" ry="5" fill="${fg}" opacity="0.2"/>
+      <rect x="112" y="68" width="56" height="18" rx="3" fill="${fg}" opacity="0.8"/>
+      <rect x="116" y="48" width="48" height="22" rx="2" fill="${fg}" opacity="0.7"/>
+      <rect x="120" y="36" width="40" height="14" rx="2" fill="${fg}" opacity="0.6"/>
+    </svg>`;
+
+  return `<svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+    <rect width="280" height="220" fill="${bg}"/>
+    <circle cx="140" cy="110" r="40" fill="${fg}" opacity="0.15"/>
+    <circle cx="140" cy="110" r="28" fill="none" stroke="${fg}" stroke-width="2" opacity="0.6"/>
+  </svg>`;
+}
+
+// ── RENDER PRODUCTS ──
+function renderProducts(products) {
+  const grid = document.getElementById('productsGrid');
+  document.getElementById('productsCount').textContent = `${products.length} fixture${products.length !== 1 ? 's' : ''} in catalogue`;
+
+  if (products.length === 0 && CATALOGUE.length === 0) {
+    grid.innerHTML = `<div class="no-results"><div class="nr-title">Catalogue coming soon</div><div class="nr-sub">Our European product catalogue is being added. In the meantime, <a href="index.html#contact" style="color:var(--charcoal)">contact us</a> to discuss your project directly.</div></div>`;
+    return;
+  }
+  if (products.length === 0) {
+    grid.innerHTML = `<div class="no-results"><div class="nr-title">No fixtures match these filters</div><div class="nr-sub">Try removing a filter or clearing all to see the full catalogue.</div></div>`;
+    return;
+  }
+
+  grid.innerHTML = products.map(p => {
+    const isPinned = pinnedIds.has(p.id);
+    return `
+    <div class="product-card" id="pc-${p.id}">
+      ${isPinned ? '<div class="pinned-badge">✓ Pinned</div>' : ''}
+      <div style="width:100%;height:220px;overflow:hidden;position:relative;" onclick="openDrawer(${p.id})">
+        ${getFixtureSVG(p)}
+      </div>
+      <div class="pc-body" onclick="openDrawer(${p.id})" style="cursor:pointer;">
+        <div class="pc-brand">${p.brand} · ${p.country}</div>
+        <div class="pc-name">${p.name}</div>
+        <div class="pc-tags">
+          ${p.materials.slice(0,3).map(m => `<span class="pc-tag">${m}</span>`).join('')}
+          ${p.cct.map(c => `<span class="pc-tag">${c}K</span>`).join('')}
+          ${p.dimmable ? '<span class="pc-tag">Dimmable</span>' : ''}
+        </div>
+        <div class="pc-spec">
+          <span>CRI ${p.cri}${p.cri>=90?'+':''}</span>
+          <span>${p.designLanguages[0].charAt(0).toUpperCase()+p.designLanguages[0].slice(1)}</span>
+        </div>
+      </div>
+      <div class="pc-overlay">
+        <button class="pin-btn ${isPinned?'pinned':''}" onclick="togglePin(${p.id},event)">${isPinned?'✓ Pinned':'+ Pin to Board'}</button>
+        <button class="view-btn" onclick="openDrawer(${p.id})">View details →</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── PIN SYSTEM ──
+function togglePin(id, e) {
+  if (e) e.stopPropagation();
+  const product = CATALOGUE.find(p => p.id === id);
+  if (!product) return;
+  if (pinnedIds.has(id)) {
+    pinnedIds.delete(id);
+    delete pinnedQty[id];
+    showToast(`"${product.name}" removed from board`);
+  } else {
+    pinnedIds.add(id);
+    pinnedQty[id] = 1;
+    showToast(`"${product.name}" pinned to board`);
+  }
+  renderPinnedList();
+  applyFilters();
+  updateBoardCount();
+  if (activeDrawerProduct?.id === id) updateDrawerPinState();
+}
+
+function togglePinFromDrawer() {
+  if (activeDrawerProduct) togglePin(activeDrawerProduct.id, null);
+}
+
+function updateDrawerPinState() {
+  const btn = document.getElementById('drPinBtn');
+  const isPinned = pinnedIds.has(activeDrawerProduct.id);
+  btn.textContent = isPinned ? '✓ Pinned to Board' : '+ Pin to Mood Board';
+  btn.className = `dr-pin-btn${isPinned?' pinned':''}`;
+}
+
+function changeQty(id, delta) {
+  if (!pinnedQty[id]) return;
+  pinnedQty[id] = Math.max(1, pinnedQty[id] + delta);
+  renderPinnedList();
+}
+
+function renderPinnedList() {
+  const list = document.getElementById('pinnedList');
+  const count = document.getElementById('pinCount');
+  const pinned = CATALOGUE.filter(p => pinnedIds.has(p.id));
+  count.textContent = `(${pinned.length})`;
+
+  if (pinned.length === 0) {
+    list.innerHTML = `<div class="empty-board"><div class="eb-icon">◇</div><div class="eb-title">No fixtures pinned yet</div><div class="eb-sub">Hover over any product and click "Pin to Board" to add it here.</div></div>`;
+    return;
+  }
+
+  list.innerHTML = pinned.map(p => `
+    <div class="pinned-item">
+      <div class="pi-img" style="overflow:hidden;">${getFixtureSVG({...p, svgBg: p.svgBg||'#EDECEA'})}</div>
+      <div>
+        <div class="pi-brand">${p.brand}</div>
+        <div class="pi-name">${p.name}</div>
+        <div class="pi-tags">${p.materials[0]} · ${p.cct[0]}K</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="pi-qty">
+          <button class="qty-btn" onclick="changeQty(${p.id},-1)">−</button>
+          <span class="qty-num">${pinnedQty[p.id]||1}</span>
+          <button class="qty-btn" onclick="changeQty(${p.id},1)">+</button>
+        </div>
+        <button class="pi-remove" onclick="togglePin(${p.id},null)">×</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateBoardCount() {
+  const n = pinnedIds.size;
+  document.getElementById('boardCountNav').textContent = n > 0 ? `${n} fixture${n!==1?'s':''} on board` : '';
+}
+
+// ── DRAWER ──
+function openDrawer(id) {
+  const p = CATALOGUE.find(x => x.id === id);
+  if (!p) return;
+  activeDrawerProduct = p;
+  document.getElementById('drImg').innerHTML = getFixtureSVG(p);
+  document.getElementById('drImg').style.fontSize = '';
+  document.getElementById('drBrand').textContent = `${p.brand} · ${p.country}`;
+  document.getElementById('drName').textContent = p.name;
+  document.getElementById('drCountry').textContent = `${p.type.charAt(0).toUpperCase()+p.type.slice(1)} · ${p.cct.join(' / ')}K`;
+  document.getElementById('drSpecGrid').innerHTML = `
+    <div class="dr-spec"><div class="dr-spec-label">Fixture Type</div><div class="dr-spec-val">${p.type.charAt(0).toUpperCase()+p.type.slice(1)}</div></div>
+    <div class="dr-spec"><div class="dr-spec-label">Colour Temp</div><div class="dr-spec-val">${p.cct.join(' / ')}K</div></div>
+    <div class="dr-spec"><div class="dr-spec-label">Colour Rendering</div><div class="dr-spec-val">CRI ${p.cri}${p.cri>=90?'+':''}</div></div>
+    <div class="dr-spec"><div class="dr-spec-label">Dimmable</div><div class="dr-spec-val">${p.dimmable?'Yes':'No'}</div></div>
+  `;
+  document.getElementById('drDesc').textContent = p.description;
+  document.getElementById('drTags').innerHTML = [
+    ...p.materials.map(m=>`<span class="dr-tag">${m}</span>`),
+    ...p.designLanguages.map(d=>`<span class="dr-tag">${d}</span>`)
+  ].join('');
+  updateDrawerPinState();
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.body.style.overflow = '';
+  activeDrawerProduct = null;
+}
+
+// ── IMAGE UPLOAD ──
+function handleImageUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = document.getElementById('uploadedImg');
+    img.src = ev.target.result;
+    img.style.display = 'block';
+    document.getElementById('imgClear').style.display = 'flex';
+    document.getElementById('uploadArea').classList.add('has-img');
+    document.querySelectorAll('.upload-icon,.upload-text').forEach(el=>el.style.display='none');
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearImage(e) {
+  e.stopPropagation();
+  document.getElementById('uploadedImg').style.display = 'none';
+  document.getElementById('uploadedImg').src = '';
+  document.getElementById('imgClear').style.display = 'none';
+  document.getElementById('uploadArea').classList.remove('has-img');
+  document.querySelectorAll('.upload-icon,.upload-text').forEach(el=>el.style.display='');
+  document.getElementById('roomImgInput').value = '';
+}
+
+// ── PDF EXPORT ──
+function exportPDF() {
+  if (pinnedIds.size === 0) { showToast('Pin at least one fixture to export'); return; }
+  const pinned = CATALOGUE.filter(p => pinnedIds.has(p.id));
+  const project = document.getElementById('boardProject').value || 'My Project';
+  const room = document.getElementById('boardRoom').value || 'Room';
+  const studio = document.getElementById('boardStudio').value || '';
+  const notes = document.getElementById('boardNotes').value || '';
+  const today = new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+  const roomImg = document.getElementById('uploadedImg').src;
+
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Mood Board — ${project}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Jost',sans-serif;font-weight:300;color:#1A1A1A;background:#fff;padding:48px;}
+    .header{display:flex;justify-content:space-between;align-items:start;margin-bottom:36px;padding-bottom:28px;border-bottom:0.5px solid #C8C4BC;}
+    .brand{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;}
+    .brand-sub{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#8C8880;margin-top:3px;}
+    .doc-info{text-align:right;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#8C8880;}
+    .doc-date{font-size:12px;color:#1A1A1A;margin-top:4px;}
+    .project-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;margin-bottom:4px;}
+    .project-sub{font-size:12px;color:#8C8880;margin-bottom:32px;}
+    .board-grid{display:grid;grid-template-columns:${roomImg?'1fr 1fr':'1fr'};gap:24px;margin-bottom:36px;}
+    .room-img{width:100%;height:280px;object-fit:cover;background:#EDECEA;display:flex;align-items:center;justify-content:center;}
+    .products-col{display:grid;grid-template-columns:repeat(${Math.min(pinned.length,3)},1fr);gap:12px;}
+    .product-card{background:#F7F6F2;padding:16px 14px;}
+    .p-emoji{font-size:32px;margin-bottom:10px;text-align:center;}
+    .p-brand{font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:#8C8880;margin-bottom:3px;}
+    .p-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:400;color:#1A1A1A;margin-bottom:6px;}
+    .p-spec{font-size:9px;color:#8C8880;line-height:1.6;}
+    .notes-section{background:#EDECEA;padding:24px 28px;margin-bottom:36px;}
+    .notes-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#8C8880;margin-bottom:8px;}
+    .notes-text{font-size:13px;color:#1A1A1A;line-height:1.8;font-style:italic;}
+    .schedule{width:100%;border-collapse:collapse;margin-bottom:36px;}
+    th{font-size:8px;letter-spacing:0.18em;text-transform:uppercase;color:#8C8880;padding:10px 12px;text-align:left;background:#F7F6F2;border-bottom:0.5px solid #C8C4BC;}
+    td{padding:12px;font-size:11px;color:#1A1A1A;border-bottom:0.5px solid #C8C4BC;}
+    tr:last-child td{border-bottom:none;}
+    .footer{display:flex;justify-content:space-between;padding-top:20px;border-top:0.5px solid #C8C4BC;}
+    .footer-brand{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:#8C8880;}
+    .footer-note{font-size:10px;color:#8C8880;text-align:right;line-height:1.6;}
+    @media print{body{padding:28px;}}
+  </style></head><body>
+  <div class="header">
+    <div>
+      <div class="brand">The Lightists</div>
+      <div class="brand-sub">Mood Studio — Lighting Selection Board</div>
+    </div>
+    <div class="doc-info">
+      ${studio ? studio + '<br>' : ''}Lighting Mood Board
+      <div class="doc-date">${today}</div>
+    </div>
+  </div>
+  <div class="project-title">${project}</div>
+  <div class="project-sub">${room}${studio?' · '+studio:''} · ${pinned.length} fixture${pinned.length!==1?'s':''} selected</div>
+  <div class="board-grid">
+    ${roomImg ? `<div><img src="${roomImg}" style="width:100%;height:280px;object-fit:cover;"></div>` : ''}
+    <div class="products-col">
+      ${pinned.map(p=>`
+        <div class="product-card">
+          <div class="p-emoji">${p.emoji}</div>
+          <div class="p-brand">${p.brand}</div>
+          <div class="p-name">${p.name}</div>
+          <div class="p-spec">
+            ${p.type.charAt(0).toUpperCase()+p.type.slice(1)}<br>
+            ${p.cct.join('/')}K · CRI ${p.cri}${p.cri>=90?'+':''}<br>
+            ${p.materials.join(', ')}<br>
+            Qty: ${pinnedQty[p.id]||1}
+          </div>
+        </div>`).join('')}
+    </div>
+  </div>
+  ${notes?`<div class="notes-section"><div class="notes-label">Design Notes</div><div class="notes-text">${notes}</div></div>`:''}
+  <table class="schedule">
+    <thead><tr><th>Brand</th><th>Fixture</th><th>Type</th><th>Material</th><th>Colour Temp</th><th>CRI</th><th>Dimmable</th><th>Qty</th></tr></thead>
+    <tbody>
+      ${pinned.map(p=>`<tr>
+        <td>${p.brand}</td><td>${p.name}</td>
+        <td>${p.type.charAt(0).toUpperCase()+p.type.slice(1)}</td>
+        <td>${p.materials.join(', ')}</td>
+        <td>${p.cct.join(' / ')}K</td>
+        <td>CRI ${p.cri}${p.cri>=90?'+':''}</td>
+        <td>${p.dimmable?'Yes':'No'}</td>
+        <td>${pinnedQty[p.id]||1}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>
+  <div class="footer">
+    <div class="footer-brand">The Lightists · thelightists.com · info@thelightists.com · Gurugram, India</div>
+    <div class="footer-note">Pricing and availability on request.<br>Lead times for European products: 8–14 weeks from order confirmation.</div>
+  </div>
+  <script>window.print();<\/script>
+  </body></html>`);
+  win.document.close();
+  showToast('PDF opened — use Print to save');
+}
+
+// ── QUOTE MODAL ──
+function openQuoteModal() {
+  if (pinnedIds.size === 0) { showToast('Pin at least one fixture to request a quote'); return; }
+  const pinned = CATALOGUE.filter(p => pinnedIds.has(p.id));
+  const project = document.getElementById('boardProject').value || 'My Project';
+  const room = document.getElementById('boardRoom').value || 'Room';
+  const bs = document.getElementById('boardSummary');
+  bs.innerHTML = `
+    <div class="bs-project">Quote Request · ${new Date().toLocaleDateString('en-IN')}</div>
+    <div class="bs-room">${project} — ${room}</div>
+    <div class="bs-products">
+      ${pinned.map(p=>`<div class="bs-product"><span>${p.brand} ${p.name}</span><span>Qty ${pinnedQty[p.id]||1} · ${p.cct[0]}K · CRI ${p.cri}${p.cri>=90?'+':''}</span></div>`).join('')}
+    </div>`;
+  document.getElementById('quoteModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('quoteModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) { if(e.target.id==='quoteModal') closeModal(); }
+
+function buildBriefText() {
+  const pinned = CATALOGUE.filter(p => pinnedIds.has(p.id));
+  const project = document.getElementById('boardProject').value||'Project';
+  const room = document.getElementById('boardRoom').value||'Room';
+  const studio = document.getElementById('boardStudio').value||'';
+  const name = document.getElementById('qName').value||'';
+  const firm = document.getElementById('qFirm').value||'';
+  const notes = document.getElementById('qNotes').value||'';
+  return {pinned,project,room,studio,name,firm,notes};
+}
+
+function sendEmail() {
+  const {pinned,project,room,name,firm,notes} = buildBriefText();
+  if(!name||!document.getElementById('qEmail').value){showToast('Please enter your name and email');return;}
+  const body = encodeURIComponent(
+    `MOOD BOARD QUOTE REQUEST — THE LIGHTISTS\n\n`+
+    `From: ${name}${firm?' · '+firm:''}\nEmail: ${document.getElementById('qEmail').value}\n`+
+    `Phone: ${document.getElementById('qPhone').value||'Not provided'}\n\n`+
+    `PROJECT: ${project}\nROOM: ${room}\n\n`+
+    `FIXTURES SELECTED:\n${pinned.map(p=>`  • ${p.brand} ${p.name} — ${p.cct[0]}K · CRI ${p.cri}${p.cri>=90?'+':''} · Qty ${pinnedQty[p.id]||1}`).join('\n')}\n\n`+
+    `PROJECT NOTES:\n${notes||'None'}\n\n`+
+    `Sent via The Lightists Mood Studio — thelightists.com`
+  );
+  window.location.href=`mailto:info@thelightists.com?subject=Mood Board Quote — ${project}&body=${body}`;
+  showSuccess();
+}
+
+function sendWhatsApp() {
+  const {pinned,project,room,name,firm,notes} = buildBriefText();
+  const msg = encodeURIComponent(
+    `*Quote Request — The Lightists Mood Studio*\n\n`+
+    `*From:* ${name||'Designer'}${firm?' · '+firm:''}\n`+
+    `*Project:* ${project} — ${room}\n\n`+
+    `*Fixtures:*\n${pinned.map(p=>`• ${p.brand} ${p.name} · ${p.cct[0]}K · Qty ${pinnedQty[p.id]||1}`).join('\n')}\n\n`+
+    `*Notes:* ${notes||'None'}\n\n`+
+    `_Sent via thelightists.com Mood Studio_`
+  );
+  window.open(`https://wa.me/919999306667?text=${msg}`,'_blank');
+  showSuccess();
+}
+
+function showSuccess() {
+  document.getElementById('modalBody').innerHTML=`
+    <div class="success-state">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Quote request sent.</div>
+      <div class="success-sub">Our team has your complete mood board selection.<br>We'll respond within 24 hours with product availability, lead times from Europe, and a formal quote for your project.</div>
+      <div class="success-actions">
+        <button class="success-btn" onclick="exportPDF();closeModal()">Export PDF</button>
+        <button class="success-btn" onclick="closeModal()">Close</button>
+      </div>
+    </div>`;
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ── MOBILE MENU ──
+function toggleMobileMenu() {
+  const h = document.getElementById('hamburger');
+  const d = document.getElementById('mobileDrawer');
+  const isOpen = d.classList.contains('open');
+  if(isOpen){ closeMobileMenu(); }
+  else { h.classList.add('open'); d.classList.add('open'); document.body.style.overflow='hidden'; }
+}
+function closeMobileMenu() {
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobileDrawer').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ── RUN ──
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();closeModal();closeMobileMenu();}});
+init();
+</script>
+</body>
+</html>

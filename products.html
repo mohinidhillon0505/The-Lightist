@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products — The Lightists</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&family=Raleway:wght@100;200;300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --stone:#F7F6F2; --charcoal:#1A1A1A; --warm:#EDECEA;
+  --mid:#8C8880; --border:#C8C4BC; --dark:#3D3D3A;
+  --white:#FFFFFF; --accent:#B8965A; --pale:#E8EDF2;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--stone);color:var(--charcoal);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 56px;height:64px;background:rgba(247,246,242,0.96);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-mark{width:36px;height:36px;border:1px solid var(--charcoal);display:flex;align-items:center;justify-content:center;}
+.nav-tl{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--charcoal);letter-spacing:-0.5px;}
+.nav-wordmark{font-size:10px;font-weight:300;letter-spacing:0.22em;text-transform:uppercase;color:var(--charcoal);}
+.nav-center{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:300;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);}
+.nav-sep{color:var(--border);}
+.nav-current{color:var(--charcoal);}
+.nav-actions{display:flex;gap:10px;align-items:center;}
+.btn-nav{font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;padding:7px 16px;border:0.5px solid var(--border);background:transparent;color:var(--charcoal);cursor:pointer;transition:all 0.2s;}
+.btn-nav:hover,.btn-nav.solid{background:var(--charcoal);color:var(--stone);border-color:var(--charcoal);}
+
+/* ── HERO ── */
+.hero{background:var(--charcoal);padding:56px 80px 48px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;position:relative;overflow:hidden;}
+.hero::after{content:'CATALOGUE';position:absolute;right:-10px;bottom:-30px;font-family:'Cormorant Garamond',serif;font-size:140px;font-weight:300;color:rgba(200,196,188,0.04);letter-spacing:-0.04em;pointer-events:none;line-height:1;}
+.hero-eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(200,196,188,0.4);margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+.hero-eyebrow::before{content:'';width:20px;height:0.5px;background:rgba(200,196,188,0.3);}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,3.5vw,56px);font-weight:300;color:var(--stone);line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px;}
+.hero-title em{font-style:italic;}
+.hero-sub{font-size:12px;font-weight:300;line-height:1.9;color:rgba(200,196,188,0.5);max-width:520px;}
+.hero-stats{display:flex;gap:40px;flex-shrink:0;}
+.hs-item{text-align:right;}
+.hs-num{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--stone);line-height:1;}
+.hs-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(200,196,188,0.35);margin-top:4px;}
+
+/* ── BRAND DIRECTORY ── */
+.brand-directory{background:var(--white);border-bottom:0.5px solid var(--border);}
+.bd-header{display:flex;align-items:center;justify-content:space-between;padding:20px 80px;border-bottom:0.5px solid var(--border);}
+.bd-title{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--mid);}
+.bd-region-tabs{display:flex;gap:0;}
+.brt{padding:8px 18px;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);cursor:pointer;border-bottom:1.5px solid transparent;transition:all 0.2s;background:none;border-left:none;border-right:none;border-top:none;font-family:'Jost',sans-serif;}
+.brt:hover{color:var(--charcoal);}
+.brt.active{color:var(--charcoal);border-bottom-color:var(--charcoal);}
+
+.brand-grid-wrap{padding:32px 80px 28px;}
+.brand-grid{display:flex;flex-wrap:wrap;gap:4px;}
+.brand-logo-btn{
+  padding:12px 20px;border:0.5px solid var(--border);
+  font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;
+  color:var(--mid);cursor:pointer;transition:all 0.25s;
+  background:var(--stone);letter-spacing:0.03em;
+  position:relative;
+}
+.brand-logo-btn:hover{border-color:var(--charcoal);color:var(--charcoal);background:var(--white);}
+.brand-logo-btn.active{background:var(--charcoal);border-color:var(--charcoal);color:var(--stone);}
+.brand-logo-btn .brand-country{font-family:'Jost',sans-serif;font-size:8px;letter-spacing:0.15em;text-transform:uppercase;display:block;margin-top:2px;opacity:0.5;}
+
+/* ── FILTER BAR ── */
+.filter-bar{
+  position:sticky;top:64px;z-index:90;
+  background:rgba(247,246,242,0.97);backdrop-filter:blur(12px);
+  border-bottom:0.5px solid var(--border);
+  padding:0 80px;
+  display:flex;align-items:center;gap:0;
+  overflow-x:auto;
+}
+.filter-group{display:flex;align-items:center;gap:0;border-right:0.5px solid var(--border);padding-right:20px;margin-right:20px;}
+.filter-group:last-child{border-right:none;}
+.fg-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-right:10px;white-space:nowrap;}
+.filter-chips{display:flex;gap:4px;}
+.fc{
+  padding:5px 12px;border:0.5px solid var(--border);
+  font-size:10px;font-weight:300;letter-spacing:0.1em;
+  color:var(--mid);cursor:pointer;transition:all 0.15s;
+  background:transparent;white-space:nowrap;font-family:'Jost',sans-serif;
+}
+.fc:hover{border-color:var(--charcoal);color:var(--charcoal);}
+.fc.active{background:var(--charcoal);border-color:var(--charcoal);color:var(--stone);}
+.filter-bar-inner{display:flex;align-items:center;height:52px;gap:0;min-width:max-content;}
+
+/* Search in filter bar */
+.filter-search{
+  display:flex;align-items:center;gap:8px;padding:0 0 0 20px;margin-left:auto;
+}
+.fs-input{
+  padding:6px 12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;
+  color:var(--charcoal);background:transparent;border:0.5px solid var(--border);
+  outline:none;width:180px;transition:all 0.2s;
+}
+.fs-input:focus{border-color:var(--charcoal);background:var(--white);}
+.fs-input::placeholder{color:var(--mid);}
+
+/* Results bar */
+.results-bar{
+  padding:14px 80px;background:var(--stone);
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:0.5px solid var(--border);
+}
+.rb-count{font-size:11px;color:var(--mid);}
+.rb-count strong{color:var(--charcoal);font-weight:400;}
+.rb-clear{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);cursor:pointer;border-bottom:0.5px solid var(--border);padding-bottom:1px;transition:all 0.2s;background:none;border-left:none;border-right:none;border-top:none;font-family:'Jost',sans-serif;}
+.rb-clear:hover{color:var(--charcoal);border-bottom-color:var(--charcoal);}
+
+/* ── MAIN LAYOUT ── */
+.catalogue-layout{display:grid;grid-template-columns:1fr 280px;min-height:80vh;}
+
+/* ── PRODUCTS GRID ── */
+.products-col{padding:48px 80px;}
+
+/* Brand section heading */
+.brand-section{margin-bottom:56px;}
+.bs-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:28px;padding-bottom:16px;border-bottom:0.5px solid var(--border);}
+.bsh-left{}
+.bsh-country{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:6px;}
+.bsh-name{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--charcoal);letter-spacing:-0.01em;}
+.bsh-right{display:flex;align-items:center;gap:20px;}
+.bsh-count{font-size:11px;color:var(--mid);}
+.bsh-link{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);cursor:pointer;border-bottom:0.5px solid var(--border);padding-bottom:1px;transition:color 0.2s;background:none;border-left:none;border-right:none;border-top:none;font-family:'Jost',sans-serif;}
+.bsh-link:hover{color:var(--charcoal);}
+
+/* Product grid */
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+
+/* Product card */
+.product-card{background:var(--white);position:relative;overflow:hidden;cursor:pointer;transition:all 0.2s;}
+.product-card:hover{z-index:2;}
+.product-card:hover .pc-img-wrap{transform:scale(1.02);}
+.product-card:hover .pc-overlay{opacity:1;}
+
+.pc-img-wrap{
+  height:220px;overflow:hidden;
+  background:var(--warm);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;transition:transform 0.4s ease;
+}
+.pc-img{width:100%;height:100%;object-fit:cover;display:none;}
+.pc-img.loaded{display:block;}
+.pc-placeholder{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;
+}
+.pc-placeholder-icon{font-size:32px;color:var(--border);opacity:0.6;}
+.pc-placeholder-text{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--border);}
+
+.pc-overlay{
+  position:absolute;inset:0;background:rgba(26,26,26,0.82);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;opacity:0;transition:opacity 0.2s;
+}
+.pco-btn{
+  padding:10px 24px;font-family:'Jost',sans-serif;font-size:9px;font-weight:300;
+  letter-spacing:0.18em;text-transform:uppercase;
+  border:0.5px solid rgba(200,196,188,0.3);color:rgba(247,246,242,0.85);
+  background:transparent;cursor:pointer;transition:all 0.15s;
+}
+.pco-btn:hover{background:rgba(247,246,242,0.1);border-color:rgba(200,196,188,0.6);}
+.pco-btn.primary-btn{background:rgba(247,246,242,0.9);color:var(--charcoal);border-color:rgba(247,246,242,0.9);}
+.pco-btn.primary-btn:hover{background:var(--white);}
+
+.pc-badge{
+  position:absolute;top:10px;left:10px;
+  font-size:8px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  padding:3px 8px;
+}
+.badge-new{background:var(--charcoal);color:var(--stone);}
+.badge-featured{background:var(--accent);color:var(--stone);}
+
+.pc-body{padding:16px 18px 18px;}
+.pc-brand-tag{font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:4px;}
+.pc-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:var(--charcoal);margin-bottom:6px;line-height:1.2;}
+.pc-meta{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+.pc-tag{font-size:9px;padding:2px 7px;background:var(--stone);color:var(--mid);border-radius:10px;}
+.pc-spec-row{display:flex;justify-content:space-between;align-items:center;}
+.pc-type{font-size:10px;color:var(--mid);}
+.pc-cta-text{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);opacity:0;transition:opacity 0.2s;}
+.product-card:hover .pc-cta-text{opacity:1;}
+
+.no-results{padding:80px 40px;text-align:center;grid-column:1/-1;}
+.nr-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--charcoal);margin-bottom:8px;}
+.nr-sub{font-size:12px;color:var(--mid);line-height:1.8;}
+
+/* ── RIGHT SIDEBAR ── */
+.catalogue-sidebar{border-left:0.5px solid var(--border);padding:48px 32px;}
+.cs-section{margin-bottom:40px;padding-bottom:36px;border-bottom:0.5px solid var(--border);}
+.cs-section:last-child{border-bottom:none;margin-bottom:0;}
+.cs-label{font-size:9px;font-weight:500;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.cs-label::after{content:'';flex:1;height:0.5px;background:var(--border);}
+
+/* Brand index list */
+.brand-index{display:flex;flex-direction:column;gap:0;}
+.bi-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-bottom:0.5px solid var(--border);
+  cursor:pointer;transition:all 0.15s;
+}
+.bi-item:last-child{border-bottom:none;}
+.bi-item:hover .bi-name{color:var(--charcoal);}
+.bi-name{font-size:12px;font-weight:300;color:var(--mid);transition:color 0.15s;}
+.bi-flag{font-size:10px;color:var(--border);}
+.bi-item.active .bi-name{color:var(--charcoal);font-weight:400;}
+
+/* Request CTA */
+.request-cta{background:var(--charcoal);padding:24px;}
+.rc-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--stone);line-height:1.2;margin-bottom:8px;}
+.rc-title em{font-style:italic;}
+.rc-body{font-size:11px;color:rgba(200,196,188,0.5);line-height:1.7;margin-bottom:16px;}
+.rc-btn{
+  width:100%;padding:11px;font-family:'Jost',sans-serif;font-size:9px;font-weight:300;
+  letter-spacing:0.18em;text-transform:uppercase;
+  border:0.5px solid rgba(200,196,188,0.2);color:rgba(200,196,188,0.65);
+  background:transparent;cursor:pointer;transition:all 0.2s;margin-bottom:6px;
+}
+.rc-btn:hover{border-color:rgba(200,196,188,0.5);color:var(--stone);}
+
+/* ── PRODUCT DETAIL DRAWER ── */
+.drawer-overlay{position:fixed;inset:0;z-index:200;background:rgba(10,8,6,0.85);opacity:0;pointer-events:none;transition:opacity 0.3s;backdrop-filter:blur(3px);}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:520px;background:var(--stone);z-index:201;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94);overflow-y:auto;display:flex;flex-direction:column;}
+.drawer.open{transform:translateX(0);}
+.drawer-close{position:absolute;top:20px;right:24px;background:none;border:none;font-size:22px;color:var(--mid);cursor:pointer;transition:color 0.2s;z-index:5;}
+.drawer-close:hover{color:var(--charcoal);}
+.drawer-img{width:100%;height:320px;background:var(--warm);overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;}
+.drawer-img img{width:100%;height:100%;object-fit:cover;display:none;}
+.drawer-img img.loaded{display:block;}
+.drawer-img-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:100%;height:100%;}
+.dip-icon{font-size:48px;color:var(--border);}
+.dip-text{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--border);}
+.drawer-body{padding:32px 36px;flex:1;}
+.dr-brand{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:8px;}
+.dr-name{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--charcoal);line-height:1.1;margin-bottom:4px;}
+.dr-type{font-size:11px;color:var(--mid);margin-bottom:24px;}
+.dr-section{margin-bottom:20px;}
+.dr-section-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:10px;}
+.dr-spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.dr-spec{background:var(--warm);padding:12px 14px;}
+.dr-spec-label{font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);margin-bottom:3px;}
+.dr-spec-val{font-size:13px;font-weight:400;color:var(--charcoal);}
+.dr-desc{font-size:12px;color:var(--mid);line-height:1.8;margin-bottom:20px;}
+.dr-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:24px;}
+.dr-tag{font-size:9px;padding:3px 10px;background:var(--warm);color:var(--mid);}
+.dr-image-note{font-size:10px;color:var(--mid);padding:10px 14px;border:0.5px dashed var(--border);margin-bottom:16px;line-height:1.6;}
+.dr-actions{display:flex;flex-direction:column;gap:8px;}
+.dr-btn{
+  width:100%;padding:14px;font-family:'Jost',sans-serif;font-size:10px;font-weight:300;
+  letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;
+}
+.dr-btn.primary{background:var(--charcoal);color:var(--stone);border:none;}
+.dr-btn.primary:hover{background:var(--dark);}
+.dr-btn.secondary{background:transparent;color:var(--charcoal);border:0.5px solid var(--border);}
+.dr-btn.secondary:hover{border-color:var(--charcoal);}
+.dr-btn.wa{background:transparent;color:#25D366;border:0.5px solid #25D366;}
+.dr-btn.wa:hover{background:#25D366;color:#fff;}
+
+/* ── ENQUIRY MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:300;background:rgba(10,8,6,0.88);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;backdrop-filter:blur(4px);}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--stone);width:100%;max-width:520px;max-height:88vh;overflow-y:auto;border:0.5px solid var(--border);position:relative;}
+.modal-header{background:var(--charcoal);padding:28px 36px;position:sticky;top:0;}
+.modal-eyebrow{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(200,196,188,0.4);margin-bottom:8px;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--stone);}
+.modal-sub{font-size:11px;color:rgba(200,196,188,0.5);margin-top:5px;line-height:1.6;}
+.modal-close{position:absolute;top:18px;right:20px;background:none;border:none;color:rgba(200,196,188,0.4);font-size:20px;cursor:pointer;}
+.modal-close:hover{color:var(--stone);}
+.modal-body{padding:28px 36px;}
+.modal-product-summary{background:var(--warm);border:0.5px solid var(--border);padding:14px 16px;margin-bottom:20px;}
+.mps-brand{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);}
+.mps-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--charcoal);}
+.modal-section{margin-bottom:18px;}
+.ms-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.ms-label::after{content:'';flex:1;height:0.5px;background:var(--border);}
+.modal-input{width:100%;padding:10px 12px;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;margin-bottom:8px;transition:border-color 0.2s;}
+.modal-input:focus{border-color:var(--charcoal);}
+.modal-input::placeholder{color:var(--mid);}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.modal-textarea{width:100%;padding:10px 12px;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;resize:none;min-height:80px;transition:border-color 0.2s;line-height:1.7;}
+.modal-textarea:focus{border-color:var(--charcoal);}
+.modal-textarea::placeholder{color:var(--mid);}
+.modal-send-row{display:flex;gap:8px;margin-top:16px;}
+.ms-btn{flex:1;padding:13px;font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.ms-btn.email{background:var(--charcoal);color:var(--stone);border:none;}
+.ms-btn.email:hover{background:var(--dark);}
+.ms-btn.wa{background:transparent;color:#25D366;border:0.5px solid #25D366;}
+.ms-btn.wa:hover{background:#25D366;color:#fff;}
+.modal-note{font-size:10px;color:var(--mid);text-align:center;margin-top:10px;line-height:1.6;}
+
+/* Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--charcoal);color:var(--stone);padding:12px 22px;font-size:12px;font-weight:300;border:0.5px solid rgba(200,196,188,0.2);opacity:0;transition:all 0.3s;pointer-events:none;z-index:500;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── FADE ── */
+.fade-up{opacity:0;transform:translateY(16px);transition:opacity 0.5s,transform 0.5s;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:1100px){
+  .nav,.hero,.brand-directory .bd-header,.brand-grid-wrap,.results-bar,.filter-bar{padding-left:24px;padding-right:24px;}
+  .nav-center{display:none;}
+  .nav-actions{display:none;}
+  #hamburger{display:flex!important;}
+  #mobileDrawer{display:flex!important;}
+  .catalogue-layout{grid-template-columns:1fr;}
+  .catalogue-sidebar{display:none;}
+  .products-col{padding:32px 24px;}
+  .products-grid{grid-template-columns:repeat(2,1fr);}
+  .drawer{width:100%;}
+}
+@media(max-width:600px){
+  .products-grid{grid-template-columns:1fr;}
+  .hero{padding:48px 24px!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- DRAWER OVERLAY -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <button class="drawer-close" onclick="closeDrawer()">×</button>
+  <div class="drawer-img" id="drawerImg">
+    <div class="drawer-img-placeholder" id="drawerImgPlaceholder">
+      <div class="dip-icon">◎</div>
+      <div class="dip-text">Product image coming soon</div>
+    </div>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</div>
+
+<!-- ENQUIRY MODAL -->
+<div class="modal-overlay" id="enquiryModal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="modal-eyebrow">The Lightists — Product Enquiry</div>
+      <div class="modal-title" id="modalTitle">Enquire About This Product</div>
+      <div class="modal-sub">Our team will respond within 24 hours with availability, lead times from Europe, and pricing.</div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;flex-shrink:0;">
+    <img src="Logo White.png" alt="TL" style="height:38px;width:auto;display:block;">
+    <span style="width:0.5px;height:26px;background:var(--border);display:block;"></span>
+    <span style="font-family:'Raleway',sans-serif;font-weight:200;font-size:11px;letter-spacing:0.36em;text-transform:uppercase;color:var(--charcoal);white-space:nowrap;">The Lightists</span>
+  </a>
+  <div class="nav-center">
+    <span>Platform</span><span class="nav-sep">—</span><span class="nav-current">Products</span>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-nav" onclick="window.location.href='mood-studio.html'">Mood Studio</button>
+    <button class="btn-nav solid" onclick="window.location.href='lighting-lab.html'">Lighting Lab</button>
+  </div>
+  <button id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu" style="display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;z-index:200;">
+    <span style="display:block;width:24px;height:0.5px;background:var(--charcoal);transition:all 0.3s;transform-origin:center;"></span>
+    <span style="display:block;width:24px;height:0.5px;background:var(--charcoal);transition:all 0.3s;"></span>
+    <span style="display:block;width:24px;height:0.5px;background:var(--charcoal);transition:all 0.3s;transform-origin:center;"></span>
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div id="mobileDrawer" style="display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:var(--stone);z-index:99;flex-direction:column;padding:40px 32px;border-top:0.5px solid var(--border);overflow-y:auto;transform:translateY(-100%);opacity:0;transition:transform 0.35s ease,opacity 0.35s ease;">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:40px;padding-bottom:32px;border-bottom:0.5px solid var(--border);">
+    <img src="Logo White.png" alt="TL" style="height:32px;width:auto;">
+    <span style="width:0.5px;height:24px;background:var(--border);display:block;"></span>
+    <span style="font-family:'Raleway',sans-serif;font-weight:200;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--charcoal);">The Lightists</span>
+  </div>
+  <ul style="list-style:none;display:flex;flex-direction:column;gap:0;margin-bottom:40px;">
+    <li style="border-bottom:0.5px solid var(--border);"><a href="index.html" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">Home</a></li>
+    <li style="border-bottom:0.5px solid var(--border);"><a href="lighting-lab.html" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">Lighting Lab</a></li>
+    <li style="border-bottom:0.5px solid var(--border);"><a href="mood-studio.html" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">Mood Studio</a></li>
+    <li style="border-bottom:0.5px solid var(--border);"><a href="design-academy.html" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">Academy</a></li>
+    <li style="border-bottom:0.5px solid var(--border);"><a href="about.html" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">About</a></li>
+    <li><a href="index.html#contact" style="display:block;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;padding:20px 0;">Contact</a></li>
+  </ul>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <button onclick="window.location.href='lighting-lab.html'" style="padding:14px;background:var(--charcoal);color:var(--stone);font-family:'Jost',sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;border:none;cursor:pointer;">Open Lighting Lab</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">The Lightists — European Catalogue</div>
+    <h1 class="hero-title">Premium European lighting,<br><em>curated for India.</em></h1>
+    <p class="hero-sub">Over 25 European brands — Italian masters, Scandinavian icons, Spanish innovators, and global independents. Browse by brand or filter by type, material, and room. Enquire directly for pricing and availability.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="hs-item"><div class="hs-num">25+</div><div class="hs-label">Brands</div></div>
+    <div class="hs-item"><div class="hs-num">8</div><div class="hs-label">Countries</div></div>
+    <div class="hs-item"><div class="hs-num">India</div><div class="hs-label">Exclusive distributor</div></div>
+  </div>
+</div>
+
+<!-- BRAND DIRECTORY -->
+<div class="brand-directory">
+  <div class="bd-header">
+    <div class="bd-title">Browse by brand</div>
+    <div class="bd-region-tabs">
+      <button class="brt active" onclick="filterRegion('all',this)">All Brands</button>
+      <button class="brt" onclick="filterRegion('italy',this)">Italy</button>
+      <button class="brt" onclick="filterRegion('spain-nordic',this)">Spain & Nordic</button>
+      <button class="brt" onclick="filterRegion('global',this)">Global</button>
+    </div>
+  </div>
+  <div class="brand-grid-wrap">
+    <div class="brand-grid" id="brandGrid"></div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-bar-inner">
+    <div class="filter-group">
+      <span class="fg-label">Type</span>
+      <div class="filter-chips">
+        <button class="fc active" onclick="setFilter('type','all',this)">All</button>
+        <button class="fc" onclick="setFilter('type','pendant',this)">Pendant</button>
+        <button class="fc" onclick="setFilter('type','floor',this)">Floor Lamp</button>
+        <button class="fc" onclick="setFilter('type','wall',this)">Wall</button>
+        <button class="fc" onclick="setFilter('type','table',this)">Table Lamp</button>
+        <button class="fc" onclick="setFilter('type','chandelier',this)">Chandelier</button>
+        <button class="fc" onclick="setFilter('type','outdoor',this)">Outdoor</button>
+        <button class="fc" onclick="setFilter('type','ceiling',this)">Ceiling</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="fg-label">Material</span>
+      <div class="filter-chips">
+        <button class="fc" onclick="setFilter('material','brass',this)">Brass</button>
+        <button class="fc" onclick="setFilter('material','glass',this)">Glass</button>
+        <button class="fc" onclick="setFilter('material','alabaster',this)">Alabaster</button>
+        <button class="fc" onclick="setFilter('material','ceramic',this)">Ceramic</button>
+        <button class="fc" onclick="setFilter('material','steel',this)">Steel</button>
+        <button class="fc" onclick="setFilter('material','wood',this)">Wood</button>
+        <button class="fc" onclick="setFilter('material','rattan',this)">Rattan</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="fg-label">CCT</span>
+      <div class="filter-chips">
+        <button class="fc" onclick="setFilter('cct','2700',this)">2700K</button>
+        <button class="fc" onclick="setFilter('cct','3000',this)">3000K</button>
+        <button class="fc" onclick="setFilter('cct','4000',this)">4000K</button>
+      </div>
+    </div>
+    <div class="filter-search">
+      <input class="fs-input" id="searchInput" type="text" placeholder="Search products, brands..." oninput="applyFilters()">
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS BAR -->
+<div class="results-bar">
+  <div class="rb-count" id="resultsCount"><strong>—</strong> products</div>
+  <button class="rb-clear" onclick="clearAllFilters()">Clear filters</button>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="catalogue-layout">
+
+  <!-- PRODUCTS -->
+  <div class="products-col" id="productsCol"></div>
+
+  <!-- SIDEBAR -->
+  <div class="catalogue-sidebar">
+    <div class="cs-section">
+      <div class="cs-label">Brand Index</div>
+      <div class="brand-index" id="brandIndex"></div>
+    </div>
+    <div class="cs-section">
+      <div class="cs-label">Enquire</div>
+      <div class="request-cta">
+        <div class="rc-title">Can't find what you're <em>looking for?</em></div>
+        <div class="rc-body">Tell our team what you need — fixture type, space, material, budget. We'll curate options from across our European portfolio.</div>
+        <button class="rc-btn" onclick="openGeneralEnquiry()">Send a Brief →</button>
+        <button class="rc-btn" onclick="openWhatsApp()">WhatsApp Us</button>
+      </div>
+    </div>
+    <div class="cs-section">
+      <div class="cs-label">Platform Tools</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <button class="rc-btn" style="border-color:var(--border);color:var(--mid);" onclick="window.location.href='mood-studio.html'">Open Mood Studio →</button>
+        <button class="rc-btn" style="border-color:var(--border);color:var(--mid);" onclick="window.location.href='lighting-lab.html'">Open Lighting Lab →</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── BRAND DATA ──
+const BRANDS = [
+  // Italy
+  {id:'artemide',name:'Artemide',region:'italy',country:'Italy',desc:'Established 1960, Milan. The original Italian lighting manufacturer. Pioneers of human-centric and energy-efficient lighting design. Home to fixtures by Vico Magistretti, Ernesto Gismondi, and Ross Lovegrove.'},
+  {id:'fontanaarte',name:'FontanaArte',region:'italy',country:'Italy',desc:'Founded 1932, Milan. One of Italy\'s oldest design houses. Known for works in glass and metal with an architectural sensibility. Gio Ponti was an early creative director.'},
+  {id:'aggiolight',name:'Aggiolight',region:'italy',country:'Italy',desc:'Contemporary Italian manufacturer specialising in architectural and decorative LED solutions. Known for clean, precise forms in anodised aluminium and steel.'},
+  {id:'axolight',name:'Axolight',region:'italy',country:'Italy',desc:'Venice-based manufacturer founded 1999. Celebrated for large-scale sculptural pendants and chandeliers. Their Cerchio and Urban series define contemporary Italian statement lighting.'},
+  {id:'foscarini',name:'Foscarini',region:'italy',country:'Italy',desc:'Venice, founded 1981. One of Italy\'s most creative design publishers. Known for unconventional forms and collaborations with designers like Marc Sadler, Ferruccio Laviani, and Luca Nichetto.'},
+  {id:'henge',name:'Henge',region:'italy',country:'Italy',desc:'Premium Italian brand founded 2009, known for extraordinary craftsmanship in natural stone, metal, leather, and rope. Among the most sculptural and materially rich fixtures available.'},
+  {id:'martinelli-luce',name:'Martinelli Luce',region:'italy',country:'Italy',desc:'Lucca, founded 1950. Family-owned manufacturer with a strong design heritage. Notable for the Cobra lamp by Elio Martinelli and ongoing collaborations with international designers.'},
+  {id:'modoluce',name:'Modoluce',region:'italy',country:'Italy',desc:'Contemporary Italian brand known for geometric, minimal forms in metal and glass. Their product range spans residential through commercial with a consistent architectural language.'},
+  {id:'nemo-lighting',name:'Nemo Lighting',region:'italy',country:'Italy',desc:'Milan, founded 1993. Reissues of iconic mid-century Italian designs alongside new collections. Home to the Charlotte Perriand wall lamp and Le Corbusier-inspired pieces.'},
+  {id:'penta',name:'Penta',region:'italy',country:'Italy',desc:'Founded 1998, specialising in decorative residential lighting. Known for warmly lit, material-rich designs in brass, glass, and natural fibres. Strong in hospitality specification.'},
+  {id:'terzani',name:'Terzani',region:'italy',country:'Italy',desc:'Florence, founded 1977. Master craftsmen of hand-made crystal, glass, and metal installations. Their chandeliers and large-scale ceiling fixtures are among the most distinctive in the world.'},
+  // Spain & Nordic
+  {id:'vibia',name:'Vibia',region:'spain-nordic',country:'Spain',desc:'Barcelona, founded 1987. Among the most innovative European manufacturers. Known for sculptural LED systems, modular pendants, and collaborations with Arik Levy, Ichiro Iwasaki, and Pete Sans.'},
+  {id:'bover',name:'Bover',region:'spain-nordic',country:'Spain',desc:'Barcelona. Natural materials — linen, cotton, rattan — woven over structured frames. Their fixtures bring a warm, organic quality to residential and boutique hospitality spaces.'},
+  {id:'aromas-del-campo',name:'Aromas del Campo',region:'spain-nordic',country:'Spain',desc:'Spanish manufacturer known for refined, contemporary forms in brass and glass. A strong portfolio for luxury residential and hospitality specification.'},
+  {id:'marset',name:'Marset',region:'spain-nordic',country:'Spain',desc:'Barcelona, founded 1940. Award-winning manufacturer whose designers include Christophe Mathieu, Joan Gaspar, and Inma Bermúdez. The Followme and Pleat Box are defining fixtures of contemporary Spanish design.'},
+  {id:'santa-cole',name:'Santa & Cole',region:'spain-nordic',country:'Spain',desc:'Barcelona, founded 1985. Republishers of 20th century design classics alongside new commissions. The Cestita by Miguel Milá and the Nana lamp are among their most iconic.'},
+  {id:'and-tradition',name:'&Tradition',region:'spain-nordic',country:'Denmark',desc:'Copenhagen, founded 2010. Republishes mid-century Scandinavian icons — Verner Panton\'s Flowerpot, Arne Jacobsen\'s AJ series — alongside new collaborations with Space Copenhagen and Norm Architects.'},
+  {id:'muuto',name:'Muuto',region:'spain-nordic',country:'Denmark',desc:'Copenhagen, founded 2006. Design-forward Scandinavian brand that explores materials and forms with a rigorous but approachable aesthetic. Part of the Knoll International group since 2018.'},
+  // Global
+  {id:'bocci',name:'Bocci',region:'global',country:'Canada',desc:'Vancouver, founded 2005. Internationally acclaimed for hand-blown glass installations of extraordinary scale and beauty. The 28 series is among the most specified statement installations in contemporary luxury.'},
+  {id:'bomma',name:'Bomma',region:'global',country:'Czech Republic',desc:'Prague. Premium hand-blown borosilicate glass lighting. Each fixture is individually crafted, making them unique objects. Known for the Brokis collaboration and independent collections in sculptural glass.'},
+  {id:'brokis',name:'Brokis',region:'global',country:'Czech Republic',desc:'Prague, founded 2006. Hand-blown glass by Czech master glassblowers. Designer collaborations with Lucie Koldova, Giorgio Bonaguro, and Christophe Pillet. Among the most collectible glass lighting available.'},
+  {id:'forestier',name:'Forestier',region:'global',country:'France',desc:'Paris. Natural material specialists — rattan, bamboo, linen, cotton rope. Their fixtures have a refined artisanal quality that suits biophilic and organic interior languages particularly well.'},
+  {id:'tom-dixon',name:'Tom Dixon',region:'global',country:'UK',desc:'London. Tom Dixon\'s eponymous brand occupies a unique position between industrial and luxury. Known for the Beat, Melt, and Etch series — sculptural, materially interesting fixtures in copper, brass, and blown glass.'},
+  {id:'occhio',name:'Occhio',region:'global',country:'Germany',desc:'Munich, founded 2006. Architects\' choice for architectural precision lighting. Their Mito and Sento series offer extraordinary control of light direction and quality in an extremely refined housing. LED technology at its most refined.'},
+  {id:'formagenda',name:'Formagenda',region:'global',country:'Germany',desc:'Berlin. Industrial craft meets refined design. Known for the Cosi series and Frea collection — fixtures with a confident, non-decorative presence suited to both residential and commercial architecture.'},
+  {id:'roll-hill',name:'Roll & Hill',region:'global',country:'USA',desc:'New York, founded 2011. A studio that commissions and publishes lighting by the world\'s foremost designers — Jason Miller, Lindsey Adelman, Allied Maker. Each collection is produced in limited runs.'},
+  // New additions
+  {id:'prolicht',name:'Prolicht',region:'global',country:'Austria',desc:'Prolicht is an Austrian lighting manufacturer known for precision-engineered architectural spotlight and track systems. A preferred choice for retail, hospitality, and high-end residential specification requiring exceptional light quality and beam control.'},
+  {id:'reggiani',name:'Reggiani',region:'italy',country:'Italy',desc:'Reggiani Illuminazione, founded in Osnago, Italy. A leading manufacturer of architectural LED lighting systems — track, recessed, and ceiling-mounted — with a strong presence in retail, hospitality, and museum specification. Known for photometric precision and Italian industrial design.'},
+  {id:'iltiluce',name:'Iltiluce',region:'italy',country:'Italy',desc:'Italian lighting brand known for contemporary decorative and architectural fixtures. Combines Italian craftsmanship with modern LED technology across residential and hospitality applications.'},
+  {id:'simes',name:'Simes',region:'italy',country:'Italy',desc:'Simes, founded in Italy, specialises in high-performance outdoor and architectural lighting. Their ground, wall, and bollard fixtures are specified across luxury gardens, hospitality exteriors, and landmark architecture worldwide.'},
+  {id:'griven',name:'Griven',region:'italy',country:'Italy',desc:'Italian manufacturer of professional architectural and entertainment lighting. Known for high-powered LED projectors and wash lights used in façade lighting, landmark illumination, and large-scale hospitality and retail environments.'},
+  {id:'dreamlux',name:'Dreamlux',region:'italy',country:'Italy',desc:'Italian innovators in fiber optic textile lighting. Dreamlux weaves optical fiber directly into fabric to create luminous curtains, wall panels, and bespoke installations. Exceptional for high-end hospitality, luxury residential, and statement retail environments.'},
+  {id:'visual-feast',name:'Visual Feast',region:'global',country:'China',desc:'Visual Feast is a professional architectural LED lighting brand specialising in commercial, hospitality, office, and hotel lighting. Known for specification-grade LED luminaires across the hotel and hospitality sectors.'},
+];
+
+// ── PRODUCT DATA ──
+// Products are loaded from Supabase — add them via the Admin Panel
+let PRODUCTS = [];
+
+async function loadProductsFromDB() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/products?active=eq.true&order=brand.asc`, {
+      headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
+    });
+    if(!res.ok) throw new Error('Failed to fetch');
+    const data = await res.json();
+    PRODUCTS = data.map(p => ({
+      id: p.id,
+      brand: p.brand?.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') || '',
+      brandName: p.brand || '',
+      name: p.name || '',
+      type: p.type || 'pendant',
+      materials: Array.isArray(p.materials) ? p.materials : (p.materials||'').split(',').map(s=>s.trim()).filter(Boolean),
+      cct: Array.isArray(p.cct) ? p.cct : (p.cct||'').split(',').map(s=>s.trim()).filter(Boolean),
+      desc: p.description || '',
+      image: p.image_url || '',
+      badge: p.badge || ''
+    }));
+    applyFilters();
+    renderBrandIndex();
+  } catch(e) {
+    console.log('Products not loaded from DB:', e);
+    // Show empty state
+    applyFilters();
+  }
+}
+
+const SUPABASE_URL = 'https://xwgbkolqltdzottdwufb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_gLoiEdxkGyjCfHjLBVDsgQ_LDyZHjSV';
+
+// ── STATE ──
+let activeFilters = {type:'all', material:null, cct:null, brand:null, region:'all'};
+
+// ── BRAND DIRECTORY ──
+function renderBrandGrid(region='all') {
+  const bg = document.getElementById('brandGrid');
+  const filtered = region==='all' ? BRANDS : BRANDS.filter(b => b.region===region);
+  bg.innerHTML = filtered.map(b => `
+    <button class="brand-logo-btn ${activeFilters.brand===b.id?'active':''}"
+      onclick="selectBrand('${b.id}',this)">
+      ${b.name}
+      <span class="brand-country">${b.country}</span>
+    </button>`).join('');
+}
+
+function filterRegion(region, el) {
+  activeFilters.region = region;
+  document.querySelectorAll('.brt').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderBrandGrid(region);
+}
+
+function selectBrand(id, el) {
+  if(activeFilters.brand === id) {
+    activeFilters.brand = null;
+    document.querySelectorAll('.brand-logo-btn').forEach(b => b.classList.remove('active'));
+  } else {
+    activeFilters.brand = id;
+    document.querySelectorAll('.brand-logo-btn').forEach(b => b.classList.remove('active'));
+    if(el) el.classList.add('active');
+    // Scroll to brand section
+    setTimeout(() => {
+      const sec = document.getElementById(`section-${id}`);
+      if(sec) sec.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 100);
+  }
+  applyFilters();
+  renderBrandIndex();
+}
+
+// ── FILTERS ──
+function setFilter(type, val, el) {
+  if(type === 'type') {
+    activeFilters.type = val;
+    document.querySelectorAll('.filter-chips .fc').forEach(c => {
+      if(c.onclick?.toString().includes("'type'")) c.classList.remove('active');
+    });
+    // Simpler approach: remove active from same filter group
+    el.closest('.filter-chips').querySelectorAll('.fc').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  } else {
+    const current = activeFilters[type];
+    if(current === val) {
+      activeFilters[type] = null;
+      el.classList.remove('active');
+    } else {
+      el.closest('.filter-chips').querySelectorAll('.fc').forEach(c => c.classList.remove('active'));
+      activeFilters[type] = val;
+      el.classList.add('active');
+    }
+  }
+  applyFilters();
+}
+
+function clearAllFilters() {
+  activeFilters = {type:'all', material:null, cct:null, brand:null, region:'all'};
+  document.querySelectorAll('.fc, .brand-logo-btn, .brt').forEach(el => el.classList.remove('active'));
+  document.querySelector('.fc').classList.add('active'); // All
+  document.querySelector('.brt').classList.add('active'); // All Brands
+  document.getElementById('searchInput').value = '';
+  renderBrandGrid('all');
+  applyFilters();
+  renderBrandIndex();
+  showToast('All filters cleared');
+}
+
+function applyFilters() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  let products = PRODUCTS.filter(p => {
+    if(activeFilters.brand && p.brand !== activeFilters.brand) return false;
+    if(activeFilters.type !== 'all' && p.type !== activeFilters.type) return false;
+    if(activeFilters.material && !p.materials.includes(activeFilters.material)) return false;
+    if(activeFilters.cct && !p.cct.includes(activeFilters.cct)) return false;
+    if(q && !p.name.toLowerCase().includes(q) && !p.brandName.toLowerCase().includes(q) && !p.materials.join(' ').toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  document.getElementById('resultsCount').innerHTML = `<strong>${products.length}</strong> product${products.length!==1?'s':''}`;
+  renderProducts(products);
+}
+
+function renderProducts(products) {
+  const col = document.getElementById('productsCol');
+  if(products.length === 0) {
+    col.innerHTML = `<div class="no-results"><div class="nr-title">No products match these filters</div><div class="nr-sub">Try removing a filter or <button onclick="clearAllFilters()" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--slate);text-decoration:underline;">clear all filters</button> to see the full catalogue.</div></div>`;
+    return;
+  }
+
+  // Group by brand
+  const byBrand = {};
+  products.forEach(p => {
+    if(!byBrand[p.brand]) byBrand[p.brand] = [];
+    byBrand[p.brand].push(p);
+  });
+
+  col.innerHTML = Object.entries(byBrand).map(([brandId, prods]) => {
+    const brand = BRANDS.find(b => b.id === brandId);
+    return `
+      <div class="brand-section fade-up" id="section-${brandId}">
+        <div class="bs-header">
+          <div class="bsh-left">
+            <div class="bsh-country">${brand?.country || ''}</div>
+            <div class="bsh-name">${brand?.name || brandId}</div>
+          </div>
+          <div class="bsh-right">
+            <span class="bsh-count">${prods.length} product${prods.length!==1?'s':''}</span>
+            <button class="bsh-link" onclick="openBrandInfo('${brandId}')">About this brand →</button>
+          </div>
+        </div>
+        <div class="products-grid">
+          ${prods.map(p => renderProductCard(p)).join('')}
+        </div>
+      </div>`;
+  }).join('');
+
+  // Observe fade-up
+  document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+}
+
+function renderProductCard(p) {
+  return `
+    <div class="product-card" onclick="openDrawer('${p.id}')">
+      ${p.badge ? `<div class="pc-badge badge-${p.badge}">${p.badge}</div>` : ''}
+      <div class="pc-img-wrap">
+        ${p.image
+          ? `<img class="pc-img" src="${p.image}" alt="${p.name}" onload="this.classList.add('loaded')" onerror="this.style.display='none'">`
+          : ''}
+        <div class="pc-placeholder" ${p.image ? 'style="display:none"' : ''} id="placeholder-${p.id}">
+          <div class="pc-placeholder-icon">◎</div>
+          <div class="pc-placeholder-text">Image coming soon</div>
+        </div>
+        <div class="pc-overlay">
+          <button class="pco-btn primary-btn" onclick="event.stopPropagation();openEnquiry('${p.id}')">Enquire →</button>
+          <button class="pco-btn" onclick="event.stopPropagation();openMoodStudio('${p.id}')">Add to Mood Board</button>
+        </div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-brand-tag">${p.brandName}</div>
+        <div class="pc-name">${p.name}</div>
+        <div class="pc-meta">
+          ${p.materials.slice(0,2).map(m=>`<span class="pc-tag">${m}</span>`).join('')}
+          ${p.cct.map(c=>`<span class="pc-tag">${c}K</span>`).join('')}
+        </div>
+        <div class="pc-spec-row">
+          <span class="pc-type">${p.type.charAt(0).toUpperCase()+p.type.slice(1)}</span>
+          <span class="pc-cta-text">View details →</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── BRAND INDEX (sidebar) ──
+function renderBrandIndex() {
+  const idx = document.getElementById('brandIndex');
+  idx.innerHTML = BRANDS.map(b => `
+    <div class="bi-item ${activeFilters.brand===b.id?'active':''}" onclick="selectBrand('${b.id}',null)">
+      <span class="bi-name">${b.name}</span>
+      <span class="bi-flag">${b.country}</span>
+    </div>`).join('');
+}
+
+// ── DRAWER ──
+function openDrawer(productId) {
+  const p = PRODUCTS.find(x => x.id === productId);
+  if(!p) return;
+  const brand = BRANDS.find(b => b.id === p.brand);
+
+  const img = document.getElementById('drawerImg');
+  const placeholder = document.getElementById('drawerImgPlaceholder');
+  if(p.image) {
+    img.innerHTML = `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" onload="this.classList.add('loaded')" onerror="this.style.display='none'"><div class="drawer-img-placeholder" id="drawerImgPlaceholder"><div class="dip-icon">◎</div><div class="dip-text">Product image coming soon</div></div>`;
+  } else {
+    img.innerHTML = `<div class="drawer-img-placeholder"><div class="dip-icon">◎</div><div class="dip-text">Product image coming soon</div></div>`;
+  }
+
+  document.getElementById('drawerBody').innerHTML = `
+    <div class="dr-brand">${p.brandName} · ${brand?.country || ''}</div>
+    <div class="dr-name">${p.name}</div>
+    <div class="dr-type">${p.type.charAt(0).toUpperCase()+p.type.slice(1)}</div>
+    <div class="dr-section">
+      <div class="dr-section-label">Specifications</div>
+      <div class="dr-spec-grid">
+        <div class="dr-spec"><div class="dr-spec-label">Type</div><div class="dr-spec-val">${p.type.charAt(0).toUpperCase()+p.type.slice(1)}</div></div>
+        <div class="dr-spec"><div class="dr-spec-label">Colour Temp</div><div class="dr-spec-val">${p.cct.join(' / ')}K</div></div>
+        <div class="dr-spec"><div class="dr-spec-label">Materials</div><div class="dr-spec-val">${p.materials.join(', ')}</div></div>
+        <div class="dr-spec"><div class="dr-spec-label">Origin</div><div class="dr-spec-val">${brand?.country || ''}</div></div>
+      </div>
+    </div>
+    <div class="dr-section">
+      <div class="dr-section-label">About this fixture</div>
+      <div class="dr-desc">${p.desc}</div>
+    </div>
+    ${brand ? `<div class="dr-section">
+      <div class="dr-section-label">About ${p.brandName}</div>
+      <div class="dr-desc">${brand.desc}</div>
+    </div>` : ''}
+    <div class="dr-image-note">
+      Product photography will be available once the full catalogue is live. Our team can share high-resolution images and detailed specifications on enquiry.
+    </div>
+    <div class="dr-actions">
+      <button class="dr-btn primary" onclick="openEnquiry('${p.id}')">Enquire About This Product →</button>
+      <button class="dr-btn wa" onclick="openWhatsAppProduct('${p.id}')">✉ WhatsApp Enquiry</button>
+      <button class="dr-btn secondary" onclick="openMoodStudio('${p.id}')">Add to Mood Board</button>
+    </div>`;
+
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── BRAND INFO POPUP ──
+function openBrandInfo(brandId) {
+  const brand = BRANDS.find(b => b.id === brandId);
+  if(!brand) return;
+  showToast(`${brand.name} — ${brand.country}`);
+}
+
+// ── ENQUIRY MODAL ──
+function openEnquiry(productId) {
+  const p = PRODUCTS.find(x => x.id === productId);
+  if(!p) return;
+  const modal = document.getElementById('enquiryModal');
+  document.getElementById('modalTitle').textContent = `Enquire — ${p.brandName} ${p.name}`;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-product-summary">
+      <div class="mps-brand">${p.brandName}</div>
+      <div class="mps-name">${p.name}</div>
+    </div>
+    <div class="modal-section">
+      <div class="ms-label">Your Details</div>
+      <div class="modal-row">
+        <input class="modal-input" id="eq-name" type="text" placeholder="Your name">
+        <input class="modal-input" id="eq-firm" type="text" placeholder="Studio / firm">
+      </div>
+      <div class="modal-row">
+        <input class="modal-input" id="eq-email" type="email" placeholder="Email">
+        <input class="modal-input" id="eq-phone" type="tel" placeholder="WhatsApp number">
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="ms-label">Project Context</div>
+      <textarea class="modal-textarea" id="eq-notes" placeholder="Project type, quantity needed, finish preference, installation timeline, budget range..."></textarea>
+    </div>
+    <div class="modal-send-row">
+      <button class="ms-btn wa" onclick="sendEnquiryWA('${productId}')">✉ WhatsApp</button>
+      <button class="ms-btn email" onclick="sendEnquiryEmail('${productId}')">Send Enquiry →</button>
+    </div>
+    <div class="modal-note">Our team responds within 24 hours with pricing, availability, and lead times from ${p.brandName}'s European warehouse.</div>`;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openGeneralEnquiry() {
+  const modal = document.getElementById('enquiryModal');
+  document.getElementById('modalTitle').textContent = 'Send a Product Brief';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-section">
+      <div class="ms-label">Your Details</div>
+      <div class="modal-row">
+        <input class="modal-input" id="eq-name" type="text" placeholder="Your name">
+        <input class="modal-input" id="eq-firm" type="text" placeholder="Studio / firm">
+      </div>
+      <div class="modal-row">
+        <input class="modal-input" id="eq-email" type="email" placeholder="Email">
+        <input class="modal-input" id="eq-phone" type="tel" placeholder="WhatsApp number">
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="ms-label">Your Brief</div>
+      <textarea class="modal-textarea" id="eq-notes" placeholder="Tell us what you're looking for — fixture type, space, material preferences, budget, timeline..."></textarea>
+    </div>
+    <div class="modal-send-row">
+      <button class="ms-btn wa" onclick="sendGeneralWA()">✉ WhatsApp</button>
+      <button class="ms-btn email" onclick="sendGeneralEmail()">Send Brief →</button>
+    </div>
+    <div class="modal-note">Our team will curate options from across our European portfolio and respond within 24 hours.</div>`;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('enquiryModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeModalOutside(e) { if(e.target.id==='enquiryModal') closeModal(); }
+
+function sendEnquiryEmail(productId) {
+  const p = PRODUCTS.find(x => x.id === productId);
+  const name = document.getElementById('eq-name')?.value || '';
+  const email = document.getElementById('eq-email')?.value || '';
+  if(!name || !email) { showToast('Please enter your name and email'); return; }
+  const notes = document.getElementById('eq-notes')?.value || '';
+  const body = encodeURIComponent(`PRODUCT ENQUIRY — THE LIGHTISTS\n\nProduct: ${p?.brandName} ${p?.name}\n\nFrom: ${name} · ${document.getElementById('eq-firm')?.value}\nEmail: ${email}\nPhone: ${document.getElementById('eq-phone')?.value}\n\nProject notes:\n${notes}\n\nSent via thelightists.com`);
+  window.location.href = `mailto:info@thelightists.com?subject=Product Enquiry — ${p?.brandName} ${p?.name}&body=${body}`;
+  closeModal();
+  showToast('Enquiry sent. Our team will respond within 24 hours.');
+}
+
+function sendEnquiryWA(productId) {
+  const p = PRODUCTS.find(x => x.id === productId);
+  const name = document.getElementById('eq-name')?.value || 'Designer';
+  const notes = document.getElementById('eq-notes')?.value || '';
+  const msg = encodeURIComponent(`*Product Enquiry — The Lightists*\n\n*Product:* ${p?.brandName} ${p?.name}\n*From:* ${name}\n*Notes:* ${notes || 'None'}\n\n_Sent via thelightists.com_`);
+  window.open(`https://wa.me/919999306999?text=${msg}`, '_blank');
+  closeModal();
+}
+
+function sendGeneralEmail() {
+  const name = document.getElementById('eq-name')?.value || '';
+  const email = document.getElementById('eq-email')?.value || '';
+  if(!name || !email) { showToast('Please enter your name and email'); return; }
+  const notes = document.getElementById('eq-notes')?.value || '';
+  const body = encodeURIComponent(`GENERAL PRODUCT BRIEF — THE LIGHTISTS\n\nFrom: ${name} · ${document.getElementById('eq-firm')?.value}\nEmail: ${email}\n\nBrief:\n${notes}\n\nSent via thelightists.com`);
+  window.location.href = `mailto:info@thelightists.com?subject=Product Brief — The Lightists&body=${body}`;
+  closeModal();
+  showToast('Brief sent. Our team will curate options within 24 hours.');
+}
+
+function sendGeneralWA() {
+  const msg = encodeURIComponent(`*Product Brief — The Lightists*\n\n${document.getElementById('eq-notes')?.value || ''}\n\n_Sent via thelightists.com_`);
+  window.open(`https://wa.me/919999306999?text=${msg}`, '_blank');
+  closeModal();
+}
+
+function openWhatsApp() {
+  window.open('https://wa.me/919999306999?text=Hi, I\'m looking for lighting for my project. Can you help?', '_blank');
+}
+
+function openWhatsAppProduct(productId) {
+  const p = PRODUCTS.find(x => x.id === productId);
+  const msg = encodeURIComponent(`*Product Enquiry — The Lightists*\n\n*Product:* ${p?.brandName} ${p?.name}\n\nHi, I'd like to know more about this fixture — pricing, availability, and lead time.\n\n_Sent via thelightists.com_`);
+  window.open(`https://wa.me/919999306999?text=${msg}`, '_blank');
+}
+
+function openMoodStudio(productId) {
+  showToast('Opening Mood Studio...');
+  setTimeout(() => window.location.href = 'mood-studio.html', 600);
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── FADE OBSERVER ──
+const fadeObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.06 });
+
+// ── INIT ──
+renderBrandGrid();
+renderBrandIndex();
+loadProductsFromDB(); // loads from Supabase then calls applyFilters()
+document.addEventListener('keydown', e => { if(e.key==='Escape'){closeDrawer();closeModal();closeMobileMenu();} });
+
+function toggleMobileMenu() {
+  const d = document.getElementById('mobileDrawer');
+  const isOpen = d.style.opacity === '1';
+  if(isOpen){ closeMobileMenu(); }
+  else { d.style.transform='translateY(0)'; d.style.opacity='1'; document.body.style.overflow='hidden'; }
+}
+function closeMobileMenu() {
+  document.getElementById('mobileDrawer').style.transform='translateY(-100%)';
+  document.getElementById('mobileDrawer').style.opacity='0';
+  document.body.style.overflow='';
+}
+</script>
+</body>
+</html>

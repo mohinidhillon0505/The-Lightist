@@ -1,0 +1,2204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lightists — European Lighting for Architects & Designers</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400&family=Raleway:wght@100;200;300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --stone: #F7F6F2;
+    --charcoal: #1A1A1A;
+    --warm: #EDECEA;
+    --mid: #8C8880;
+    --border: #C8C4BC;
+    --dark: #3D3D3A;
+    --slate: #4A5568;
+    --pale-slate: #E8EDF2;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--stone);
+    color: var(--charcoal);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 72px;
+    background: rgba(247,246,242,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+    transition: all 0.3s ease;
+  }
+
+  /* ── LOGO ── */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .logo-monogram {
+    height: 40px;
+    width: auto;
+    display: block;
+  }
+
+  .logo-divider {
+    width: 0.5px;
+    height: 28px;
+    background: var(--border);
+    display: block;
+  }
+
+  .logo-wordmark {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 200;
+    font-size: 12px;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-links a {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--charcoal); }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  .btn-ghost {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    text-decoration: none;
+    padding: 8px 20px;
+    border: 0.5px solid var(--border);
+    transition: all 0.2s;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--charcoal);
+    background: var(--charcoal);
+    color: var(--stone);
+  }
+
+  .btn-solid {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--stone);
+    text-decoration: none;
+    padding: 8px 20px;
+    background: var(--charcoal);
+    border: 0.5px solid var(--charcoal);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-solid:hover { background: var(--dark); border-color: var(--dark); }
+
+  /* ── HAMBURGER ── */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none;
+    border: none;
+    z-index: 200;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 0.5px;
+    background: var(--charcoal);
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+
+  .hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+  /* ── MOBILE DRAWER ── */
+  .mobile-drawer {
+    display: none;
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--stone);
+    z-index: 99;
+    flex-direction: column;
+    padding: 40px 32px;
+    border-top: 0.5px solid var(--border);
+    overflow-y: auto;
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+  }
+
+  .mobile-drawer.open {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .mobile-nav-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 40px;
+  }
+
+  .mobile-nav-links li {
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .mobile-nav-links a {
+    display: block;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    text-decoration: none;
+    padding: 20px 0;
+    transition: color 0.2s;
+  }
+
+  .mobile-nav-links a:hover { color: var(--mid); }
+
+  .mobile-nav-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .mobile-nav-actions .btn-ghost,
+  .mobile-nav-actions .btn-solid {
+    text-align: center;
+    padding: 14px 20px;
+    font-size: 11px;
+  }
+
+  .mobile-drawer-logo {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .mobile-drawer-logo img {
+    height: 36px;
+    width: auto;
+  }
+
+  .mobile-drawer-logo .logo-wordmark {
+    font-size: 11px;
+    letter-spacing: 0.32em;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 72px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 64px 80px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 0.5px;
+    background: var(--mid);
+  }
+
+  .hero-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 5vw, 80px);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--charcoal);
+    margin-bottom: 32px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-headline em { font-style: italic; font-weight: 300; }
+
+  .hero-sub {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.9;
+    color: var(--mid);
+    max-width: 380px;
+    margin-bottom: 56px;
+    letter-spacing: 0.03em;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 80px;
+  }
+
+  .hero-cta-primary {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    background: var(--charcoal);
+    padding: 14px 32px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 0.5px solid var(--charcoal);
+  }
+
+  .hero-cta-primary:hover { background: var(--dark); }
+
+  .hero-cta-secondary {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    background: transparent;
+    padding: 14px 32px;
+    text-decoration: none;
+    border: 0.5px solid var(--border);
+    transition: all 0.2s;
+  }
+
+  .hero-cta-secondary:hover { border-color: var(--charcoal); }
+
+  .hero-stats { display: flex; gap: 48px; }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-top: 6px;
+  }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+    background: var(--charcoal);
+  }
+
+  /* ── HERO CAROUSEL ── */
+  .hero-carousel {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .carousel-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    background-size: cover;
+    background-position: center;
+    background-color: #1A1A1A;
+  }
+
+  .carousel-slide.active { opacity: 1; }
+
+  .carousel-slide::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, rgba(10,8,6,0.35) 0%, rgba(10,8,6,0.2) 50%, rgba(10,8,6,0.5) 100%);
+  }
+
+  .carousel-slide-1 { background: linear-gradient(160deg, #1A1A1A 0%, #2a2825 40%, #1a1918 70%, #0f0e0d 100%); }
+  .carousel-slide-2 { background: linear-gradient(160deg, #0F0E0D 0%, #1C1914 50%, #141210 100%); }
+  .carousel-slide-3 { background: linear-gradient(160deg, #1C1A18 0%, #2A2420 50%, #181614 100%); }
+
+  /* Hide placeholder hints — they only show before real images load */
+  .carousel-hint { display: none; }
+
+  .carousel-dots {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  .carousel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(200,196,188,0.25);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    padding: 0;
+  }
+
+  .carousel-dot.active {
+    background: rgba(200,196,188,0.7);
+    width: 20px;
+    border-radius: 3px;
+  }
+
+  .brand-tag {
+    position: absolute;
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    font-weight: 200;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(200,196,188,0.4);
+    white-space: nowrap;
+    z-index: 5;
+  }
+
+  .tag-1 { top: 20%; left: 10%; }
+  .tag-2 { top: 35%; right: 8%; }
+  .tag-3 { bottom: 30%; left: 8%; }
+  .tag-4 { bottom: 20%; right: 10%; }
+  .tag-5 { top: 65%; left: 14%; }
+
+  .hero-annotation {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    text-align: right;
+    z-index: 5;
+  }
+
+  .annotation-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: rgba(200,196,188,0.4);
+    line-height: 1.8;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 80px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .scroll-line {
+    width: 0.5px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--border), transparent);
+    animation: scroll-drop 2s ease-in-out infinite;
+  }
+
+  .scroll-text {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--mid);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  @keyframes scroll-drop {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  /* ── BRAND STRIP ── */
+  .brand-strip {
+    background: var(--charcoal);
+    padding: 22px 0;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .brand-strip-label {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(200,196,188,0.4);
+    white-space: nowrap;
+    padding: 0 24px 0 32px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 3;
+    background: var(--charcoal);
+  }
+
+  .brand-strip-divider {
+    width: 0.5px;
+    height: 18px;
+    background: rgba(200,196,188,0.2);
+    flex-shrink: 0;
+    margin-right: 0;
+    z-index: 3;
+    position: relative;
+  }
+
+  .brand-strip::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; right: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(to left, var(--charcoal), transparent);
+  }
+
+  .marquee-wrap {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee-scroll 50s linear infinite;
+    flex-shrink: 0;
+    width: max-content;
+  }
+
+  .marquee-track:hover { animation-play-state: paused; }
+
+  @keyframes marquee-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(200,196,188,0.5);
+    white-space: nowrap;
+    letter-spacing: 0.1em;
+    transition: color 0.3s;
+    cursor: default;
+    padding: 0 40px;
+  }
+
+  .brand-name:hover { color: rgba(200,196,188,0.9); }
+
+  /* ── TOOLS ── */
+  .tools-section { padding: 120px 80px; background: var(--stone); }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 72px;
+  }
+
+  .section-eyebrow {
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 0.5px;
+    background: var(--mid);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 3.5vw, 52px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--charcoal);
+    letter-spacing: -0.01em;
+  }
+
+  .section-title em { font-style: italic; }
+
+  .section-link {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mid);
+    text-decoration: none;
+    border-bottom: 0.5px solid var(--border);
+    padding-bottom: 2px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .section-link:hover { color: var(--charcoal); border-color: var(--charcoal); }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .tool-card {
+    background: var(--warm);
+    padding: 56px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.3s;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .tool-card:hover { background: var(--charcoal); }
+  .tool-card:hover .tool-num { color: rgba(200,196,188,0.3); }
+  .tool-card:hover .tool-name { color: var(--stone); }
+  .tool-card:hover .tool-desc { color: rgba(200,196,188,0.6); }
+  .tool-card:hover .tool-cta { color: var(--stone); border-color: rgba(200,196,188,0.3); }
+  .tool-card:hover .tool-tag { color: rgba(200,196,188,0.5); }
+
+  .tool-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    font-weight: 300;
+    color: rgba(139,136,128,0.15);
+    line-height: 1;
+    position: absolute;
+    top: 40px;
+    right: 48px;
+    transition: color 0.3s;
+    letter-spacing: -0.05em;
+  }
+
+  .tool-tag {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 20px;
+    display: inline-block;
+    transition: color 0.3s;
+  }
+
+  .tool-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.1;
+    margin-bottom: 20px;
+    transition: color 0.3s;
+  }
+
+  .tool-desc {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--mid);
+    max-width: 340px;
+    margin-bottom: 40px;
+    transition: color 0.3s;
+  }
+
+  .tool-cta {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    text-decoration: none;
+    border-bottom: 0.5px solid var(--border);
+    padding-bottom: 4px;
+    display: inline-block;
+    transition: all 0.3s;
+  }
+
+  /* ── PROCESS ── */
+  .process-section {
+    padding: 120px 80px;
+    background: var(--charcoal);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 120px;
+    align-items: center;
+  }
+
+  .process-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(200,196,188,0.4);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .process-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 0.5px;
+    background: rgba(200,196,188,0.3);
+  }
+
+  .process-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 3vw, 52px);
+    font-weight: 300;
+    color: var(--stone);
+    line-height: 1.1;
+    margin-bottom: 32px;
+  }
+
+  .process-title em { font-style: italic; }
+
+  .process-body {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.9;
+    color: rgba(200,196,188,0.6);
+    margin-bottom: 48px;
+  }
+
+  .process-cta {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    text-decoration: none;
+    padding: 14px 32px;
+    border: 0.5px solid rgba(200,196,188,0.3);
+    transition: all 0.2s;
+  }
+
+  .process-cta:hover { border-color: var(--stone); background: rgba(247,246,242,0.05); }
+
+  .process-steps { display: flex; flex-direction: column; gap: 0; }
+
+  .process-step {
+    display: flex;
+    gap: 32px;
+    padding: 32px 0;
+    border-bottom: 0.5px solid rgba(200,196,188,0.1);
+    align-items: flex-start;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .process-step:last-child { border-bottom: none; }
+  .process-step:hover .step-label { color: var(--stone); }
+
+  .step-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(200,196,188,0.25);
+    flex-shrink: 0;
+    padding-top: 3px;
+    letter-spacing: 0.1em;
+  }
+
+  .step-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: rgba(200,196,188,0.7);
+    margin-bottom: 8px;
+    transition: color 0.2s;
+    letter-spacing: 0.01em;
+  }
+
+  .step-detail {
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(200,196,188,0.35);
+  }
+
+  /* ── ACADEMY ── */
+  .academy-section { padding: 120px 80px; background: var(--stone); }
+
+  .academy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    margin-top: 72px;
+  }
+
+  .academy-card {
+    background: var(--warm);
+    padding: 40px;
+    min-height: 340px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+
+  .academy-card:hover { background: var(--charcoal); }
+  .academy-card:hover .ac-num { color: rgba(200,196,188,0.1); }
+  .academy-card:hover .ac-title { color: var(--stone); }
+  .academy-card:hover .ac-body { color: rgba(200,196,188,0.5); }
+  .academy-card:hover .ac-tag { color: rgba(200,196,188,0.4); }
+
+  .ac-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: rgba(139,136,128,0.12);
+    line-height: 1;
+    margin-bottom: 24px;
+    transition: color 0.3s;
+  }
+
+  .ac-tag {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 16px;
+    transition: color 0.3s;
+  }
+
+  .ac-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.2;
+    margin-bottom: 16px;
+    transition: color 0.3s;
+  }
+
+  .ac-body {
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--mid);
+    flex: 1;
+    transition: color 0.3s;
+  }
+
+  .ac-arrow {
+    margin-top: 28px;
+    font-size: 18px;
+    color: var(--border);
+    transition: color 0.3s, transform 0.2s;
+  }
+
+  .academy-card:hover .ac-arrow { color: rgba(200,196,188,0.4); transform: translateX(4px); }
+
+  /* ── ENTRY SECTION ── */
+  .entry-section {
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 480px;
+  }
+
+  .entry-card {
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.4s;
+  }
+
+  .entry-card.architects { background: var(--charcoal); }
+  .entry-card.designers { background: var(--dark); }
+  .entry-card:hover.architects { background: #111; }
+  .entry-card:hover.designers { background: #2a2826; }
+
+  .entry-eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(200,196,188,0.35);
+    margin-bottom: 20px;
+  }
+
+  .entry-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 3.5vw, 56px);
+    font-weight: 300;
+    color: var(--stone);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .entry-title em { font-style: italic; }
+
+  .entry-body {
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.9;
+    color: rgba(200,196,188,0.5);
+    max-width: 320px;
+  }
+
+  .entry-features { margin-top: 40px; display: flex; flex-direction: column; gap: 10px; }
+
+  .entry-feature {
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: rgba(200,196,188,0.45);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .entry-feature::before {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 0.5px;
+    background: rgba(200,196,188,0.25);
+    flex-shrink: 0;
+  }
+
+  .entry-cta {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    text-decoration: none;
+    padding: 14px 32px;
+    border: 0.5px solid rgba(200,196,188,0.25);
+    margin-top: 48px;
+    transition: all 0.2s;
+    width: fit-content;
+  }
+
+  .entry-cta:hover { border-color: rgba(200,196,188,0.6); }
+
+  .entry-large-num {
+    position: absolute;
+    bottom: -20px;
+    right: 40px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 180px;
+    font-weight: 300;
+    color: rgba(200,196,188,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  /* ── LUX ── */
+  .lux-section { padding: 120px 80px; background: var(--pale-slate); }
+
+  .lux-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .lux-table { border: 0.5px solid var(--border); }
+
+  .lux-table-header {
+    background: var(--charcoal);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 16px 24px;
+  }
+
+  .lux-th {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(200,196,188,0.5);
+    font-weight: 300;
+  }
+
+  .lux-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 16px 24px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--white);
+    transition: background 0.15s;
+    cursor: default;
+  }
+
+  .lux-row:last-child { border-bottom: none; }
+  .lux-row:hover { background: var(--warm); }
+
+  .lux-room { font-size: 13px; font-weight: 300; color: var(--charcoal); }
+
+  .lux-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--slate);
+    text-align: right;
+  }
+
+  .lux-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 3vw, 48px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--charcoal);
+    margin-bottom: 24px;
+  }
+
+  .lux-title em { font-style: italic; }
+
+  .lux-body {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.9;
+    color: var(--mid);
+    margin-bottom: 40px;
+  }
+
+  .lux-cta {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    background: var(--charcoal);
+    padding: 14px 32px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .lux-cta:hover { background: var(--dark); }
+
+  /* ── NEWSLETTER ── */
+  .newsletter-section {
+    padding: 80px;
+    background: var(--warm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 80px;
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .nl-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 16px;
+  }
+
+  .nl-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.15;
+  }
+
+  .nl-title em { font-style: italic; }
+
+  .nl-form {
+    display: flex;
+    gap: 0;
+    border: 0.5px solid var(--border);
+    background: var(--white);
+  }
+
+  .nl-input {
+    flex: 1;
+    padding: 16px 20px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: var(--charcoal);
+    border: none;
+    background: transparent;
+    outline: none;
+  }
+
+  .nl-input::placeholder { color: var(--mid); }
+
+  .nl-submit {
+    padding: 16px 28px;
+    background: var(--charcoal);
+    color: var(--stone);
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .nl-submit:hover { background: var(--dark); }
+
+  .nl-note { margin-top: 12px; font-size: 11px; font-weight: 300; color: var(--mid); }
+
+  /* ── FOOTER ── */
+  footer { background: var(--charcoal); padding: 80px 80px 40px; }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 72px;
+    padding-bottom: 64px;
+    border-bottom: 0.5px solid rgba(200,196,188,0.1);
+  }
+
+  .footer-logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .footer-logo-img {
+    height: 44px;
+    width: auto;
+  }
+
+  .footer-logo-divider {
+    width: 0.5px;
+    height: 28px;
+    background: rgba(200,196,188,0.2);
+  }
+
+  .footer-logo-wordmark {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 200;
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(200,196,188,0.6);
+  }
+
+  .footer-tagline {
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(200,196,188,0.4);
+    max-width: 260px;
+    margin-bottom: 28px;
+  }
+
+  .footer-contact {
+    font-size: 11px;
+    font-weight: 300;
+    color: rgba(200,196,188,0.35);
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+  }
+
+  .footer-col-title {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(200,196,188,0.3);
+    margin-bottom: 24px;
+    font-weight: 300;
+  }
+
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+
+  .footer-links a {
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(200,196,188,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: rgba(200,196,188,0.8); }
+
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+
+  .footer-copy { font-size: 11px; font-weight: 300; color: rgba(200,196,188,0.25); letter-spacing: 0.05em; }
+
+  .footer-legal { display: flex; gap: 32px; }
+
+  .footer-legal a {
+    font-size: 10px;
+    font-weight: 300;
+    color: rgba(200,196,188,0.25);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .footer-legal a:hover { color: rgba(200,196,188,0.5); }
+
+  /* ── ANIMATIONS ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,26,26,0.85);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(4px);
+    padding: 20px;
+  }
+
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--stone);
+    width: 100%;
+    max-width: 480px;
+    padding: 56px;
+    position: relative;
+    border: 0.5px solid var(--border);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--mid);
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+
+  .modal-close:hover { color: var(--charcoal); }
+  .modal-eyebrow { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--mid); margin-bottom: 16px; }
+
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--charcoal);
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+
+  .modal-sub { font-size: 12px; font-weight: 300; color: var(--mid); margin-bottom: 36px; line-height: 1.6; }
+
+  .modal-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 32px;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .modal-tab {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mid);
+    padding: 0 0 12px;
+    margin-right: 28px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-bottom: 1.5px solid transparent;
+    margin-bottom: -0.5px;
+    transition: all 0.2s;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+  }
+
+  .modal-tab.active { color: var(--charcoal); border-bottom-color: var(--charcoal); }
+
+  .modal-form { display: flex; flex-direction: column; gap: 16px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .form-field { display: flex; flex-direction: column; gap: 6px; }
+
+  .form-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid); font-weight: 300; }
+
+  .form-input {
+    padding: 12px 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--charcoal);
+    background: var(--white);
+    border: 0.5px solid var(--border);
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .form-input:focus { border-color: var(--charcoal); }
+
+  .form-select {
+    padding: 12px 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--charcoal);
+    background: var(--white);
+    border: 0.5px solid var(--border);
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .form-select:focus { border-color: var(--charcoal); }
+
+  .form-submit {
+    margin-top: 8px;
+    padding: 14px;
+    background: var(--charcoal);
+    color: var(--stone);
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+  }
+
+  .form-submit:hover { background: var(--dark); }
+
+  .form-note { font-size: 11px; font-weight: 300; color: var(--mid); text-align: center; margin-top: 4px; }
+
+  /* ── NOTIFICATION ── */
+  .notification {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--charcoal);
+    color: var(--stone);
+    padding: 16px 24px;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.3s;
+    pointer-events: none;
+    border: 0.5px solid rgba(200,196,188,0.2);
+    max-width: 300px;
+  }
+
+  .notification.show { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .nav-actions { display: none; }
+    .hamburger { display: flex; }
+    .mobile-drawer { display: flex; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 60px 24px; }
+    .hero-headline { font-size: clamp(44px, 10vw, 64px); }
+    .hero-ctas { flex-direction: column; gap: 12px; }
+    .hero-cta-primary, .hero-cta-secondary {
+      display: block;
+      text-align: center;
+      width: 100%;
+      max-width: 340px;
+    }
+    .hero-stats { gap: 32px; }
+    .tools-section, .academy-section, .lux-section { padding: 80px 24px; }
+    .tools-grid { grid-template-columns: 1fr; }
+    .academy-grid { grid-template-columns: 1fr; }
+    .process-section { grid-template-columns: 1fr; padding: 80px 24px; gap: 60px; }
+    .entry-section { grid-template-columns: 1fr; }
+    .entry-card { padding: 56px 24px; min-height: 400px; }
+    .newsletter-section { flex-direction: column; padding: 56px 24px; gap: 40px; }
+    .brand-strip { padding: 24px 0; }
+    footer { padding: 60px 24px 32px; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .lux-inner { grid-template-columns: 1fr; }
+    .section-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .tool-card { padding: 40px 32px; }
+    .logo-wordmark { display: none; }
+    .logo-divider { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    #contact > div { grid-template-columns: 1fr !important; gap: 40px !important; }
+    #contact { padding: 48px 24px !important; }
+    .footer-top { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .modal { padding: 40px 28px; }
+    .newsletter-section { padding: 48px 24px; }
+    .nl-form { flex-direction: column; }
+    .nl-submit { width: 100%; padding: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="authModal" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('authModal').classList.remove('active');document.body.style.overflow=''">×</button>
+    <div class="modal-eyebrow">Professional Access</div>
+    <div class="modal-title" id="modalTitle">Create Account</div>
+    <div class="modal-sub" id="modalSub">Join India's first professional lighting platform. Free for architects and interior designers.</div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchTab('signup', this)">Sign Up</button>
+      <button class="modal-tab" onclick="switchTab('login', this)">Sign In</button>
+    </div>
+    <div id="signupForm">
+      <div class="modal-form">
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" placeholder="Arjun">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" placeholder="Sharma">
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" placeholder="arjun@studio.in">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Firm / Studio Name</label>
+          <input class="form-input" type="text" placeholder="Sharma Associates">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Role</label>
+          <select class="form-select">
+            <option value="">Select your role</option>
+            <option>Architect</option>
+            <option>Interior Designer</option>
+            <option>Lighting Consultant</option>
+            <option>Project Manager</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" placeholder="••••••••">
+        </div>
+        <button class="form-submit" onclick="handleSignup()">Create Professional Account</button>
+        <div class="form-note">Free access to all tools. No credit card required.</div>
+      </div>
+    </div>
+    <div id="loginForm" style="display:none">
+      <div class="modal-form">
+        <div class="form-field">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" placeholder="arjun@studio.in">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" placeholder="••••••••">
+        </div>
+        <button class="form-submit" onclick="handleLogin()">Sign In</button>
+        <div class="form-note"><a href="#" style="color:var(--mid);text-decoration:underline;">Forgot password?</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notification" id="notification"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img class="logo-monogram" src="Logo White.png" alt="TL">
+    <span class="logo-divider"></span>
+    <span class="logo-wordmark">The Lightists</span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="lighting-lab.html">Lighting Lab</a></li>
+    <li><a href="mood-studio.html">Mood Studio</a></li>
+    <li><a href="mood-board.html">Mood Board</a></li>
+    <li><a href="design-academy.html">Academy</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+
+  <div class="nav-actions">
+    <button class="btn-ghost" onclick="openModal('login')">Sign In</button>
+    <button class="btn-solid" onclick="openModal('signup')">Join Free</button>
+  </div>
+
+  <!-- Hamburger for mobile -->
+  <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <div class="mobile-drawer-logo">
+    <img src="Logo White.png" alt="TL" style="height:32px;width:auto;">
+    <span style="width:0.5px;height:24px;background:var(--border);display:block;"></span>
+    <span class="logo-wordmark" style="font-size:10px;letter-spacing:0.3em;">The Lightists</span>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="lighting-lab.html" onclick="closeMobileMenu()">Lighting Lab</a></li>
+    <li><a href="mood-studio.html" onclick="closeMobileMenu()">Mood Studio</a></li>
+    <li><a href="mood-board.html" onclick="closeMobileMenu()">Mood Board</a></li>
+    <li><a href="design-academy.html" onclick="closeMobileMenu()">Academy</a></li>
+    <li><a href="products.html" onclick="closeMobileMenu()">Products</a></li>
+    <li><a href="about.html" onclick="closeMobileMenu()">About</a></li>
+    <li><a href="#contact" onclick="closeMobileMenu()">Contact</a></li>
+  </ul>
+  <div class="mobile-nav-actions">
+    <button class="btn-ghost" onclick="closeMobileMenu();openModal('login')">Sign In</button>
+    <button class="btn-solid" onclick="closeMobileMenu();openModal('signup')">Join Free</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">India's First Professional Lighting Platform</div>
+    <h1 class="hero-headline">
+      Light, <em>designed</em><br>
+      with European<br>
+      precision.
+    </h1>
+    <p class="hero-sub">
+      The Lightists brings the world's finest European lighting — Artemide, Vibia, Foscarini, Brokis, Occhio — to architects and interior designers across India. With professional tools built for the way you work.
+    </p>
+    <div class="hero-ctas">
+      <a href="#tools" class="hero-cta-primary">Explore the Tools</a>
+      <a href="#" class="hero-cta-secondary" onclick="openModal('signup'); return false;">Create Free Account</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">25+</div>
+        <div class="stat-label">European Brands</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Pro Tools</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-carousel">
+      <div class="carousel-slide carousel-slide-1 active" id="slide-0"
+        style="background-image:url('hero-1.jpg');background-size:cover;background-position:center;">
+      </div>
+      <div class="carousel-slide carousel-slide-2" id="slide-1"
+        style="background-image:url('hero-2.jpg');background-size:cover;background-position:center;">
+      </div>
+      <div class="carousel-slide carousel-slide-3" id="slide-2"
+        style="background-image:url('hero-3.jpg');background-size:cover;background-position:center;">
+      </div>
+    </div>
+    <span class="brand-tag tag-1">Artemide — Milano</span>
+    <span class="brand-tag tag-2">Brokis — Praha</span>
+    <span class="brand-tag tag-3">Vibia — Barcelona</span>
+    <span class="brand-tag tag-4">Bocci — Vancouver</span>
+    <span class="brand-tag tag-5">Foscarini — Venezia</span>
+    <div class="hero-annotation">
+      <div class="annotation-text">Curated for the<br>Indian professional.</div>
+    </div>
+    <div class="carousel-dots">
+      <button class="carousel-dot active" onclick="goToSlide(0)"></button>
+      <button class="carousel-dot" onclick="goToSlide(1)"></button>
+      <button class="carousel-dot" onclick="goToSlide(2)"></button>
+    </div>
+  </div>
+</section>
+
+<!-- BRAND STRIP -->
+<div class="brand-strip">
+  <span class="brand-strip-label">European Partners</span>
+  <div class="brand-strip-divider"></div>
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="marqueeTrack">
+      <span class="brand-name">Artemide</span><span class="brand-name">FontanaArte</span>
+      <span class="brand-name">Foscarini</span><span class="brand-name">Henge</span>
+      <span class="brand-name">Terzani</span><span class="brand-name">Axolight</span>
+      <span class="brand-name">Vibia</span><span class="brand-name">Marset</span>
+      <span class="brand-name">Bover</span><span class="brand-name">Santa &amp; Cole</span>
+      <span class="brand-name">&amp;Tradition</span><span class="brand-name">Muuto</span>
+      <span class="brand-name">Bocci</span><span class="brand-name">Brokis</span>
+      <span class="brand-name">Tom Dixon</span><span class="brand-name">Forestier</span>
+      <span class="brand-name">Occhio</span><span class="brand-name">Roll &amp; Hill</span>
+      <span class="brand-name">Aggiolight</span><span class="brand-name">Penta</span>
+      <span class="brand-name">Martinelli Luce</span><span class="brand-name">Modoluce</span>
+      <span class="brand-name">Nemo Lighting</span><span class="brand-name">Formagenda</span>
+      <span class="brand-name">Bomma</span><span class="brand-name">Prolicht</span>
+      <span class="brand-name">Reggiani</span><span class="brand-name">Simes</span>
+      <span class="brand-name">Dreamlux</span><span class="brand-name">Visual Feast</span>
+      <!-- Duplicate for seamless loop -->
+      <span class="brand-name">Artemide</span><span class="brand-name">FontanaArte</span>
+      <span class="brand-name">Foscarini</span><span class="brand-name">Henge</span>
+      <span class="brand-name">Terzani</span><span class="brand-name">Axolight</span>
+      <span class="brand-name">Vibia</span><span class="brand-name">Marset</span>
+      <span class="brand-name">Bover</span><span class="brand-name">Santa &amp; Cole</span>
+      <span class="brand-name">&amp;Tradition</span><span class="brand-name">Muuto</span>
+      <span class="brand-name">Bocci</span><span class="brand-name">Brokis</span>
+      <span class="brand-name">Tom Dixon</span><span class="brand-name">Forestier</span>
+      <span class="brand-name">Occhio</span><span class="brand-name">Roll &amp; Hill</span>
+      <span class="brand-name">Aggiolight</span><span class="brand-name">Penta</span>
+      <span class="brand-name">Martinelli Luce</span><span class="brand-name">Modoluce</span>
+      <span class="brand-name">Nemo Lighting</span><span class="brand-name">Formagenda</span>
+      <span class="brand-name">Bomma</span><span class="brand-name">Prolicht</span>
+      <span class="brand-name">Reggiani</span><span class="brand-name">Simes</span>
+      <span class="brand-name">Dreamlux</span><span class="brand-name">Visual Feast</span>
+    </div>
+  </div>
+</div>
+
+<!-- TOOLS -->
+<section class="tools-section" id="tools">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Professional Tools</div>
+      <h2 class="section-title">Four tools.<br><em>Built for how you work.</em></h2>
+    </div>
+    <a href="lighting-lab.html" class="section-link">View all tools →</a>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card fade-up" onclick="window.location.href='lighting-lab.html'">
+      <div class="tool-num">01</div>
+      <div>
+        <div class="tool-tag">Calculation</div>
+        <div class="tool-name">Lighting Lab</div>
+        <div class="tool-desc">Enter room type, dimensions, and ceiling height. Get target lux levels, fixture count, total lumens — and matched products from our European catalogue. Download as a project PDF.</div>
+        <a class="tool-cta" href="lighting-lab.html">Open Calculator →</a>
+      </div>
+      <div style="font-size:11px;color:var(--mid);display:flex;gap:10px;flex-wrap:wrap;">
+        <span>Lux by room type</span><span style="color:var(--border)">·</span>
+        <span>Fixture count</span><span style="color:var(--border)">·</span><span>PDF export</span>
+      </div>
+    </div>
+    <div class="tool-card fade-up" style="transition-delay:0.1s" onclick="window.location.href='mood-studio.html'">
+      <div class="tool-num">02</div>
+      <div>
+        <div class="tool-tag">Visual Planning</div>
+        <div class="tool-name">Mood Studio</div>
+        <div class="tool-desc">Browse our European catalogue and pin products to build client-ready lighting mood boards. Filter by brand, room type, and style. Export your selection as a PDF presentation.</div>
+        <a class="tool-cta" href="mood-studio.html">Open Studio →</a>
+      </div>
+      <div style="font-size:11px;color:var(--mid);display:flex;gap:10px;flex-wrap:wrap;">
+        <span>Browse catalogue</span><span style="color:var(--border)">·</span>
+        <span>Pin products</span><span style="color:var(--border)">·</span><span>Client PDF</span>
+      </div>
+    </div>
+    <div class="tool-card fade-up" style="transition-delay:0.15s" onclick="window.location.href='mood-board.html'">
+      <div class="tool-num">03</div>
+      <div>
+        <div class="tool-tag">Canvas Builder</div>
+        <div class="tool-name">Mood Board</div>
+        <div class="tool-desc">Full-screen canvas. Upload your room render or photo, drag and drop European fixtures onto it, resize and position. Export a client-ready PDF presentation with your studio branding.</div>
+        <a class="tool-cta" href="mood-board.html">Open Mood Board →</a>
+      </div>
+      <div style="font-size:11px;color:var(--mid);display:flex;gap:10px;flex-wrap:wrap;">
+        <span>Drag &amp; drop canvas</span><span style="color:var(--border)">·</span>
+        <span>Room upload</span><span style="color:var(--border)">·</span><span>PDF export</span>
+      </div>
+    </div>
+    <div class="tool-card fade-up" style="transition-delay:0.2s" onclick="window.location.href='design-academy.html'">
+      <div class="tool-num">04</div>
+      <div>
+        <div class="tool-tag">Knowledge</div>
+        <div class="tool-name">Design Academy</div>
+        <div class="tool-desc">Lighting 101 guides. Room-by-room how-tos. European trend reports issued quarterly. Hospitality and commercial speccing guides. All written for India's architecture and design community.</div>
+        <a class="tool-cta" href="design-academy.html">Explore Academy →</a>
+      </div>
+      <div style="font-size:11px;color:var(--mid);display:flex;gap:10px;flex-wrap:wrap;">
+        <span>Lux &amp; CRI guides</span><span style="color:var(--border)">·</span>
+        <span>Trend reports</span><span style="color:var(--border)">·</span><span>Downloads</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LUX REFERENCE -->
+<section class="lux-section" id="lux">
+  <div class="lux-inner fade-up">
+    <div>
+      <div class="lux-table">
+        <div class="lux-table-header">
+          <span class="lux-th">Room Type</span>
+          <span class="lux-th" style="text-align:right">Target Lux</span>
+        </div>
+        <div class="lux-row"><span class="lux-room">Bedroom</span><span class="lux-value">150 lx</span></div>
+        <div class="lux-row"><span class="lux-room">Hotel Lobby / Foyer</span><span class="lux-value">200 lx</span></div>
+        <div class="lux-row"><span class="lux-room">Living Room</span><span class="lux-value">300 lx</span></div>
+        <div class="lux-row"><span class="lux-room">Dining Room</span><span class="lux-value">400 lx</span></div>
+        <div class="lux-row"><span class="lux-room">Kitchen</span><span class="lux-value">500 lx</span></div>
+        <div class="lux-row"><span class="lux-room">Home Office</span><span class="lux-value">500 lx</span></div>
+      </div>
+    </div>
+    <div class="lux-right">
+      <div class="section-eyebrow">Lighting Lab Preview</div>
+      <div class="lux-title">Know the right<br>light for <em>every room.</em></div>
+      <div class="lux-body">Every room has an optimal lux level. Too low and spaces feel dim and unwelcoming. Too high and they feel clinical. The Lighting Lab calculates the precise fixture count and placement for every room type — automatically matched to products from our European catalogue.</div>
+      <a href="lighting-lab.html" class="lux-cta">Use the Calculator</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process-section" id="process">
+  <div class="process-left fade-up">
+    <div class="process-eyebrow">How It Works</div>
+    <h2 class="process-title">A platform built<br>for the way<br><em>architects work.</em></h2>
+    <p class="process-body">Every tool on The Lightists is designed around the professional workflow — from initial concept through to contractor handover. Your projects, calculations, and boards are saved to your account and accessible across every device.</p>
+    <a href="#" onclick="openModal('signup');return false;" class="process-cta">Create Free Account</a>
+  </div>
+  <div class="process-right fade-up" style="transition-delay:0.1s">
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-number">01</div>
+        <div class="step-content">
+          <div class="step-label">Create your professional account</div>
+          <div class="step-detail">Free for architects and interior designers. Add your studio name, save your projects, access all tools.</div>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-number">02</div>
+        <div class="step-content">
+          <div class="step-label">Calculate lighting for each room</div>
+          <div class="step-detail">Use the Lighting Lab to get precise lux targets and fixture counts, matched to European products.</div>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-number">03</div>
+        <div class="step-content">
+          <div class="step-label">Build and share your mood board</div>
+          <div class="step-detail">Upload your renders, pin products, export a branded PDF to present to your client.</div>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-number">04</div>
+        <div class="step-content">
+          <div class="step-label">Place your order with The Lightists</div>
+          <div class="step-detail">Once your selections are finalised, our team handles sourcing, import, and delivery across India.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACADEMY -->
+<section class="academy-section" id="academy">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Design Academy</div>
+      <h2 class="section-title">Light, <em>understood.</em></h2>
+    </div>
+    <a href="design-academy.html" class="section-link">All guides →</a>
+  </div>
+  <div class="academy-grid">
+    <div class="academy-card fade-up" onclick="window.location.href='design-academy.html'">
+      <div>
+        <div class="ac-num">01</div>
+        <div class="ac-tag">Fundamentals</div>
+        <div class="ac-title">Lux, Lumens &amp; CRI — the complete guide</div>
+        <div class="ac-body">Everything architects need to understand the language of light. From colour temperature to rendering index — explained simply, applied professionally.</div>
+      </div>
+      <div class="ac-arrow">→</div>
+    </div>
+    <div class="academy-card fade-up" style="transition-delay:0.1s" onclick="window.location.href='design-academy.html'">
+      <div>
+        <div class="ac-num">02</div>
+        <div class="ac-tag">Room by Room</div>
+        <div class="ac-title">Lighting the Indian home — room by room</div>
+        <div class="ac-body">How to layer light in Indian residential spaces — from the entrance foyer through the puja room, bedroom, and terrace. Climate and context considered.</div>
+      </div>
+      <div class="ac-arrow">→</div>
+    </div>
+    <div class="academy-card fade-up" style="transition-delay:0.2s" onclick="window.location.href='design-academy.html'">
+      <div>
+        <div class="ac-num">03</div>
+        <div class="ac-tag">European Trends · Q2 2026</div>
+        <div class="ac-title">What's defining European lighting design this season</div>
+        <div class="ac-body">Material restraint, warm terracotta tones, and a return to incandescent warmth. Our quarterly report on what Europe's studios are specifying.</div>
+      </div>
+      <div class="ac-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- ENTRY POINTS -->
+<section class="entry-section" id="professionals">
+  <div class="entry-card architects">
+    <div>
+      <div class="entry-eyebrow">For Architects</div>
+      <div class="entry-title">Specify light<br>with <em>precision.</em></div>
+      <div class="entry-body">The Lighting Lab is built around the architect's workflow. Calculate, specify, and handover — all from one platform, saved to your account across every project.</div>
+      <div class="entry-features">
+        <div class="entry-feature">Lux calculator with fixture recommendations</div>
+        <div class="entry-feature">PDF spec sheets for contractor handover</div>
+        <div class="entry-feature">IES file downloads for rendering</div>
+        <div class="entry-feature">Project dashboard saved to your account</div>
+      </div>
+    </div>
+    <a href="lighting-lab.html" class="entry-cta">Join as Architect</a>
+    <div class="entry-large-num">A</div>
+  </div>
+  <div class="entry-card designers">
+    <div>
+      <div class="entry-eyebrow">For Interior Designers</div>
+      <div class="entry-title">Build boards<br><em>clients love.</em></div>
+      <div class="entry-body">The Mood Studio lets you browse and pin European products to build client-ready lighting presentations. Export branded PDFs that place The Lightists inside every client conversation.</div>
+      <div class="entry-features">
+        <div class="entry-feature">Browse 25+ European brand catalogue</div>
+        <div class="entry-feature">Pin products with position markers</div>
+        <div class="entry-feature">Export branded client PDF presentations</div>
+        <div class="entry-feature">Save boards across all your projects</div>
+      </div>
+    </div>
+    <a href="mood-studio.html" class="entry-cta">Join as Designer</a>
+    <div class="entry-large-num">D</div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<div class="newsletter-section">
+  <div class="newsletter-left" style="flex:1;">
+    <div class="nl-eyebrow">Design Academy Newsletter</div>
+    <div class="nl-title">European lighting trends,<br><em>delivered quarterly.</em></div>
+  </div>
+  <div class="newsletter-right" style="flex:1;">
+    <div class="nl-form">
+      <input class="nl-input" type="email" placeholder="Your studio email address">
+      <button class="nl-submit" onclick="handleNewsletter()">Subscribe</button>
+    </div>
+    <div class="nl-note">Quarterly trend reports. No promotions. Unsubscribe anytime.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo-wrap">
+        <img class="footer-logo-img" src="Logo Black.png" alt="The Lightists">
+        <span class="footer-logo-divider"></span>
+        <span class="footer-logo-wordmark">The Lightists</span>
+      </div>
+      <div class="footer-tagline">Premium European lighting for architects and interior designers across India. Curated, not catalogued.</div>
+      <div class="footer-contact">
+        Delhi &amp; Bangalore · Pan India<br>
+        info@thelightists.com<br>
+        +91 99993 06667
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Tools</div>
+      <ul class="footer-links">
+        <li><a href="lighting-lab.html">Lighting Lab</a></li>
+        <li><a href="mood-studio.html">Mood Studio</a></li>
+        <li><a href="mood-board.html">Mood Board</a></li>
+        <li><a href="design-academy.html">Design Academy</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Catalogue</div>
+      <ul class="footer-links">
+        <li><a href="products.html">All Products</a></li>
+        <li><a href="products.html?type=pendant">Pendant Lights</a></li>
+        <li><a href="products.html?type=floor">Floor Lamps</a></li>
+        <li><a href="products.html?type=wall">Wall Lights</a></li>
+        <li><a href="products.html?type=outdoor">Outdoor</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="about.html">About The Lightists</a></li>
+        <li><a href="products.html">European Brands</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+        <li><a href="design-academy.html">Design Academy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 The Lightists. All rights reserved. · Delhi &amp; Bangalore · Pan India</div>
+    <div class="footer-legal">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<!-- CONTACT -->
+<section id="contact" style="background:var(--warm);padding:80px 48px;overflow:hidden;border-top:0.5px solid var(--border);">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;">
+    <div>
+      <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--mid);margin-bottom:16px;display:flex;align-items:center;gap:14px;">
+        <span style="display:block;width:24px;height:0.5px;background:var(--mid);"></span>Get in Touch
+      </div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3vw,48px);font-weight:300;color:var(--charcoal);line-height:1.1;margin-bottom:32px;">
+        Let's talk about your <em>project.</em>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        <div>
+          <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:8px;">Email</div>
+          <a href="mailto:info@thelightists.com" style="font-size:14px;color:var(--charcoal);text-decoration:none;display:block;margin-bottom:4px;">info@thelightists.com</a>
+          <a href="mailto:aman@thelightists.com" style="font-size:14px;color:var(--charcoal);text-decoration:none;display:block;">aman@thelightists.com</a>
+        </div>
+        <div>
+          <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:8px;">Phone &amp; WhatsApp</div>
+          <a href="tel:+919999306667" style="font-size:14px;color:var(--charcoal);text-decoration:none;display:block;margin-bottom:4px;">+91 99993 06667</a>
+          <a href="tel:+919990635577" style="font-size:14px;color:var(--charcoal);text-decoration:none;display:block;">+91 99906 35577</a>
+        </div>
+        <div>
+          <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:8px;">Offices</div>
+          <div style="font-size:14px;color:var(--charcoal);line-height:1.8;">Delhi &amp; Bangalore<br><span style="font-size:12px;color:var(--mid);">Works Pan India</span></div>
+        </div>
+        <div>
+          <a href="https://wa.me/919999306667" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:0.5px solid #25D366;color:#25D366;text-decoration:none;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;font-family:'Jost',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='#25D366';this.style.color='white'" onmouseout="this.style.background='transparent';this.style.color='#25D366'">
+            ✉ WhatsApp Us
+          </a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:20px;">Send a Message</div>
+      <form onsubmit="handleContactForm(event)" style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:6px;">Name</label>
+            <input id="cf-name" type="text" placeholder="Your name" required style="width:100%;padding:11px 14px;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;" onfocus="this.style.borderColor='var(--charcoal)'" onblur="this.style.borderColor='var(--border)'">
+          </div>
+          <div>
+            <label style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:6px;">Studio / Firm</label>
+            <input id="cf-firm" type="text" placeholder="Your studio" style="width:100%;padding:11px 14px;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;" onfocus="this.style.borderColor='var(--charcoal)'" onblur="this.style.borderColor='var(--border)'">
+          </div>
+        </div>
+        <div>
+          <label style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:6px;">Email</label>
+          <input id="cf-email" type="email" placeholder="your@studio.com" required style="width:100%;padding:11px 14px;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;" onfocus="this.style.borderColor='var(--charcoal)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div>
+          <label style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:6px;">Phone / WhatsApp</label>
+          <input id="cf-phone" type="tel" placeholder="Your phone number" style="width:100%;padding:11px 14px;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;" onfocus="this.style.borderColor='var(--charcoal)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div>
+          <label style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:6px;">How can we help?</label>
+          <textarea id="cf-message" placeholder="Tell us about your project — space type, location, timeline, or any questions about our European lighting portfolio..." required style="width:100%;padding:11px 14px;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:var(--charcoal);background:var(--white);border:0.5px solid var(--border);outline:none;resize:none;min-height:120px;line-height:1.7;" onfocus="this.style.borderColor='var(--charcoal)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        </div>
+        <button type="submit" style="padding:14px 32px;background:var(--charcoal);color:var(--stone);font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;border:none;cursor:pointer;transition:background 0.2s;width:fit-content;" onmouseover="this.style.background='var(--dark)'" onmouseout="this.style.background='var(--charcoal)'">
+          Send Message →
+        </button>
+        <div id="cf-success" style="display:none;font-size:12px;color:#1D9E75;padding:12px 16px;background:rgba(29,158,117,0.08);border:0.5px solid rgba(29,158,117,0.3);">
+          ✓ Message sent. We'll respond within 24 hours.
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ── MOBILE MENU ──
+  function toggleMobileMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const drawer = document.getElementById('mobileDrawer');
+    const isOpen = drawer.classList.contains('open');
+    if (isOpen) {
+      closeMobileMenu();
+    } else {
+      hamburger.classList.add('open');
+      drawer.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeMobileMenu() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('mobileDrawer').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ── MODAL ──
+  function openModal(type) {
+    const modal = document.getElementById('authModal');
+    modal.classList.add('active');
+    if (type === 'login') {
+      switchTab('login', document.querySelectorAll('.modal-tab')[1]);
+    } else {
+      switchTab('signup', document.querySelectorAll('.modal-tab')[0]);
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(e) {
+    if (e.target.id === 'authModal') {
+      document.getElementById('authModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+
+  function switchTab(tab, el) {
+    document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    if (tab === 'signup') {
+      document.getElementById('signupForm').style.display = 'block';
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('modalTitle').textContent = 'Create Account';
+      document.getElementById('modalSub').textContent = "Join India's first professional lighting platform. Free for architects and interior designers.";
+    } else {
+      document.getElementById('signupForm').style.display = 'none';
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('modalTitle').textContent = 'Welcome back.';
+      document.getElementById('modalSub').textContent = 'Sign in to access your projects, tools, and saved boards.';
+    }
+  }
+
+  function handleSignup() {
+    document.getElementById('authModal').classList.remove('active');
+    document.body.style.overflow = '';
+    showNotification('Account created. Welcome to The Lightists.');
+  }
+
+  function handleLogin() {
+    document.getElementById('authModal').classList.remove('active');
+    document.body.style.overflow = '';
+    showNotification('Signed in. Welcome back.');
+  }
+
+  function handleNewsletter() {
+    showNotification('Subscribed. First report arrives next quarter.');
+  }
+
+  function handleContactForm(e) {
+    e.preventDefault();
+    const name = document.getElementById('cf-name').value;
+    const firm = document.getElementById('cf-firm').value;
+    const email = document.getElementById('cf-email').value;
+    const phone = document.getElementById('cf-phone').value;
+    const message = document.getElementById('cf-message').value;
+    const body = encodeURIComponent(
+      `New Enquiry — The Lightists Website\n\nName: ${name}\nFirm: ${firm}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}`
+    );
+    window.location.href = `mailto:info@thelightists.com?subject=Website Enquiry — ${name}&body=${body}`;
+    document.getElementById('cf-success').style.display = 'block';
+    e.target.reset();
+  }
+
+  // ── NOTIFICATION ──
+  function showNotification(msg) {
+    const n = document.getElementById('notification');
+    n.textContent = msg;
+    n.classList.add('show');
+    setTimeout(() => n.classList.remove('show'), 3500);
+  }
+
+  // ── SUPABASE ──
+  const SB_URL = 'https://xwgbkolqltdzottdwufb.supabase.co';
+  const SB_KEY = 'sb_publishable_gLoiEdxkGyjCfHjLBVDsgQ_LDyZHjSV';
+
+  async function loadHeroImagesFromDB() {
+    try {
+      const res = await fetch(`${SB_URL}/rest/v1/site_settings?id=in.(hero_1,hero_2,hero_3)`, {
+        headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}
+      });
+      if(!res.ok) return;
+      const settings = await res.json();
+      if(!Array.isArray(settings)) return;
+      settings.forEach(s => {
+        const num = s.id.replace('hero_','');
+        const url = s.value;
+        if(url && url.trim() !== '') {
+          const slide = document.getElementById(`slide-${parseInt(num)-1}`);
+          if(slide) {
+            slide.style.backgroundImage = `url('${url}')`;
+            slide.style.backgroundSize = 'cover';
+            slide.style.backgroundPosition = 'center';
+          }
+        }
+      });
+    } catch(e) {
+      console.log('Hero images not loaded from DB:', e);
+    }
+  }
+
+  loadHeroImagesFromDB();
+
+  // ── CAROUSEL ──
+  let currentSlide = 0;
+  const totalSlides = 3;
+  let carouselTimer;
+
+  function goToSlide(index) {
+    document.querySelectorAll('.carousel-slide').forEach((s,i) => {
+      s.classList.toggle('active', i === index);
+    });
+    document.querySelectorAll('.carousel-dot').forEach((d,i) => {
+      d.classList.toggle('active', i === index);
+    });
+    currentSlide = index;
+  }
+
+  function nextSlide() { goToSlide((currentSlide + 1) % totalSlides); }
+  function startCarousel() { carouselTimer = setInterval(nextSlide, 5000); }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    startCarousel();
+    const heroRight = document.querySelector('.hero-right');
+    if(heroRight) {
+      heroRight.addEventListener('mouseenter', () => clearInterval(carouselTimer));
+      heroRight.addEventListener('mouseleave', () => { clearInterval(carouselTimer); startCarousel(); });
+    }
+  });
+
+  // ── SCROLL ANIMATIONS ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // ESC closes modal
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') {
+      document.getElementById('authModal').classList.remove('active');
+      document.body.style.overflow = '';
+      closeMobileMenu();
+    }
+  });
+</script>
+</body>
+</html>
