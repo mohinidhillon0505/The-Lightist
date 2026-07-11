@@ -1420,6 +1420,12 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 1024px) {
+    #testimonials { padding: 80px 24px !important; }
+    #testimonials > div > div:last-child,
+    #testimonialsEmpty { grid-template-columns: 1fr !important; }
+    #european-difference { padding: 80px 24px !important; }
+    #european-difference > div > div { grid-template-columns: 1fr !important; gap: 40px !important; }
+    #waFloat { bottom: 20px !important; right: 20px !important; width: 48px !important; height: 48px !important; }
     nav { padding: 0 24px; }
     .nav-links { display: none; }
     .nav-actions { display: none; }
@@ -1655,34 +1661,38 @@
       <span class="brand-name">Artemide</span><span class="brand-name">FontanaArte</span>
       <span class="brand-name">Foscarini</span><span class="brand-name">Henge</span>
       <span class="brand-name">Terzani</span><span class="brand-name">Axolight</span>
+      <span class="brand-name">Nemo Lighting</span><span class="brand-name">Martinelli Luce</span>
+      <span class="brand-name">Modoluce</span><span class="brand-name">Penta</span>
+      <span class="brand-name">Aggiolight</span><span class="brand-name">Iltiluce</span>
+      <span class="brand-name">Reggiani</span><span class="brand-name">Simes</span>
       <span class="brand-name">Vibia</span><span class="brand-name">Marset</span>
       <span class="brand-name">Bover</span><span class="brand-name">Santa &amp; Cole</span>
-      <span class="brand-name">&amp;Tradition</span><span class="brand-name">Muuto</span>
-      <span class="brand-name">Bocci</span><span class="brand-name">Brokis</span>
+      <span class="brand-name">Aromas del Campo</span><span class="brand-name">&amp;Tradition</span>
+      <span class="brand-name">Muuto</span><span class="brand-name">Bocci</span>
+      <span class="brand-name">Brokis</span><span class="brand-name">Bomma</span>
       <span class="brand-name">Tom Dixon</span><span class="brand-name">Forestier</span>
-      <span class="brand-name">Occhio</span><span class="brand-name">Roll &amp; Hill</span>
-      <span class="brand-name">Aggiolight</span><span class="brand-name">Penta</span>
-      <span class="brand-name">Martinelli Luce</span><span class="brand-name">Modoluce</span>
-      <span class="brand-name">Nemo Lighting</span><span class="brand-name">Formagenda</span>
-      <span class="brand-name">Bomma</span><span class="brand-name">Prolicht</span>
-      <span class="brand-name">Reggiani</span><span class="brand-name">Simes</span>
-      <span class="brand-name">Dreamlux</span><span class="brand-name">Visual Feast</span>
+      <span class="brand-name">Occhio</span><span class="brand-name">Formagenda</span>
+      <span class="brand-name">Griven</span><span class="brand-name">Roll &amp; Hill</span>
+      <span class="brand-name">Prolicht</span><span class="brand-name">Dreamlux</span>
+      <span class="brand-name">Visual Feast</span>
       <!-- Duplicate for seamless loop -->
       <span class="brand-name">Artemide</span><span class="brand-name">FontanaArte</span>
       <span class="brand-name">Foscarini</span><span class="brand-name">Henge</span>
       <span class="brand-name">Terzani</span><span class="brand-name">Axolight</span>
+      <span class="brand-name">Nemo Lighting</span><span class="brand-name">Martinelli Luce</span>
+      <span class="brand-name">Modoluce</span><span class="brand-name">Penta</span>
+      <span class="brand-name">Aggiolight</span><span class="brand-name">Iltiluce</span>
+      <span class="brand-name">Reggiani</span><span class="brand-name">Simes</span>
       <span class="brand-name">Vibia</span><span class="brand-name">Marset</span>
       <span class="brand-name">Bover</span><span class="brand-name">Santa &amp; Cole</span>
-      <span class="brand-name">&amp;Tradition</span><span class="brand-name">Muuto</span>
-      <span class="brand-name">Bocci</span><span class="brand-name">Brokis</span>
+      <span class="brand-name">Aromas del Campo</span><span class="brand-name">&amp;Tradition</span>
+      <span class="brand-name">Muuto</span><span class="brand-name">Bocci</span>
+      <span class="brand-name">Brokis</span><span class="brand-name">Bomma</span>
       <span class="brand-name">Tom Dixon</span><span class="brand-name">Forestier</span>
-      <span class="brand-name">Occhio</span><span class="brand-name">Roll &amp; Hill</span>
-      <span class="brand-name">Aggiolight</span><span class="brand-name">Penta</span>
-      <span class="brand-name">Martinelli Luce</span><span class="brand-name">Modoluce</span>
-      <span class="brand-name">Nemo Lighting</span><span class="brand-name">Formagenda</span>
-      <span class="brand-name">Bomma</span><span class="brand-name">Prolicht</span>
-      <span class="brand-name">Reggiani</span><span class="brand-name">Simes</span>
-      <span class="brand-name">Dreamlux</span><span class="brand-name">Visual Feast</span>
+      <span class="brand-name">Occhio</span><span class="brand-name">Formagenda</span>
+      <span class="brand-name">Griven</span><span class="brand-name">Roll &amp; Hill</span>
+      <span class="brand-name">Prolicht</span><span class="brand-name">Dreamlux</span>
+      <span class="brand-name">Visual Feast</span>
     </div>
   </div>
 </div>
@@ -1894,6 +1904,160 @@
   </div>
 </section>
 
+<!-- TESTIMONIALS -->
+<section id="testimonials" style="background:var(--charcoal);padding:100px 80px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:64px;padding-bottom:32px;border-bottom:0.5px solid rgba(200,196,188,0.1);">
+      <div>
+        <div style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(200,196,188,0.35);margin-bottom:16px;display:flex;align-items:center;gap:12px;">
+          <span style="display:block;width:20px;height:0.5px;background:rgba(200,196,188,0.3);"></span>From the Profession
+        </div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3vw,48px);font-weight:300;color:var(--stone);line-height:1.05;">What architects &amp; designers <em style="font-style:italic;">say.</em></div>
+      </div>
+      <a href="about.html" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(200,196,188,0.4);text-decoration:none;border-bottom:0.5px solid rgba(200,196,188,0.2);padding-bottom:2px;white-space:nowrap;transition:color 0.2s;" onmouseover="this.style.color='rgba(200,196,188,0.8)'" onmouseout="this.style.color='rgba(200,196,188,0.4)'">About Us →</a>
+    </div>
+
+    <!-- Testimonials Grid — loaded from Supabase -->
+    <div id="testimonialsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;">
+      <!-- Loading state -->
+      <div style="grid-column:1/-1;padding:60px;text-align:center;">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:rgba(200,196,188,0.3);margin:0 4px;animation:tldot 1.2s infinite;"></span>
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:rgba(200,196,188,0.3);margin:0 4px;animation:tldot 1.2s 0.2s infinite;"></span>
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:rgba(200,196,188,0.3);margin:0 4px;animation:tldot 1.2s 0.4s infinite;"></span>
+      </div>
+    </div>
+
+    <!-- Fallback testimonials shown when DB is empty -->
+    <div id="testimonialsEmpty" style="display:none;grid-template-columns:repeat(3,1fr);gap:2px;">
+      <div style="background:rgba(255,255,255,0.04);padding:40px 36px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;color:rgba(200,196,188,0.12);line-height:0.8;margin-bottom:20px;">"</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:rgba(200,196,188,0.8);line-height:1.7;font-style:italic;margin-bottom:28px;">The Lighting Lab saved us hours on our last hospitality project. Having the lux calculations matched directly to products we could actually source in India was a first.</div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(200,196,188,0.1);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:rgba(200,196,188,0.4);">A</span>
+          </div>
+          <div>
+            <div style="font-size:12px;color:rgba(200,196,188,0.7);letter-spacing:0.05em;">Architect, Delhi</div>
+            <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,196,188,0.3);margin-top:2px;">Residential + Hospitality</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);padding:40px 36px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;color:rgba(200,196,188,0.12);line-height:0.8;margin-bottom:20px;">"</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:rgba(200,196,188,0.8);line-height:1.7;font-style:italic;margin-bottom:28px;">I've been specifying Artemide and Foscarini for years through different channels. Having one platform that understands both the products and how designers actually work is long overdue.</div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(200,196,188,0.1);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:rgba(200,196,188,0.4);">P</span>
+          </div>
+          <div>
+            <div style="font-size:12px;color:rgba(200,196,188,0.7);letter-spacing:0.05em;">Interior Designer, Mumbai</div>
+            <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,196,188,0.3);margin-top:2px;">Luxury Residential</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);padding:40px 36px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;color:rgba(200,196,188,0.12);line-height:0.8;margin-bottom:20px;">"</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:rgba(200,196,188,0.8);line-height:1.7;font-style:italic;margin-bottom:28px;">Amanpreet's knowledge of European lighting is unmatched. 18 years with Flos shows in every conversation. This is the kind of expertise India's design community has needed access to.</div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(200,196,188,0.1);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:rgba(200,196,188,0.4);">R</span>
+          </div>
+          <div>
+            <div style="font-size:12px;color:rgba(200,196,188,0.7);letter-spacing:0.05em;">Principal Architect, Bangalore</div>
+            <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,196,188,0.3);margin-top:2px;">Commercial + Hospitality</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EUROPEAN DIFFERENCE -->
+<section id="european-difference" style="background:var(--stone);padding:100px 80px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;">
+
+      <!-- Left -->
+      <div class="fade-up">
+        <div style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--mid);margin-bottom:16px;display:flex;align-items:center;gap:12px;">
+          <span style="display:block;width:20px;height:0.5px;background:var(--mid);"></span>Why European
+        </div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(36px,3.5vw,54px);font-weight:300;color:var(--charcoal);line-height:1.05;margin-bottom:28px;">The European<br><em style="font-style:italic;">difference.</em></h2>
+        <p style="font-size:13px;font-weight:300;line-height:1.9;color:var(--mid);margin-bottom:20px;">Every project we work on, we hear the same question from architects and their clients: <em>"Why European lighting when I can get something that looks similar for a quarter of the price?"</em></p>
+        <p style="font-size:13px;font-weight:300;line-height:1.9;color:var(--mid);margin-bottom:20px;">It's a fair question. And the answer is not about aesthetics alone — it's about light quality, material integrity, and what happens to a fixture ten years after installation.</p>
+        <div style="border-left:2px solid var(--charcoal);padding:20px 24px;background:var(--warm);margin:28px 0;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--charcoal);line-height:1.6;font-style:italic;">"The fixture you specify is the last thing your client sees every night for the next 15 years. It should be worth it."</div>
+          <div style="font-size:11px;letter-spacing:0.1em;color:var(--mid);margin-top:12px;">— Amanpreet Singh, Founder</div>
+        </div>
+        <p style="font-size:13px;font-weight:300;line-height:1.9;color:var(--mid);">European lighting manufacturers are held to the highest standards of photometric precision, material quality, and design integrity. These are not luxury items — they are professional-grade instruments for shaping space.</p>
+      </div>
+
+      <!-- Right — comparison cards -->
+      <div class="fade-up" style="display:flex;flex-direction:column;gap:2px;">
+
+        <div style="background:var(--charcoal);padding:32px 36px;">
+          <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(200,196,188,0.35);margin-bottom:20px;">Light Quality</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+            <div>
+              <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,196,188,0.3);margin-bottom:8px;">European</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--stone);font-weight:300;">CRI 95+</div>
+              <div style="font-size:11px;color:rgba(200,196,188,0.5);margin-top:4px;line-height:1.6;">Colours render truthfully. Skin tones look natural. Materials read as designed.</div>
+            </div>
+            <div>
+              <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,196,188,0.3);margin-bottom:8px;">Generic</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:rgba(200,196,188,0.3);font-weight:300;">CRI 70–80</div>
+              <div style="font-size:11px;color:rgba(200,196,188,0.3);margin-top:4px;line-height:1.6;">Colours shift. Whites look yellow. Your carefully chosen finishes look wrong.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--warm);padding:32px 36px;border:0.5px solid var(--border);">
+          <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:20px;">Material Longevity</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+            <div>
+              <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);margin-bottom:8px;">European</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--charcoal);font-weight:300;">15–20 yrs</div>
+              <div style="font-size:11px;color:var(--mid);margin-top:4px;line-height:1.6;">Italian die-cast, hand-blown glass, precision-engineered components. Built to last.</div>
+            </div>
+            <div>
+              <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);margin-bottom:8px;">Generic</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:rgba(139,136,128,0.4);font-weight:300;">3–5 yrs</div>
+              <div style="font-size:11px;color:rgba(139,136,128,0.5);margin-top:4px;line-height:1.6;">Plastic components yellow. Finishes chip. Replacement parts unavailable.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--charcoal);padding:32px 36px;">
+          <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(200,196,188,0.35);margin-bottom:20px;">Energy Efficiency Over 10 Years</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+            <div>
+              <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,196,188,0.3);margin-bottom:8px;">European LED</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--stone);font-weight:300;">L90 / 50K hrs</div>
+              <div style="font-size:11px;color:rgba(200,196,188,0.5);margin-top:4px;line-height:1.6;">Still at 90% output after 50,000 hours. No replacement. No maintenance cost.</div>
+            </div>
+            <div>
+              <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,196,188,0.3);margin-bottom:8px;">Generic LED</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:rgba(200,196,188,0.3);font-weight:300;">L70 / 15K hrs</div>
+              <div style="font-size:11px;color:rgba(200,196,188,0.3);margin-top:4px;line-height:1.6;">30% dimmer after 15,000 hours. Multiple replacements over the same period.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--warm);padding:32px 36px;border:0.5px solid var(--border);">
+          <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:20px;">Design Pedigree</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;color:var(--charcoal);line-height:1.8;">Our brands are designed by <strong style="font-weight:400;">Jasper Morrison, Patricia Urquiola, Michael Anastassiades, Neri&Hu</strong> — the same designers whose furniture you specify. The same rigour. The same vision. In light.</div>
+        </div>
+
+        <a href="lighting-lab.html" style="display:flex;align-items:center;justify-content:space-between;padding:20px 36px;background:var(--charcoal);color:var(--stone);text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='#111'" onmouseout="this.style.background='var(--charcoal)'">
+          <span style="font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;">Calculate the right light for your project</span>
+          <span style="font-size:16px;">→</span>
+        </a>
+
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- NEWSLETTER -->
 <div class="newsletter-section">
   <div class="newsletter-left" style="flex:1;">
@@ -1957,6 +2121,10 @@
   <div class="footer-bottom">
     <div class="footer-copy">© 2026 The Lightists. All rights reserved. · Delhi &amp; Bangalore · Pan India</div>
     <div class="footer-legal">
+      <a href="https://www.instagram.com/amanpreetsinghdesign?igsh=MXJnbTJnNjlyZXZybw==" target="_blank" style="display:inline-flex;align-items:center;gap:6px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        Instagram
+      </a>
       <a href="#">Privacy</a>
       <a href="#">Terms</a>
     </div>
@@ -2030,6 +2198,30 @@
     </div>
   </div>
 </section>
+
+<!-- FLOATING WHATSAPP -->
+<a href="https://wa.me/919999306667?text=Hi%2C%20I%20visited%20The%20Lightists%20website%20and%20would%20like%20to%20discuss%20a%20project." 
+   target="_blank" 
+   id="waFloat"
+   style="position:fixed;bottom:28px;right:28px;z-index:998;width:52px;height:52px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.35);transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;"
+   onmouseover="this.style.transform='scale(1.08)';this.style.boxShadow='0 6px 28px rgba(37,211,102,0.5)'"
+   onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 20px rgba(37,211,102,0.35)'"
+   aria-label="Chat on WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+  <!-- Pulse ring -->
+  <span style="position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(37,211,102,0.4);animation:wa-pulse 2s ease-out infinite;pointer-events:none;"></span>
+</a>
+
+<style>
+@keyframes wa-pulse {
+  0% { transform:scale(1); opacity:1; }
+  100% { transform:scale(1.5); opacity:0; }
+}
+/* Hide WhatsApp float when mobile drawer is open */
+body.drawer-open #waFloat { opacity:0; pointer-events:none; }
+</style>
 
 <script>
   // ── MOBILE MENU ──
@@ -2156,6 +2348,7 @@
   }
 
   loadHeroImagesFromDB();
+  loadTestimonials();
 
   // ── CAROUSEL ──
   let currentSlide = 0;
@@ -2191,7 +2384,36 @@
 
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-  // ESC closes modal
+  // ── TESTIMONIALS ──
+  async function loadTestimonials() {
+    const grid = document.getElementById('testimonialsGrid');
+    const empty = document.getElementById('testimonialsEmpty');
+    try {
+      const res = await fetch(`${SB_URL}/rest/v1/testimonials?active=eq.true&order=display_order.asc`, {
+        headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}
+      });
+      if(!res.ok) throw new Error('No testimonials table yet');
+      const data = await res.json();
+      if(!data.length) throw new Error('Empty');
+      grid.innerHTML = data.map(t => `
+        <div style="background:rgba(255,255,255,0.04);padding:40px 36px;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;color:rgba(200,196,188,0.12);line-height:0.8;margin-bottom:20px;">"</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:rgba(200,196,242,0.8);line-height:1.7;font-style:italic;margin-bottom:28px;color:rgba(200,196,188,0.8);">${t.quote}</div>
+          <div style="display:flex;align-items:center;gap:14px;">
+            ${t.photo_url ? `<img src="${t.photo_url}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;filter:grayscale(20%);" alt="${t.name}">` : `<div style="width:40px;height:40px;border-radius:50%;background:rgba(200,196,188,0.1);display:flex;align-items:center;justify-content:center;"><span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:rgba(200,196,188,0.4);">${t.name[0]}</span></div>`}
+            <div>
+              <div style="font-size:12px;color:rgba(200,196,188,0.7);letter-spacing:0.05em;">${t.name}${t.firm ? ', ' + t.firm : ''}</div>
+              <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,196,188,0.3);margin-top:2px;">${t.role || ''}</div>
+            </div>
+          </div>
+        </div>`).join('');
+    } catch(e) {
+      grid.style.display = 'none';
+      empty.style.display = 'grid';
+    }
+  }
+
+  // ── ESC closes modal
   document.addEventListener('keydown', (e) => {
     if(e.key === 'Escape') {
       document.getElementById('authModal').classList.remove('active');
