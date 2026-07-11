@@ -355,6 +355,10 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
         <span class="nav-icon">◉</span>
         <span class="nav-label">Team</span>
       </div>
+      <div class="nav-item" onclick="showPage('testimonials',this)">
+        <span class="nav-icon">❝</span>
+        <span class="nav-label">Testimonials</span>
+      </div>
 
       <div class="sb-section-label">Enquiries</div>
       <div class="nav-item" onclick="showPage('enquiries',this)">
@@ -675,6 +679,81 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
         </div>
       </div>
 
+      <!-- ── TESTIMONIALS ── -->
+      <div class="page" id="page-testimonials">
+        <div class="page-header">
+          <div class="ph-left">
+            <div class="ph-eyebrow">Content</div>
+            <div class="ph-title">Testimonials</div>
+          </div>
+          <div class="ph-right">
+            <button class="btn btn-secondary" onclick="toggleAddForm('testimonialsForm')">+ Add Testimonial</button>
+          </div>
+        </div>
+
+        <div class="form-panel" id="testimonialsForm" style="display:none;">
+          <div class="fp-title" id="testimonialsFormTitle">Add Testimonial</div>
+          <input type="hidden" id="editTestimonialId">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input class="form-input" id="tsName" placeholder="e.g. Rahul Mehta">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Firm / Studio</label>
+              <input class="form-input" id="tsFirm" placeholder="e.g. Mehta Associates">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Role</label>
+              <input class="form-input" id="tsRole" placeholder="e.g. Principal Architect">
+            </div>
+            <div class="form-group">
+              <label class="form-label">City</label>
+              <input class="form-input" id="tsCity" placeholder="e.g. Delhi">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">Quote *</label>
+            <textarea class="form-textarea" id="tsQuote" placeholder="The testimonial text — 2–4 sentences. Write in first person as the architect/designer." style="min-height:100px;"></textarea>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Display Order</label>
+              <input class="form-input" id="tsOrder" type="number" placeholder="1, 2, 3..." value="10">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Photo URL</label>
+              <input class="form-input" id="tsPhotoUrl" placeholder="Will auto-fill after upload">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">Upload Photo (optional — square crop, JPG)</label>
+            <div class="img-upload-zone" onclick="document.getElementById('tsPhotoFile').click()">
+              <img id="tsPhotoPreview" class="img-preview">
+              <div class="iuz-icon">⬆</div>
+              <div class="iuz-text"><strong>Click to upload photo</strong> — Square headshot, JPG recommended</div>
+            </div>
+            <input type="file" id="tsPhotoFile" accept="image/*" style="display:none" onchange="handleTestimonialPhotoUpload(event)">
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="saveTestimonial()">Save Testimonial</button>
+            <button class="btn btn-secondary" onclick="toggleAddForm('testimonialsForm')">Cancel</button>
+          </div>
+        </div>
+
+        <div class="data-table-wrap">
+          <div class="dt-header">
+            <span class="dt-title">All Testimonials</span>
+            <span class="dt-count" id="testimonialCount">Loading...</span>
+          </div>
+          <div id="testimonialsTable">
+            <div class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div>
+          </div>
+        </div>
+      </div>
+
       <!-- ── HERO IMAGES ── -->
       <div class="page" id="page-hero">
         <div class="page-header">
@@ -940,6 +1019,7 @@ function showPage(page, navEl) {
   if(page === 'enquiries') loadEnquiries();
   if(page === 'hero') loadHeroImages();
   if(page === 'team') loadTeam();
+  if(page === 'testimonials') loadTestimonials();
 }
 
 function toggleAddForm(id) {
@@ -1298,6 +1378,165 @@ function clearTeamForm() {
   document.getElementById('tmOrder').value = '10';
   document.getElementById('tmPhotoPreview').style.display = 'none';
   document.getElementById('teamFormTitle').textContent = 'Add Team Member';
+}
+
+
+// ── TESTIMONIALS ──
+async function loadTestimonials() {
+  const table = document.getElementById('testimonialsTable');
+  const count = document.getElementById('testimonialCount');
+  table.innerHTML = '<div class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div>';
+  try {
+    const data = await sbQuery('testimonials', 'order=display_order.asc');
+    count.textContent = `${data.length} total`;
+    if(!data.length) {
+      table.innerHTML = '<div style="padding:40px;text-align:center;color:var(--txt2);font-size:13px;">No testimonials yet. Click "+ Add Testimonial" to get started.</div>';
+      return;
+    }
+    table.innerHTML = `
+      <table class="data-table">
+        <thead><tr>
+          <th>Name</th><th>Firm</th><th>Role</th><th>City</th><th>Active</th><th>Order</th><th>Actions</th>
+        </tr></thead>
+        <tbody>
+          ${data.map(t => `
+            <tr>
+              <td style="display:flex;align-items:center;gap:10px;">
+                ${t.photo_url ? `<img src="${t.photo_url}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">` : `<div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:13px;">${t.name[0]}</div>`}
+                <span>${t.name}</span>
+              </td>
+              <td>${t.firm || '—'}</td>
+              <td>${t.role || '—'}</td>
+              <td>${t.city || '—'}</td>
+              <td>
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+                  <input type="checkbox" ${t.active ? 'checked' : ''} onchange="toggleTestimonialActive('${t.id}', this.checked)" style="cursor:pointer;">
+                  <span style="font-size:11px;color:var(--txt2);">${t.active ? 'Visible' : 'Hidden'}</span>
+                </label>
+              </td>
+              <td>${t.display_order}</td>
+              <td>
+                <div style="display:flex;gap:8px;">
+                  <button class="btn btn-secondary btn-sm" onclick="editTestimonial('${t.id}')">Edit</button>
+                  <button class="btn btn-sm" style="background:rgba(239,68,68,0.15);color:#f87171;border:0.5px solid rgba(239,68,68,0.3);" onclick="deleteTestimonial('${t.id}')">Delete</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="7" style="padding:0 16px 16px;font-size:12px;color:var(--txt2);font-style:italic;border-top:none;">"${t.quote}"</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  } catch(e) {
+    table.innerHTML = `<div style="padding:40px;text-align:center;color:#f87171;font-size:13px;">Could not load testimonials. Make sure the testimonials table exists in Supabase.</div>`;
+    count.textContent = 'Error';
+  }
+}
+
+async function handleTestimonialPhotoUpload(event) {
+  const file = event.target.files[0];
+  if(!file) return;
+  showNotif('Uploading photo...', 'info');
+  const ext = file.name.split('.').pop();
+  const path = `testimonials/${Date.now()}.${ext}`;
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/product-images/${path}`, {
+    method:'POST',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':file.type,'x-upsert':'true'},
+    body: file
+  });
+  if(res.ok) {
+    const url = `${SUPABASE_URL}/storage/v1/object/public/product-images/${path}`;
+    document.getElementById('tsPhotoUrl').value = url;
+    const prev = document.getElementById('tsPhotoPreview');
+    prev.src = url; prev.style.display = 'block';
+    showNotif('Photo uploaded', 'success');
+  } else { showNotif('Photo upload failed', 'error'); }
+}
+
+async function saveTestimonial() {
+  const name = document.getElementById('tsName').value.trim();
+  const quote = document.getElementById('tsQuote').value.trim();
+  if(!name || !quote) { showNotif('Name and quote are required', 'error'); return; }
+  const editId = document.getElementById('editTestimonialId').value;
+  const payload = {
+    name,
+    firm: document.getElementById('tsFirm').value.trim() || null,
+    role: document.getElementById('tsRole').value.trim() || null,
+    city: document.getElementById('tsCity').value.trim() || null,
+    quote,
+    photo_url: document.getElementById('tsPhotoUrl').value.trim() || null,
+    display_order: parseInt(document.getElementById('tsOrder').value) || 10,
+    active: true
+  };
+  let result;
+  if(editId) {
+    result = await fetch(`${SUPABASE_URL}/rest/v1/testimonials?id=eq.${editId}`, {
+      method:'PATCH',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},
+      body: JSON.stringify(payload)
+    });
+  } else {
+    result = await fetch(`${SUPABASE_URL}/rest/v1/testimonials`, {
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},
+      body: JSON.stringify(payload)
+    });
+  }
+  if(result.ok) {
+    showNotif(editId ? 'Testimonial updated ✓' : 'Testimonial added ✓', 'success');
+    clearTestimonialForm();
+    toggleAddForm('testimonialsForm');
+    loadTestimonials();
+  } else { showNotif('Error saving testimonial', 'error'); }
+}
+
+async function editTestimonial(id) {
+  const data = await sbQuery('testimonials', `id=eq.${id}`);
+  const t = data?.[0]; if(!t) return;
+  document.getElementById('editTestimonialId').value = t.id;
+  document.getElementById('tsName').value = t.name || '';
+  document.getElementById('tsFirm').value = t.firm || '';
+  document.getElementById('tsRole').value = t.role || '';
+  document.getElementById('tsCity').value = t.city || '';
+  document.getElementById('tsQuote').value = t.quote || '';
+  document.getElementById('tsPhotoUrl').value = t.photo_url || '';
+  document.getElementById('tsOrder').value = t.display_order || 10;
+  if(t.photo_url) {
+    const prev = document.getElementById('tsPhotoPreview');
+    prev.src = t.photo_url; prev.style.display = 'block';
+  }
+  document.getElementById('testimonialsFormTitle').textContent = 'Edit Testimonial';
+  document.getElementById('testimonialsForm').style.display = 'block';
+  document.getElementById('testimonialsForm').scrollIntoView({behavior:'smooth'});
+}
+
+async function toggleTestimonialActive(id, active) {
+  await fetch(`${SUPABASE_URL}/rest/v1/testimonials?id=eq.${id}`, {
+    method:'PATCH',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json'},
+    body: JSON.stringify({active})
+  });
+  showNotif(active ? 'Testimonial visible on site' : 'Testimonial hidden', 'success');
+  loadTestimonials();
+}
+
+async function deleteTestimonial(id) {
+  if(!confirm('Delete this testimonial? This cannot be undone.')) return;
+  await fetch(`${SUPABASE_URL}/rest/v1/testimonials?id=eq.${id}`, {
+    method:'DELETE',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
+  });
+  showNotif('Testimonial deleted', 'success');
+  loadTestimonials();
+}
+
+function clearTestimonialForm() {
+  ['editTestimonialId','tsName','tsFirm','tsRole','tsCity','tsQuote','tsPhotoUrl'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('tsOrder').value = '10';
+  const prev = document.getElementById('tsPhotoPreview');
+  prev.src = ''; prev.style.display = 'none';
+  document.getElementById('testimonialsFormTitle').textContent = 'Add Testimonial';
 }
 
 // ── HERO IMAGES ──
