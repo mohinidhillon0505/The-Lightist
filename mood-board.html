@@ -25,6 +25,18 @@ body{background:#1A1A1A;color:var(--charcoal);font-family:'Jost',sans-serif;font
 .tb-mark{width:30px;height:30px;border:0.5px solid rgba(200,196,188,0.4);display:flex;align-items:center;justify-content:center;}
 .tb-tl{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:500;color:rgba(247,246,242,0.85);letter-spacing:-0.5px;}
 .tb-wordmark{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(200,196,188,0.45);}
+.tb-logo span:last-child{
+  font-family:'Raleway',sans-serif!important;
+  font-weight:200!important;
+  font-size:9px!important;
+  letter-spacing:0.3em!important;
+  text-transform:uppercase!important;
+  color:rgba(200,196,188,0.6)!important;
+  background:none!important;
+  -webkit-text-fill-color:rgba(200,196,188,0.6)!important;
+  background-clip:unset!important;
+  -webkit-background-clip:unset!important;
+}
 .tb-center{display:flex;align-items:center;gap:6px;flex:1;justify-content:center;}
 .board-name-input{
   font-family:'Jost',sans-serif;font-size:12px;font-weight:300;
@@ -679,30 +691,30 @@ function getFixtureSVG(p, size=280) {
 
 // ── CATALOGUE (trimmed — same data as mood-studio) ──
 const CATALOGUE = [
-  {id:1,brand:'Louis Poulsen',country:'Denmark',name:'PH 5 Classic',type:'pendant',materials:['brass','glass'],cct:['2700','3000'],cri:90,dimmable:true,svgBg:'#F0EDE8',svgFg:'#B8965A',svgAcc:'#D4A843',svgGlow:'rgba(212,168,67,0.15)',svgShape:'cone'},
-  {id:2,brand:'Louis Poulsen',country:'Denmark',name:'PH Artichoke',type:'pendant',materials:['steel','brass'],cct:['2700'],cri:90,dimmable:true,svgBg:'#1A1A1A',svgFg:'#C8C4BC',svgAcc:'#8C8880',svgGlow:'rgba(200,196,188,0.1)',svgShape:'artichoke'},
-  {id:3,brand:'Louis Poulsen',country:'Denmark',name:'Cirque Pendant',type:'pendant',materials:['steel'],cct:['3000','4000'],cri:80,dimmable:true,svgBg:'#E8EDF2',svgFg:'#4A5568',svgAcc:'#8C9AAD',svgGlow:'rgba(74,85,104,0.1)',svgShape:'globe'},
-  {id:4,brand:'Louis Poulsen',country:'Denmark',name:'VL45 Radiohus',type:'wall',materials:['steel'],cct:['2700','3000'],cri:80,dimmable:false,svgBg:'#F7F6F2',svgFg:'#3D3D3A',svgAcc:'#8C8880',svgGlow:'rgba(255,240,200,0.12)',svgShape:'halfmoon'},
-  {id:5,brand:'Louis Poulsen',country:'Denmark',name:'Enigma 425',type:'pendant',materials:['steel','brass'],cct:['3000','4000'],cri:90,dimmable:true,svgBg:'#2A2825',svgFg:'#B8965A',svgAcc:'#8B6E3A',svgGlow:'rgba(184,150,90,0.12)',svgShape:'linear'},
-  {id:6,brand:'Flos',country:'Italy',name:'Arrangements S',type:'pendant',materials:['brass','glass'],cct:['3000'],cri:90,dimmable:true,svgBg:'#F0EAD8',svgFg:'#8B6E2A',svgAcc:'#D4A843',svgGlow:'rgba(212,168,67,0.2)',svgShape:'cluster'},
-  {id:7,brand:'Flos',country:'Italy',name:'IC Lights S2',type:'pendant',materials:['glass','steel'],cct:['2700','3000'],cri:80,dimmable:true,svgBg:'#EDECEA',svgFg:'#4A4540',svgAcc:'#8C8880',svgGlow:'rgba(255,240,200,0.18)',svgShape:'globe'},
-  {id:8,brand:'Flos',country:'Italy',name:'Arco Floor Lamp',type:'floor',materials:['steel','alabaster'],cct:['3000'],cri:80,dimmable:false,svgBg:'#F7F6F2',svgFg:'#3D3D3A',svgAcc:'#C8C4BC',svgGlow:'rgba(255,240,200,0.15)',svgShape:'arc'},
-  {id:9,brand:'Flos',country:'Italy',name:'Romeo Moon S2',type:'pendant',materials:['glass'],cct:['2700'],cri:80,dimmable:true,svgBg:'#EAE8E4',svgFg:'#5C5650',svgAcc:'#A8A49C',svgGlow:'rgba(255,245,220,0.2)',svgShape:'globe'},
-  {id:10,brand:'Flos',country:'Italy',name:'Smithfield',type:'chandelier',materials:['steel','bronze'],cct:['3000'],cri:80,dimmable:true,svgBg:'#1E1C1A',svgFg:'#6B5A48',svgAcc:'#4A3A2A',svgGlow:'rgba(180,140,80,0.1)',svgShape:'dome'},
-  {id:11,brand:'Vibia',country:'Spain',name:'Warm 4960',type:'pendant',materials:['brass','glass'],cct:['2700','3000'],cri:90,dimmable:true,svgBg:'#F5EED8',svgFg:'#C4903A',svgAcc:'#E8C47A',svgGlow:'rgba(232,196,122,0.2)',svgShape:'globe'},
-  {id:12,brand:'Vibia',country:'Spain',name:'Branching 7600',type:'pendant',materials:['steel'],cct:['3000','4000'],cri:90,dimmable:true,svgBg:'#2A2825',svgFg:'#8C8880',svgAcc:'#5C5850',svgGlow:'rgba(200,196,188,0.08)',svgShape:'cluster'},
-  {id:13,brand:'Gubi',country:'Denmark',name:'Cobra Pendant',type:'pendant',materials:['brass','glass'],cct:['2700'],cri:80,dimmable:true,svgBg:'#1C1A18',svgFg:'#D4A843',svgAcc:'#8B6E2A',svgGlow:'rgba(212,168,67,0.15)',svgShape:'dome'},
-  {id:14,brand:'Gubi',country:'Denmark',name:'Bestlite BL9',type:'pendant',materials:['steel','black'],cct:['3000'],cri:80,dimmable:false,svgBg:'#1A1A1A',svgFg:'#C8C4BC',svgAcc:'#6A6860',svgGlow:'rgba(200,196,188,0.07)',svgShape:'cone'},
-  {id:15,brand:'Gubi',country:'Denmark',name:'Gravity Floor',type:'floor',materials:['brass','alabaster'],cct:['2700'],cri:80,dimmable:true,svgBg:'#F5F0E8',svgFg:'#B8965A',svgAcc:'#D4C0A0',svgGlow:'rgba(184,150,90,0.15)',svgShape:'tripod'},
-  {id:16,brand:'Gubi',country:'Denmark',name:'Bird Floor',type:'floor',materials:['brass','glass'],cct:['2700'],cri:80,dimmable:false,svgBg:'#1C1810',svgFg:'#C4903A',svgAcc:'#E8C47A',svgGlow:'rgba(196,144,58,0.18)',svgShape:'arc'},
-  {id:17,brand:'Muuto',country:'Denmark',name:'Under the Bell',type:'pendant',materials:['wood'],cct:['2700','3000'],cri:80,dimmable:false,svgBg:'#EDE0CC',svgFg:'#8B6040',svgAcc:'#C4A070',svgGlow:'rgba(184,140,80,0.15)',svgShape:'dome'},
-  {id:18,brand:'Muuto',country:'Denmark',name:'E27 Pendant',type:'pendant',materials:['glass','ceramic'],cct:['2700','3000'],cri:80,dimmable:false,svgBg:'#F7F6F2',svgFg:'#6A6460',svgAcc:'#A8A49C',svgGlow:'rgba(255,240,200,0.12)',svgShape:'globe'},
-  {id:19,brand:'Marset',country:'Spain',name:'Follower Floor',type:'floor',materials:['rattan','brass'],cct:['2700'],cri:80,dimmable:false,svgBg:'#EDE0C8',svgFg:'#8B6040',svgAcc:'#C4A843',svgGlow:'rgba(184,140,80,0.15)',svgShape:'tripod'},
-  {id:20,brand:'Marset',country:'Spain',name:'Pleat Box',type:'pendant',materials:['ceramic'],cct:['2700','3000'],cri:80,dimmable:false,svgBg:'#EDE8E0',svgFg:'#9A8870',svgAcc:'#C8B898',svgGlow:'rgba(200,180,140,0.15)',svgShape:'dome'},
+  {id:1,brand:'Artemide',country:'Italy',name:'Tolomeo Sospensione',type:'pendant',materials:['aluminium'],cct:['2700','3000'],cri:90,dimmable:true,svgBg:'#F0EDE8',svgFg:'#B8965A',svgAcc:'#D4A843',svgGlow:'rgba(212,168,67,0.15)',svgShape:'cone'},
+  {id:2,brand:'Artemide',country:'Italy',name:'Nesso',type:'pendant',materials:['ABS','polycarbonate'],cct:['2700'],cri:90,dimmable:true,svgBg:'#1A1A1A',svgFg:'#C8C4BC',svgAcc:'#8C8880',svgGlow:'rgba(200,196,188,0.1)',svgShape:'dome'},
+  {id:3,brand:'Artemide',country:'Italy',name:'Pirce Sospensione',type:'pendant',materials:['steel'],cct:['3000'],cri:90,dimmable:true,svgBg:'#E8EDF2',svgFg:'#4A5568',svgAcc:'#8C9AAD',svgGlow:'rgba(74,85,104,0.1)',svgShape:'globe'},
+  {id:4,brand:'Foscarini',country:'Italy',name:'Aplomb',type:'pendant',materials:['concrete'],cct:['2700','3000'],cri:90,dimmable:true,svgBg:'#F7F6F2',svgFg:'#3D3D3A',svgAcc:'#8C8880',svgGlow:'rgba(255,240,200,0.12)',svgShape:'cone'},
+  {id:5,brand:'Foscarini',country:'Italy',name:'Caboche',type:'pendant',materials:['polycarbonate','steel'],cct:['2700'],cri:90,dimmable:true,svgBg:'#2A2825',svgFg:'#B8965A',svgAcc:'#8B6E3A',svgGlow:'rgba(184,150,90,0.12)',svgShape:'globe'},
+  {id:6,brand:'Vibia',country:'Spain',name:'Warm 4960',type:'pendant',materials:['brass','glass'],cct:['2700','3000'],cri:90,dimmable:true,svgBg:'#F0EAD8',svgFg:'#8B6E2A',svgAcc:'#D4A843',svgGlow:'rgba(212,168,67,0.2)',svgShape:'globe'},
+  {id:7,brand:'Vibia',country:'Spain',name:'Wireflow',type:'pendant',materials:['steel','polycarbonate'],cct:['2700','3000'],cri:90,dimmable:true,svgBg:'#EDECEA',svgFg:'#4A4540',svgAcc:'#8C8880',svgGlow:'rgba(255,240,200,0.18)',svgShape:'linear'},
+  {id:8,brand:'Brokis',country:'Czech Republic',name:'Muffins Wood',type:'pendant',materials:['glass','oak'],cct:['2700'],cri:90,dimmable:true,svgBg:'#F7F6F2',svgFg:'#8B6E4A',svgAcc:'#C8A87A',svgGlow:'rgba(255,240,200,0.15)',svgShape:'dome'},
+  {id:9,brand:'Brokis',country:'Czech Republic',name:'Balloons',type:'pendant',materials:['hand-blown glass'],cct:['2700'],cri:90,dimmable:true,svgBg:'#EAE8E4',svgFg:'#5C5650',svgAcc:'#A8A49C',svgGlow:'rgba(255,245,220,0.2)',svgShape:'globe'},
+  {id:10,brand:'Occhio',country:'Germany',name:'Mito Sospeso',type:'pendant',materials:['aluminium'],cct:['2700','3000','4000'],cri:95,dimmable:true,svgBg:'#1E1C1A',svgFg:'#C8C4BC',svgAcc:'#8C8880',svgGlow:'rgba(200,196,188,0.1)',svgShape:'linear'},
+  {id:11,brand:'Marset',country:'Spain',name:'Followme',type:'floor',materials:['aluminium','wood'],cct:['2700','3000'],cri:90,dimmable:true,svgBg:'#F5EED8',svgFg:'#C4903A',svgAcc:'#E8C47A',svgGlow:'rgba(232,196,122,0.2)',svgShape:'globe'},
+  {id:12,brand:'Bocci',country:'Canada',name:'28 Series',type:'pendant',materials:['hand-blown glass'],cct:['2700'],cri:90,dimmable:true,svgBg:'#2A2825',svgFg:'#8C8880',svgAcc:'#5C5850',svgGlow:'rgba(200,196,188,0.08)',svgShape:'cluster'},
+  {id:13,brand:'Terzani',country:'Italy',name:'Mizu Pendant',type:'pendant',materials:['brass','glass'],cct:['2700'],cri:90,dimmable:true,svgBg:'#1C1A18',svgFg:'#D4A843',svgAcc:'#8B6E2A',svgGlow:'rgba(212,168,67,0.15)',svgShape:'dome'},
+  {id:14,brand:'Terzani',country:'Italy',name:'Angie Pendant',type:'pendant',materials:['crystal','steel'],cct:['3000'],cri:90,dimmable:true,svgBg:'#1A1A1A',svgFg:'#C8C4BC',svgAcc:'#6A6860',svgGlow:'rgba(200,196,188,0.07)',svgShape:'cluster'},
+  {id:15,brand:'Axolight',country:'Italy',name:'Float Pendant',type:'pendant',materials:['fibreglass'],cct:['2700','3000'],cri:90,dimmable:true,svgBg:'#F5F0E8',svgFg:'#B8965A',svgAcc:'#D4C0A0',svgGlow:'rgba(184,150,90,0.15)',svgShape:'dome'},
+  {id:16,brand:'Axolight',country:'Italy',name:'Liaison Floor',type:'floor',materials:['steel','brass'],cct:['2700'],cri:90,dimmable:true,svgBg:'#1C1810',svgFg:'#C4903A',svgAcc:'#E8C47A',svgGlow:'rgba(196,144,58,0.18)',svgShape:'arc'},
+  {id:17,brand:'Tom Dixon',country:'UK',name:'Melt Pendant',type:'pendant',materials:['polycarbonate'],cct:['2700','3000'],cri:90,dimmable:true,svgBg:'#EDE0CC',svgFg:'#8B6040',svgAcc:'#C4A070',svgGlow:'rgba(184,140,80,0.15)',svgShape:'globe'},
+  {id:18,brand:'Tom Dixon',country:'UK',name:'Beat Fat Pendant',type:'pendant',materials:['spun steel'],cct:['2700','3000'],cri:90,dimmable:true,svgBg:'#F7F6F2',svgFg:'#6A6460',svgAcc:'#A8A49C',svgGlow:'rgba(255,240,200,0.12)',svgShape:'dome'},
+  {id:19,brand:'Marset',country:'Spain',name:'Dipping Light',type:'floor',materials:['aluminium'],cct:['2700'],cri:90,dimmable:true,svgBg:'#EDE0C8',svgFg:'#8B6040',svgAcc:'#C4A843',svgGlow:'rgba(184,140,80,0.15)',svgShape:'arc'},
+  {id:20,brand:'Bover',country:'Spain',name:'Garota Pendant',type:'pendant',materials:['linen','steel'],cct:['2700','3000'],cri:90,dimmable:true,svgBg:'#EDE8E0',svgFg:'#9A8870',svgAcc:'#C8B898',svgGlow:'rgba(200,180,140,0.15)',svgShape:'dome'},
   {id:21,brand:'&Tradition',country:'Denmark',name:'Flowerpot VP1',type:'pendant',materials:['steel','brass'],cct:['2700','3000'],cri:80,dimmable:false,svgBg:'#F5EAD0',svgFg:'#C09040',svgAcc:'#E0B060',svgGlow:'rgba(192,144,64,0.15)',svgShape:'dome'},
-  {id:22,brand:'&Tradition',country:'Denmark',name:'Collect Floor',type:'floor',materials:['steel','glass'],cct:['2700','3000'],cri:80,dimmable:false,svgBg:'#F0EDE8',svgFg:'#6A6460',svgAcc:'#A8A09A',svgGlow:'rgba(255,240,200,0.12)',svgShape:'tripod'},
-  {id:23,brand:'Deltalight',country:'Belgium',name:'Reo In Pendant',type:'pendant',materials:['steel','black'],cct:['3000','4000'],cri:90,dimmable:true,svgBg:'#1A1A1A',svgFg:'#5A5A5A',svgAcc:'#3A3A3A',svgGlow:'rgba(150,150,200,0.08)',svgShape:'linear'},
-  {id:24,brand:'Santa & Cole',country:'Spain',name:'Sylvestrina',type:'pendant',materials:['glass','brass'],cct:['2700'],cri:80,dimmable:false,svgBg:'#F5E8C8',svgFg:'#B87830',svgAcc:'#DCA850',svgGlow:'rgba(184,120,48,0.18)',svgShape:'globe'},
+  {id:22,brand:'Forestier',country:'France',name:'Flowers Floor Lamp',type:'floor',materials:['steel','fabric'],cct:['2700','3000'],cri:90,dimmable:false,svgBg:'#F0EDE8',svgFg:'#6A6460',svgAcc:'#A8A09A',svgGlow:'rgba(255,240,200,0.12)',svgShape:'tripod'},
+  {id:23,brand:'Occhio',country:'Germany',name:'Sento Lettura',type:'floor',materials:['aluminium'],cct:['2700','3000','4000'],cri:95,dimmable:true,svgBg:'#1A1A1A',svgFg:'#C8C4BC',svgAcc:'#8C8880',svgGlow:'rgba(200,196,188,0.08)',svgShape:'arc'},
+  {id:24,brand:'Santa & Cole',country:'Spain',name:'Sylvestrina',type:'pendant',materials:['glass','brass'],cct:['2700'],cri:90,dimmable:false,svgBg:'#F5E8C8',svgFg:'#B87830',svgAcc:'#DCA850',svgGlow:'rgba(184,120,48,0.18)',svgShape:'globe'},
   {id:25,brand:'Vibia',country:'Spain',name:'Guise Wall',type:'wall',materials:['steel','alabaster'],cct:['2700','3000'],cri:90,dimmable:true,svgBg:'#EDE8E0',svgFg:'#9A8870',svgAcc:'#C8B898',svgGlow:'rgba(255,240,200,0.15)',svgShape:'halfmoon'},
 ];
 
@@ -1231,19 +1243,13 @@ if(window.innerWidth < 768) {
     <a href="index.html#contact" style="display:inline-block;padding:14px 28px;border:0.5px solid rgba(200,196,188,0.3);color:rgba(200,196,188,0.7);font-family:Jost,sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;">Contact Us Instead</a>
     <a href="index.html" style="display:inline-block;margin-top:12px;font-size:11px;color:rgba(200,196,188,0.35);text-decoration:none;letter-spacing:0.1em;">← Back to Home</a>
   </div>`;
+} else {
+  // ── INIT — desktop only ──
+  switchRTab('room', document.querySelector('.rp-tab'));
+  switchRTab('fixtures', document.querySelectorAll('.rp-tab')[1]);
+  switchRTab('room', document.querySelector('.rp-tab'));
+  // Canvas starts empty — users add their own fixtures
 }
-
-// ── INIT ──
-switchRTab('room', document.querySelector('.rp-tab'));
-switchRTab('fixtures', document.querySelectorAll('.rp-tab')[1]);
-switchRTab('room', document.querySelector('.rp-tab'));
-
-// Pre-populate with 3 sample fixtures for demo
-setTimeout(() => {
-  addToCanvas(1, 320, 80);
-  addToCanvas(8, 480, 120);
-  addToCanvas(17, 180, 200);
-}, 200);
 </script>
 </body>
 </html>
