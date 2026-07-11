@@ -976,19 +976,21 @@ function renderPinnedList() {
 
   list.innerHTML = pinned.map(p => `
     <div class="pinned-item">
-      <div class="pi-img" style="overflow:hidden;">${getFixtureSVG({...p, svgBg: p.svgBg||'#EDECEA'})}</div>
+      <div class="pi-img" style="overflow:hidden;">
+        ${p.image ? `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">` : getFixtureSVG({...p, svgBg: p.svgBg||'#EDECEA'})}
+      </div>
       <div>
         <div class="pi-brand">${p.brand}</div>
         <div class="pi-name">${p.name}</div>
-        <div class="pi-tags">${p.materials[0]} · ${p.cct[0]}K</div>
+        <div class="pi-tags">${(p.materials||[])[0]||''} · ${(p.cct||[])[0]||''}K</div>
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
         <div class="pi-qty">
-          <button class="qty-btn" onclick="changeQty(${p.id},-1)">−</button>
+          <button class="qty-btn" onclick="changeQty(${JSON.stringify(p.id)},-1)">−</button>
           <span class="qty-num">${pinnedQty[p.id]||1}</span>
-          <button class="qty-btn" onclick="changeQty(${p.id},1)">+</button>
+          <button class="qty-btn" onclick="changeQty(${JSON.stringify(p.id)},1)">+</button>
         </div>
-        <button class="pi-remove" onclick="togglePin(${p.id},null)">×</button>
+        <button class="pi-remove" onclick="togglePin(${JSON.stringify(p.id)},null)">×</button>
       </div>
     </div>
   `).join('');
@@ -1002,20 +1004,25 @@ function updateBoardCount() {
 // ── DRAWER ──
 function openDrawer(id) {
   const p = CATALOGUE.find(x => x.id === id);
-  if (!p) return;
+  if (!p) { console.log('Product not found:', id); return; }
   activeDrawerProduct = p;
-  document.getElementById('drImg').innerHTML = getFixtureSVG(p);
-  document.getElementById('drImg').style.fontSize = '';
-  document.getElementById('drBrand').textContent = `${p.brand} · ${p.country}`;
+  const drImg = document.getElementById('drImg');
+  if (p.image) {
+    drImg.innerHTML = `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML=getFixtureSVG(activeDrawerProduct)">`;
+  } else {
+    drImg.innerHTML = getFixtureSVG(p);
+  }
+  drImg.style.fontSize = '';
+  document.getElementById('drBrand').textContent = `${p.brand}${p.country ? ' · ' + p.country : ''}`;
   document.getElementById('drName').textContent = p.name;
-  document.getElementById('drCountry').textContent = `${p.type.charAt(0).toUpperCase()+p.type.slice(1)} · ${p.cct.join(' / ')}K`;
+  document.getElementById('drCountry').textContent = `${p.type.charAt(0).toUpperCase()+p.type.slice(1)} · ${(p.cct||[]).join(' / ')}K`;
   document.getElementById('drSpecGrid').innerHTML = `
     <div class="dr-spec"><div class="dr-spec-label">Fixture Type</div><div class="dr-spec-val">${p.type.charAt(0).toUpperCase()+p.type.slice(1)}</div></div>
-    <div class="dr-spec"><div class="dr-spec-label">Colour Temp</div><div class="dr-spec-val">${p.cct.join(' / ')}K</div></div>
-    <div class="dr-spec"><div class="dr-spec-label">Colour Rendering</div><div class="dr-spec-val">CRI ${p.cri}${p.cri>=90?'+':''}</div></div>
+    <div class="dr-spec"><div class="dr-spec-label">Colour Temp</div><div class="dr-spec-val">${(p.cct||[]).join(' / ')}K</div></div>
+    <div class="dr-spec"><div class="dr-spec-label">Colour Rendering</div><div class="dr-spec-val">CRI ${p.cri||80}${(p.cri||80)>=90?'+':''}</div></div>
     <div class="dr-spec"><div class="dr-spec-label">Dimmable</div><div class="dr-spec-val">${p.dimmable?'Yes':'No'}</div></div>
   `;
-  document.getElementById('drDesc').textContent = p.description;
+  document.getElementById('drDesc').textContent = p.description||'';
   document.getElementById('drTags').innerHTML = [
     ...(p.materials||[]).map(m=>`<span class="dr-tag">${m}</span>`),
     ...(p.designLanguages||[]).map(d=>`<span class="dr-tag">${d}</span>`)
