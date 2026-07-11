@@ -722,13 +722,13 @@ function applyFilters() {
   filters.search = document.getElementById('searchInput').value.toLowerCase();
   let results = CATALOGUE.filter(p => {
     if (filters.type !== 'all' && p.type !== filters.type) return false;
-    if (filters.materials.length > 0 && !filters.materials.some(m => p.materials.includes(m))) return false;
+    if (filters.materials.length > 0 && !filters.materials.some(m => (p.materials||[]).includes(m))) return false;
     if (filters.brand !== 'all' && p.brand !== filters.brand) return false;
-    if (filters.cct.length > 0 && !filters.cct.some(c => p.cct.includes(c))) return false;
-    if (filters.designLanguages.length > 0 && !filters.designLanguages.some(d => p.designLanguages.includes(d))) return false;
+    if (filters.cct.length > 0 && !filters.cct.some(c => (p.cct||[]).includes(c))) return false;
+    if (filters.designLanguages.length > 0 && !(p.designLanguages||[]).some(d => filters.designLanguages.includes(d))) return false;
     if (filters.search) {
       const q = filters.search;
-      if (!p.name.toLowerCase().includes(q) && !p.brand.toLowerCase().includes(q) && !p.materials.join(' ').toLowerCase().includes(q)) return false;
+      if (!p.name.toLowerCase().includes(q) && !p.brand.toLowerCase().includes(q) && !(p.materials||[]).join(' ').toLowerCase().includes(q)) return false;
     }
     return true;
   });
@@ -894,28 +894,33 @@ function renderProducts(products) {
 
   grid.innerHTML = products.map(p => {
     const isPinned = pinnedIds.has(p.id);
+    const designLang = (p.designLanguages && p.designLanguages.length > 0) ? p.designLanguages[0] : 'luxury';
+    const designLabel = designLang.charAt(0).toUpperCase() + designLang.slice(1);
     return `
     <div class="product-card" id="pc-${p.id}">
       ${isPinned ? '<div class="pinned-badge">✓ Pinned</div>' : ''}
-      <div style="width:100%;height:220px;overflow:hidden;position:relative;" onclick="openDrawer(${p.id})">
-        ${getFixtureSVG(p)}
+      <div style="width:100%;height:220px;overflow:hidden;position:relative;" onclick="openDrawer(${JSON.stringify(p.id)})">
+        ${p.image
+          ? `<img src="${p.image}" alt="${p.name}" style="width:100%;height:220px;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div style="display:none;width:100%;height:220px;">${getFixtureSVG(p)}</div>`
+          : getFixtureSVG(p)
+        }
       </div>
-      <div class="pc-body" onclick="openDrawer(${p.id})" style="cursor:pointer;">
-        <div class="pc-brand">${p.brand} · ${p.country}</div>
+      <div class="pc-body" onclick="openDrawer(${JSON.stringify(p.id)})" style="cursor:pointer;">
+        <div class="pc-brand">${p.brand}${p.country ? ' · ' + p.country : ''}</div>
         <div class="pc-name">${p.name}</div>
         <div class="pc-tags">
-          ${p.materials.slice(0,3).map(m => `<span class="pc-tag">${m}</span>`).join('')}
-          ${p.cct.map(c => `<span class="pc-tag">${c}K</span>`).join('')}
+          ${(p.materials||[]).slice(0,3).map(m => `<span class="pc-tag">${m}</span>`).join('')}
+          ${(p.cct||[]).map(c => `<span class="pc-tag">${c}K</span>`).join('')}
           ${p.dimmable ? '<span class="pc-tag">Dimmable</span>' : ''}
         </div>
         <div class="pc-spec">
-          <span>CRI ${p.cri}${p.cri>=90?'+':''}</span>
-          <span>${p.designLanguages[0].charAt(0).toUpperCase()+p.designLanguages[0].slice(1)}</span>
+          <span>CRI ${p.cri||80}${(p.cri||80)>=90?'+':''}</span>
+          <span>${designLabel}</span>
         </div>
       </div>
       <div class="pc-overlay">
-        <button class="pin-btn ${isPinned?'pinned':''}" onclick="togglePin(${p.id},event)">${isPinned?'✓ Pinned':'+ Pin to Board'}</button>
-        <button class="view-btn" onclick="openDrawer(${p.id})">View details →</button>
+        <button class="pin-btn ${isPinned?'pinned':''}" onclick="togglePin(${JSON.stringify(p.id)},event)">${isPinned?'✓ Pinned':'+ Pin to Board'}</button>
+        <button class="view-btn" onclick="openDrawer(${JSON.stringify(p.id)})">View details →</button>
       </div>
     </div>`;
   }).join('');
@@ -1012,8 +1017,8 @@ function openDrawer(id) {
   `;
   document.getElementById('drDesc').textContent = p.description;
   document.getElementById('drTags').innerHTML = [
-    ...p.materials.map(m=>`<span class="dr-tag">${m}</span>`),
-    ...p.designLanguages.map(d=>`<span class="dr-tag">${d}</span>`)
+    ...(p.materials||[]).map(m=>`<span class="dr-tag">${m}</span>`),
+    ...(p.designLanguages||[]).map(d=>`<span class="dr-tag">${d}</span>`)
   ].join('');
   updateDrawerPinState();
   document.getElementById('drawerOverlay').classList.add('open');
