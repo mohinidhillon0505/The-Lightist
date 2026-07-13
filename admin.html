@@ -769,23 +769,23 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
         <!-- Size guide -->
         <div style="background:rgba(184,150,90,0.08);border:0.5px solid rgba(184,150,90,0.2);padding:16px 20px;margin-bottom:24px;display:flex;gap:32px;align-items:center;">
           <div>
-            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;">Recommended Image Size</div>
-            <div style="font-size:14px;color:var(--txt);font-weight:400;">1200 × 900px</div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;">Image Size</div>
+            <div style="font-size:14px;color:var(--txt);font-weight:400;">1920 × 1080px</div>
           </div>
           <div>
             <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--txt2);margin-bottom:4px;">Format</div>
-            <div style="font-size:14px;color:var(--txt);">JPG</div>
+            <div style="font-size:14px;color:var(--txt);">JPG or MP4</div>
           </div>
           <div>
             <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--txt2);margin-bottom:4px;">Max File Size</div>
-            <div style="font-size:14px;color:var(--txt);">500 KB</div>
+            <div style="font-size:14px;color:var(--txt);">Image: 2MB · Video: 15MB</div>
           </div>
           <div>
-            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--txt2);margin-bottom:4px;">Aspect Ratio</div>
-            <div style="font-size:14px;color:var(--txt);">4:3 (portrait or landscape)</div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--txt2);margin-bottom:4px;">Video Length</div>
+            <div style="font-size:14px;color:var(--txt);">10–30 seconds</div>
           </div>
           <div style="flex:1;font-size:11px;color:var(--txt2);line-height:1.6;">
-            Dark, moody interior photography works best. Changes appear on the live website immediately after saving — no redeployment needed.
+            Upload JPG images or MP4 video clips. Videos autoplay silently and loop. Dark, moody interior lighting works best. Changes go live immediately after saving.
           </div>
         </div>
 
@@ -795,13 +795,13 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
           <!-- Hero 1 -->
           <div class="form-panel" style="padding:20px;">
             <div class="fp-title">Hero 1 — Image or Video <span style="font-size:10px;color:var(--txt2);font-weight:300;">(first shown)</span></div>
-            <div id="hero1Preview" style="width:100%;height:160px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;">
+            <div id="hero1Preview" style="width:100%;height:220px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;aspect-ratio:16/9;">
               <span style="font-size:10px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;text-transform:uppercase;" id="hero1PreviewText">No image set</span>
-              <img id="hero1Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;" alt="Hero 1">
+              <img id="hero1Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:none;" alt="Hero 1" onerror="this.style.display='none';document.getElementById('hero1PreviewText').style.display='flex'">
             </div>
             <div class="img-upload-zone" onclick="document.getElementById('hero1File').click()" style="margin-bottom:10px;">
               <div class="iuz-icon">⬆</div>
-              <div class="iuz-text"><strong>Upload new image</strong>1200×900px JPG recommended</div>
+              <div class="iuz-text"><strong>Upload Image or Video</strong> — JPG or MP4, max 15MB</div>
             </div>
             <input type="file" id="hero1File" accept="image/*,video/*" style="display:none" onchange="previewHero(event,1)">
             <div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt2);margin-bottom:6px;">Or paste image URL</div>
@@ -811,13 +811,13 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
           <!-- Hero 2 -->
           <div class="form-panel" style="padding:20px;">
             <div class="fp-title">Hero 2 — Image or Video</div>
-            <div id="hero2Preview" style="width:100%;height:160px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;">
+            <div id="hero2Preview" style="width:100%;height:220px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;aspect-ratio:16/9;">
               <span style="font-size:10px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;text-transform:uppercase;" id="hero2PreviewText">No image set</span>
-              <img id="hero2Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;" alt="Hero 2">
+              <img id="hero2Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:none;" alt="Hero 2" onerror="this.style.display='none';document.getElementById('hero2PreviewText').style.display='flex'">
             </div>
             <div class="img-upload-zone" onclick="document.getElementById('hero2File').click()" style="margin-bottom:10px;">
               <div class="iuz-icon">⬆</div>
-              <div class="iuz-text"><strong>Upload new image</strong>1200×900px JPG recommended</div>
+              <div class="iuz-text"><strong>Upload Image or Video</strong> — JPG or MP4, max 15MB</div>
             </div>
             <input type="file" id="hero2File" accept="image/*,video/*" style="display:none" onchange="previewHero(event,2)">
             <div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt2);margin-bottom:6px;">Or paste image URL</div>
@@ -827,13 +827,13 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
           <!-- Hero 3 -->
           <div class="form-panel" style="padding:20px;">
             <div class="fp-title">Hero 3 — Image or Video <span style="font-size:10px;color:var(--txt2);font-weight:300;">(last shown)</span></div>
-            <div id="hero3Preview" style="width:100%;height:160px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;">
+            <div id="hero3Preview" style="width:100%;height:220px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;aspect-ratio:16/9;">
               <span style="font-size:10px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;text-transform:uppercase;" id="hero3PreviewText">No image set</span>
-              <img id="hero3Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;" alt="Hero 3">
+              <img id="hero3Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:none;" alt="Hero 3" onerror="this.style.display='none';document.getElementById('hero3PreviewText').style.display='flex'">
             </div>
             <div class="img-upload-zone" onclick="document.getElementById('hero3File').click()" style="margin-bottom:10px;">
               <div class="iuz-icon">⬆</div>
-              <div class="iuz-text"><strong>Upload new image</strong>1200×900px JPG recommended</div>
+              <div class="iuz-text"><strong>Upload Image or Video</strong> — JPG or MP4, max 15MB</div>
             </div>
             <input type="file" id="hero3File" accept="image/*,video/*" style="display:none" onchange="previewHero(event,3)">
             <div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt2);margin-bottom:6px;">Or paste image URL</div>
@@ -951,21 +951,32 @@ async function sbQuery(table, filters='', order='created_at.desc') {
 
 // Upload image to Supabase Storage
 async function uploadImage(file, bucket='product-images') {
-  const fileName = `${Date.now()}_${file.name.replace(/\s/g,'_')}`;
-  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${fileName}`, {
-    method: 'POST',
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': file.type
-    },
-    body: file
-  });
-  if(!res.ok) {
-    showNotif('Image upload failed — using URL instead', 'error');
+  const ext = file.name.split('.').pop().toLowerCase();
+  const fileName = `${Date.now()}.${ext}`;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${fileName}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': file.type,
+        'x-upsert': 'true'
+      },
+      body: file
+    });
+    if(!res.ok) {
+      const err = await res.json().catch(()=>({message:'Unknown error'}));
+      console.error('Upload error:', err);
+      // If upload fails, return null — admin can paste URL manually
+      showNotif(`Upload failed: ${err.message||res.status}. Try pasting a URL instead.`, 'error');
+      return null;
+    }
+    return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${fileName}`;
+  } catch(e) {
+    console.error('Upload exception:', e);
+    showNotif('Upload failed — check your internet connection or paste a URL instead.', 'error');
     return null;
   }
-  return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${fileName}`;
 }
 
 // ── AUTH ──
@@ -1550,12 +1561,28 @@ async function loadHeroImages() {
     settings.forEach(s => {
       const num = s.id.replace('hero_','');
       const url = s.value;
-      if(url) {
+      if(url && url.trim() !== '') {
         document.getElementById(`hero${num}Url`).value = url;
-        const img = document.getElementById(`hero${num}Img`);
-        if(img) { img.src = url; img.style.display = 'block'; }
         const txt = document.getElementById(`hero${num}PreviewText`);
         if(txt) txt.style.display = 'none';
+        const isVideo = /\.(mp4|webm|mov|ogg)(\?|$)/i.test(url);
+        const previewWrap = document.getElementById(`hero${num}Preview`);
+        if(isVideo) {
+          const img = document.getElementById(`hero${num}Img`);
+          if(img) img.style.display = 'none';
+          const vid = document.createElement('video');
+          vid.src = url; vid.autoplay = true; vid.muted = true;
+          vid.loop = true; vid.playsInline = true;
+          vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
+          previewWrap.appendChild(vid);
+        } else {
+          const img = document.getElementById(`hero${num}Img`);
+          if(img) {
+            img.src = url;
+            img.style.display = 'block';
+            img.onerror = () => { img.style.display = 'none'; };
+          }
+        }
       }
     });
   } catch(e) { console.log('Hero load error:', e); }
@@ -1593,15 +1620,32 @@ async function previewHero(event, num) {
 }
 
 function previewHeroUrl(num) {
-  const url = document.getElementById(`hero${num}Url`).value;
+  const url = document.getElementById(`hero${num}Url`).value.trim();
   if(!url) return;
-  const img = document.getElementById(`hero${num}Img`);
-  if(!img) return;
-  img.src = url;
-  img.style.display = 'block';
-  img.onerror = () => { img.style.display = 'none'; };
   const txt = document.getElementById(`hero${num}PreviewText`);
-  if(txt) txt.style.display = 'none';
+  const previewWrap = document.getElementById(`hero${num}Preview`);
+  // Remove existing video if any
+  const existingVid = previewWrap.querySelector('video');
+  if(existingVid) existingVid.remove();
+  const isVideo = /\.(mp4|webm|mov|ogg)(\?|$)/i.test(url);
+  if(isVideo) {
+    const img = document.getElementById(`hero${num}Img`);
+    if(img) img.style.display = 'none';
+    if(txt) txt.style.display = 'none';
+    const vid = document.createElement('video');
+    vid.src = url; vid.autoplay = true; vid.muted = true;
+    vid.loop = true; vid.playsInline = true;
+    vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
+    previewWrap.appendChild(vid);
+  } else {
+    const img = document.getElementById(`hero${num}Img`);
+    if(img) {
+      img.src = url;
+      img.style.display = 'block';
+      img.onerror = () => { img.style.display = 'none'; };
+    }
+    if(txt) txt.style.display = 'none';
+  }
 }
 
 async function saveHeroImages() {
