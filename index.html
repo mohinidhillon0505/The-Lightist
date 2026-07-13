@@ -255,31 +255,27 @@
   /* ── HERO ── */
   .hero {
     margin-top: 72px;
-    height: calc(90vh - 72px);
-    min-height: 520px;
+    min-height: calc(100vh - 72px);
     display: grid;
     grid-template-columns: 1fr 1fr;
     position: relative;
-    overflow: hidden;
   }
 
   .hero-right {
     position: relative;
     overflow: hidden;
     background: #0F0E0D;
-    height: 100%;
+    min-height: 100%;
   }
 
   .hero-left {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 48px 48px 48px 80px;
+    padding: 64px 48px 64px 80px;
     position: relative;
     z-index: 2;
     background: var(--stone);
-    height: 100%;
-    overflow-y: auto;
   }
 
   .hero-eyebrow {
@@ -1444,7 +1440,7 @@
     .nav-actions { display: none; }
     .hamburger { display: flex; }
     .mobile-drawer { display: flex; }
-    .hero { grid-template-columns: 1fr; margin-top: 72px; } .hero-right { display: none; aspect-ratio: unset; max-height: none; }
+    .hero { grid-template-columns: 1fr; margin-top: 72px; min-height: auto; } .hero-right { display: block; min-height: 320px; aspect-ratio: 16/10; }
     .hero-left { padding: 60px 24px; background: var(--stone); }
     .hero-headline { font-size: clamp(44px, 10vw, 64px); }
     .hero-ctas { flex-direction: column; gap: 12px; }
