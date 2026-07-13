@@ -255,7 +255,8 @@
   /* ── HERO ── */
   .hero {
     margin-top: 72px;
-    height: calc(100vh - 72px);
+    height: calc(90vh - 72px);
+    min-height: 520px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     position: relative;
@@ -303,11 +304,11 @@
 
   .hero-headline {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(52px, 5vw, 80px);
+    font-size: clamp(36px, 4vw, 72px);
     font-weight: 300;
     line-height: 1.05;
     color: var(--charcoal);
-    margin-bottom: 32px;
+    margin-bottom: 24px;
     letter-spacing: -0.02em;
   }
 
@@ -319,7 +320,7 @@
     line-height: 1.9;
     color: var(--mid);
     max-width: 380px;
-    margin-bottom: 56px;
+    margin-bottom: 32px;
     letter-spacing: 0.03em;
   }
 
@@ -327,7 +328,7 @@
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
-    margin-bottom: 80px;
+    margin-bottom: 32px;
   }
 
   .hero-cta-primary {
@@ -408,8 +409,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    object-position: center center;
+    object-fit: cover;
+    object-position: 70% center;
     display: block;
     z-index: 1;
   }
@@ -444,12 +445,12 @@
   /* Dots */
   .carousel-dots {
     position: absolute;
-    bottom: 28px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 8px;
-    z-index: 10;
+    z-index: 20;
   }
 
   .carousel-dot {
@@ -2358,7 +2359,7 @@ body.drawer-open #waFloat { opacity:0; pointer-events:none; }
             const img = document.createElement('img');
             img.src = url;
             img.alt = '';
-            img.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center center;display:block;z-index:1;';
+            img.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:70% center;display:block;z-index:1;';
             slide.appendChild(img);
           }
         }
