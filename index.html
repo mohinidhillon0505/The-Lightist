@@ -255,8 +255,9 @@
   /* ── HERO ── */
   .hero {
     margin-top: 72px;
+    height: calc(100vh - 72px);
     display: grid;
-    grid-template-columns: 40% 60%;
+    grid-template-columns: 1fr 1fr;
     position: relative;
     overflow: hidden;
   }
@@ -265,8 +266,7 @@
     position: relative;
     overflow: hidden;
     background: #0F0E0D;
-    aspect-ratio: 16 / 9;
-    max-height: calc(100vh - 72px);
+    height: 100%;
   }
 
   .hero-left {
@@ -277,6 +277,8 @@
     position: relative;
     z-index: 2;
     background: var(--stone);
+    height: 100%;
+    overflow-y: auto;
   }
 
   .hero-eyebrow {
@@ -406,7 +408,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center center;
     display: block;
     z-index: 1;
@@ -2356,7 +2358,7 @@ body.drawer-open #waFloat { opacity:0; pointer-events:none; }
             const img = document.createElement('img');
             img.src = url;
             img.alt = '';
-            img.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block;z-index:1;';
+            img.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center center;display:block;z-index:1;';
             slide.appendChild(img);
           }
         }
