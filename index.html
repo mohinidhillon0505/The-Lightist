@@ -255,6 +255,7 @@
   /* ── HERO ── */
   .hero {
     height: calc(100vh - 72px);
+    min-height: 600px;
     margin-top: 72px;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -266,7 +267,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 80px 64px 80px 80px;
+    padding: 60px 64px 60px 80px;
     position: relative;
     z-index: 2;
   }
@@ -405,7 +406,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: center top;
     display: block;
     z-index: 1;
   }
@@ -2356,7 +2357,7 @@ body.drawer-open #waFloat { opacity:0; pointer-events:none; }
             const img = document.createElement('img');
             img.src = url;
             img.alt = '';
-            img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;z-index:1;';
+            img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;display:block;z-index:1;';
             slide.appendChild(img);
           }
         }
