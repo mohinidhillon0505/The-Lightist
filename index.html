@@ -254,10 +254,9 @@
 
   /* ── HERO ── */
   .hero {
-    min-height: 100vh;
+    height: 100vh;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding-top: 72px;
     position: relative;
     overflow: hidden;
   }
@@ -267,6 +266,7 @@
     flex-direction: column;
     justify-content: center;
     padding: 80px 64px 80px 80px;
+    padding-top: calc(72px + 60px);
     position: relative;
     z-index: 2;
   }
@@ -375,6 +375,7 @@
     position: relative;
     overflow: hidden;
     background: var(--charcoal);
+    height: 100%;
   }
 
   /* ── HERO CAROUSEL ── */
@@ -1439,9 +1440,9 @@
     .nav-actions { display: none; }
     .hamburger { display: flex; }
     .mobile-drawer { display: flex; }
-    .hero { grid-template-columns: 1fr; }
+    .hero { grid-template-columns: 1fr; height: auto; min-height: 100vh; }
     .hero-right { display: none; }
-    .hero-left { padding: 60px 24px; }
+    .hero-left { padding: 60px 24px; padding-top: calc(72px + 40px); }
     .hero-headline { font-size: clamp(44px, 10vw, 64px); }
     .hero-ctas { flex-direction: column; gap: 12px; }
     .hero-cta-primary, .hero-cta-secondary {
