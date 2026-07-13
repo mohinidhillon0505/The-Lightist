@@ -254,7 +254,8 @@
 
   /* ── HERO ── */
   .hero {
-    height: 100vh;
+    height: calc(100vh - 72px);
+    margin-top: 72px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     position: relative;
@@ -266,7 +267,6 @@
     flex-direction: column;
     justify-content: center;
     padding: 80px 64px 80px 80px;
-    padding-top: calc(72px + 60px);
     position: relative;
     z-index: 2;
   }
@@ -1440,9 +1440,9 @@
     .nav-actions { display: none; }
     .hamburger { display: flex; }
     .mobile-drawer { display: flex; }
-    .hero { grid-template-columns: 1fr; height: auto; min-height: 100vh; }
+    .hero { grid-template-columns: 1fr; height: auto; min-height: calc(100vh - 72px); margin-top: 72px; }
     .hero-right { display: none; }
-    .hero-left { padding: 60px 24px; padding-top: calc(72px + 40px); }
+    .hero-left { padding: 60px 24px; }
     .hero-headline { font-size: clamp(44px, 10vw, 64px); }
     .hero-ctas { flex-direction: column; gap: 12px; }
     .hero-cta-primary, .hero-cta-secondary {
