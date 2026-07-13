@@ -794,7 +794,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
 
           <!-- Hero 1 -->
           <div class="form-panel" style="padding:20px;">
-            <div class="fp-title">Hero Image 1 <span style="font-size:10px;color:var(--txt2);font-weight:300;">(first shown)</span></div>
+            <div class="fp-title">Hero 1 — Image or Video <span style="font-size:10px;color:var(--txt2);font-weight:300;">(first shown)</span></div>
             <div id="hero1Preview" style="width:100%;height:160px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;">
               <span style="font-size:10px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;text-transform:uppercase;" id="hero1PreviewText">No image set</span>
               <img id="hero1Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;" alt="Hero 1">
@@ -803,14 +803,14 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
               <div class="iuz-icon">⬆</div>
               <div class="iuz-text"><strong>Upload new image</strong>1200×900px JPG recommended</div>
             </div>
-            <input type="file" id="hero1File" accept="image/*" style="display:none" onchange="previewHero(event,1)">
+            <input type="file" id="hero1File" accept="image/*,video/*" style="display:none" onchange="previewHero(event,1)">
             <div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt2);margin-bottom:6px;">Or paste image URL</div>
             <input class="form-input" id="hero1Url" placeholder="https://..." oninput="previewHeroUrl(1)">
           </div>
 
           <!-- Hero 2 -->
           <div class="form-panel" style="padding:20px;">
-            <div class="fp-title">Hero Image 2</div>
+            <div class="fp-title">Hero 2 — Image or Video</div>
             <div id="hero2Preview" style="width:100%;height:160px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;">
               <span style="font-size:10px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;text-transform:uppercase;" id="hero2PreviewText">No image set</span>
               <img id="hero2Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;" alt="Hero 2">
@@ -819,14 +819,14 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
               <div class="iuz-icon">⬆</div>
               <div class="iuz-text"><strong>Upload new image</strong>1200×900px JPG recommended</div>
             </div>
-            <input type="file" id="hero2File" accept="image/*" style="display:none" onchange="previewHero(event,2)">
+            <input type="file" id="hero2File" accept="image/*,video/*" style="display:none" onchange="previewHero(event,2)">
             <div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt2);margin-bottom:6px;">Or paste image URL</div>
             <input class="form-input" id="hero2Url" placeholder="https://..." oninput="previewHeroUrl(2)">
           </div>
 
           <!-- Hero 3 -->
           <div class="form-panel" style="padding:20px;">
-            <div class="fp-title">Hero Image 3 <span style="font-size:10px;color:var(--txt2);font-weight:300;">(last shown)</span></div>
+            <div class="fp-title">Hero 3 — Image or Video <span style="font-size:10px;color:var(--txt2);font-weight:300;">(last shown)</span></div>
             <div id="hero3Preview" style="width:100%;height:160px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;">
               <span style="font-size:10px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;text-transform:uppercase;" id="hero3PreviewText">No image set</span>
               <img id="hero3Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;" alt="Hero 3">
@@ -835,7 +835,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
               <div class="iuz-icon">⬆</div>
               <div class="iuz-text"><strong>Upload new image</strong>1200×900px JPG recommended</div>
             </div>
-            <input type="file" id="hero3File" accept="image/*" style="display:none" onchange="previewHero(event,3)">
+            <input type="file" id="hero3File" accept="image/*,video/*" style="display:none" onchange="previewHero(event,3)">
             <div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt2);margin-bottom:6px;">Or paste image URL</div>
             <input class="form-input" id="hero3Url" placeholder="https://..." oninput="previewHeroUrl(3)">
           </div>
@@ -1564,15 +1564,31 @@ async function loadHeroImages() {
 async function previewHero(event, num) {
   const file = event.target.files[0];
   if(!file) return;
-  showNotif('Uploading image...', 'success');
+  const isVideo = file.type.startsWith('video/');
+  showNotif(`Uploading ${isVideo ? 'video' : 'image'}...`, 'success');
   const url = await uploadImage(file, 'hero-images');
   if(url) {
     document.getElementById(`hero${num}Url`).value = url;
-    const img = document.getElementById(`hero${num}Img`);
-    if(img) { img.src = url; img.style.display = 'block'; }
     const txt = document.getElementById(`hero${num}PreviewText`);
     if(txt) txt.style.display = 'none';
-    showNotif(`Hero image ${num} uploaded ✓`, 'success');
+    // Show preview
+    const previewWrap = document.getElementById(`hero${num}Img`).parentElement;
+    // Remove existing video preview if any
+    const existingVid = previewWrap.querySelector('video');
+    if(existingVid) existingVid.remove();
+    if(isVideo) {
+      const img = document.getElementById(`hero${num}Img`);
+      if(img) img.style.display = 'none';
+      const vid = document.createElement('video');
+      vid.src = url; vid.autoplay = true; vid.muted = true;
+      vid.loop = true; vid.playsInline = true;
+      vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
+      previewWrap.appendChild(vid);
+    } else {
+      const img = document.getElementById(`hero${num}Img`);
+      if(img) { img.src = url; img.style.display = 'block'; }
+    }
+    showNotif(`Hero ${isVideo ? 'video' : 'image'} ${num} uploaded ✓`, 'success');
   }
 }
 
