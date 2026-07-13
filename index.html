@@ -395,6 +395,18 @@
     background-size: cover;
     background-position: center;
     background-color: #1A1A1A;
+    overflow: hidden;
+  }
+
+  .carousel-slide img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    z-index: 1;
   }
 
   .carousel-slide.active { opacity: 1; }
@@ -403,14 +415,15 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(160deg, rgba(10,8,6,0.35) 0%, rgba(10,8,6,0.2) 50%, rgba(10,8,6,0.5) 100%);
+    background: linear-gradient(160deg, rgba(10,8,6,0.25) 0%, rgba(10,8,6,0.1) 50%, rgba(10,8,6,0.4) 100%);
+    z-index: 3;
+    pointer-events: none;
   }
 
   .carousel-slide-1 { background: linear-gradient(160deg, #1A1A1A 0%, #2a2825 40%, #1a1918 70%, #0f0e0d 100%); }
   .carousel-slide-2 { background: linear-gradient(160deg, #0F0E0D 0%, #1C1914 50%, #141210 100%); }
   .carousel-slide-3 { background: linear-gradient(160deg, #1C1A18 0%, #2A2420 50%, #181614 100%); }
 
-  /* Hide placeholder hints — they only show before real images load */
   .carousel-hint { display: none; }
 
   /* Video slides */
@@ -424,10 +437,7 @@
     z-index: 1;
   }
 
-  .carousel-slide::after {
-    z-index: 2;
-  }
-
+  /* Dots */
   .carousel-dots {
     position: absolute;
     bottom: 28px;
@@ -447,6 +457,7 @@
     transition: all 0.3s;
     border: none;
     padding: 0;
+    flex-shrink: 0;
   }
 
   .carousel-dot.active {
@@ -454,24 +465,6 @@
     width: 20px;
     border-radius: 3px;
   }
-
-  .brand-tag {
-    position: absolute;
-    font-family: 'Jost', sans-serif;
-    font-size: 9px;
-    font-weight: 200;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: rgba(200,196,188,0.4);
-    white-space: nowrap;
-    z-index: 5;
-  }
-
-  .tag-1 { top: 20%; left: 10%; }
-  .tag-2 { top: 35%; right: 8%; }
-  .tag-3 { bottom: 30%; left: 8%; }
-  .tag-4 { bottom: 20%; right: 10%; }
-  .tag-5 { top: 65%; left: 14%; }
 
   .hero-annotation {
     position: absolute;
@@ -1645,11 +1638,6 @@
       <div class="carousel-slide carousel-slide-2" id="slide-1"></div>
       <div class="carousel-slide carousel-slide-3" id="slide-2"></div>
     </div>
-    <span class="brand-tag tag-1">Artemide — Milano</span>
-    <span class="brand-tag tag-2">Brokis — Praha</span>
-    <span class="brand-tag tag-3">Vibia — Barcelona</span>
-    <span class="brand-tag tag-4">Bocci — Vancouver</span>
-    <span class="brand-tag tag-5">Foscarini — Venezia</span>
     <div class="hero-annotation">
       <div class="annotation-text">Curated for the<br>Indian professional.</div>
     </div>
@@ -2346,29 +2334,29 @@ body.drawer-open #waFloat { opacity:0; pointer-events:none; }
           const slide = document.getElementById(`slide-${parseInt(num)-1}`);
           if(!slide) return;
           const isVideo = /\.(mp4|webm|mov|ogg)(\?|$)/i.test(url);
+          // Clear previous content
+          slide.style.backgroundImage = 'none';
+          const prev = slide.querySelector('img, video');
+          if(prev) prev.remove();
           if(isVideo) {
-            // Clear background image and insert video element
-            slide.style.backgroundImage = 'none';
             slide.style.background = '#0F0E0D';
-            // Remove existing video if any
-            const existingVideo = slide.querySelector('video');
-            if(existingVideo) existingVideo.remove();
             const video = document.createElement('video');
             video.src = url;
             video.autoplay = true;
             video.muted = true;
             video.loop = true;
             video.playsInline = true;
-            video.setAttribute('playsinline', '');
-            video.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;';
+            video.setAttribute('playsinline','');
+            video.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:1;';
             slide.appendChild(video);
-            // Play when this slide becomes active
             video.play().catch(()=>{});
           } else {
-            // Image — set as background
-            slide.style.backgroundImage = `url('${url}')`;
-            slide.style.backgroundSize = 'cover';
-            slide.style.backgroundPosition = 'center';
+            // Use img tag for full bleed — better than background-image for CORS images
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = '';
+            img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;z-index:1;';
+            slide.appendChild(img);
           }
         }
       });
