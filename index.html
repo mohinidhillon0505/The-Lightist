@@ -255,24 +255,26 @@
   /* ── HERO ── */
   .hero {
     margin-top: 72px;
-    min-height: calc(100vh - 72px);
+    height: calc(100vh - 72px);
+    min-height: 560px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     position: relative;
+    overflow: hidden;
   }
 
   .hero-right {
     position: relative;
     overflow: hidden;
     background: #0F0E0D;
-    min-height: 100%;
+    height: 100%;
   }
 
   .hero-left {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 64px 48px 64px 80px;
+    padding: clamp(28px, 5vh, 64px) 48px clamp(28px, 5vh, 64px) 80px;
     position: relative;
     z-index: 2;
     background: var(--stone);
@@ -284,7 +286,7 @@
     letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--mid);
-    margin-bottom: 32px;
+    margin-bottom: clamp(16px, 2.5vh, 32px);
     display: flex;
     align-items: center;
     gap: 16px;
@@ -304,7 +306,7 @@
     font-weight: 300;
     line-height: 1.05;
     color: var(--charcoal);
-    margin-bottom: 24px;
+    margin-bottom: clamp(12px, 2vh, 24px);
     letter-spacing: -0.02em;
   }
 
@@ -316,7 +318,7 @@
     line-height: 1.9;
     color: var(--mid);
     max-width: 380px;
-    margin-bottom: 32px;
+    margin-bottom: clamp(16px, 2.5vh, 32px);
     letter-spacing: 0.03em;
   }
 
@@ -324,7 +326,7 @@
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
-    margin-bottom: 32px;
+    margin-bottom: clamp(16px, 2.5vh, 32px);
   }
 
   .hero-cta-primary {
