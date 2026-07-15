@@ -409,7 +409,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 70% center;
+    object-position: center center;
     display: block;
     z-index: 1;
   }
@@ -2358,7 +2358,7 @@ body.drawer-open #waFloat { opacity:0; pointer-events:none; }
             const img = document.createElement('img');
             img.src = url;
             img.alt = '';
-            img.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:70% center;display:block;z-index:1;';
+            img.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block;z-index:1;';
             slide.appendChild(img);
           }
         }
