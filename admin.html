@@ -770,7 +770,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
         <div style="background:rgba(184,150,90,0.08);border:0.5px solid rgba(184,150,90,0.2);padding:16px 20px;margin-bottom:24px;display:flex;gap:32px;align-items:center;">
           <div>
             <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;">Image Size</div>
-            <div style="font-size:14px;color:var(--txt);font-weight:400;">1920 × 1080px</div>
+            <div style="font-size:14px;color:var(--txt);font-weight:400;">1080 × 1080px</div>
           </div>
           <div>
             <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--txt2);margin-bottom:4px;">Format</div>
@@ -785,7 +785,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
             <div style="font-size:14px;color:var(--txt);">10–30 seconds</div>
           </div>
           <div style="flex:1;font-size:11px;color:var(--txt2);line-height:1.6;">
-            Upload JPG images or MP4 video clips. Videos autoplay silently and loop. Dark, moody interior lighting works best. Changes go live immediately after saving.
+            Upload square JPG images (1080×1080px) or MP4 video clips. Keep the main subject <strong style="color:var(--txt);">centred in the frame</strong> — the hero panel is square on screen. Dark, moody interior lighting works best. Changes go live immediately after saving.
           </div>
         </div>
 
@@ -795,7 +795,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
           <!-- Hero 1 -->
           <div class="form-panel" style="padding:20px;">
             <div class="fp-title">Hero 1 — Image or Video <span style="font-size:10px;color:var(--txt2);font-weight:300;">(first shown)</span></div>
-            <div id="hero1Preview" style="width:100%;height:220px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;aspect-ratio:16/9;">
+            <div id="hero1Preview" style="width:100%;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;aspect-ratio:1/1;">
               <span style="font-size:10px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;text-transform:uppercase;" id="hero1PreviewText">No image set</span>
               <img id="hero1Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:none;" alt="Hero 1" onerror="this.style.display='none';document.getElementById('hero1PreviewText').style.display='flex'">
             </div>
@@ -811,7 +811,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
           <!-- Hero 2 -->
           <div class="form-panel" style="padding:20px;">
             <div class="fp-title">Hero 2 — Image or Video</div>
-            <div id="hero2Preview" style="width:100%;height:220px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;aspect-ratio:16/9;">
+            <div id="hero2Preview" style="width:100%;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;aspect-ratio:1/1;">
               <span style="font-size:10px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;text-transform:uppercase;" id="hero2PreviewText">No image set</span>
               <img id="hero2Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:none;" alt="Hero 2" onerror="this.style.display='none';document.getElementById('hero2PreviewText').style.display='flex'">
             </div>
@@ -827,7 +827,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
           <!-- Hero 3 -->
           <div class="form-panel" style="padding:20px;">
             <div class="fp-title">Hero 3 — Image or Video <span style="font-size:10px;color:var(--txt2);font-weight:300;">(last shown)</span></div>
-            <div id="hero3Preview" style="width:100%;height:220px;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;aspect-ratio:16/9;">
+            <div id="hero3Preview" style="width:100%;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;aspect-ratio:1/1;">
               <span style="font-size:10px;color:rgba(200,196,188,0.2);letter-spacing:0.1em;text-transform:uppercase;" id="hero3PreviewText">No image set</span>
               <img id="hero3Img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:none;" alt="Hero 3" onerror="this.style.display='none';document.getElementById('hero3PreviewText').style.display='flex'">
             </div>
