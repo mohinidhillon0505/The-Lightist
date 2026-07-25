@@ -631,6 +631,15 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
           </div>
         </div>
 
+        <!-- Founder note -->
+        <div style="background:rgba(184,150,90,0.08);border:0.5px solid rgba(184,150,90,0.2);padding:14px 20px;margin-bottom:20px;display:flex;gap:16px;align-items:center;">
+          <span style="font-size:18px;">📸</span>
+          <div>
+            <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:3px;">Founder Photo</div>
+            <div style="font-size:12px;color:var(--txt2);line-height:1.6;">To update Amanpreet Singh's photo on the About page, add or edit his entry below — his photo and bio load automatically from this table.</div>
+          </div>
+        </div>
+
         <div class="form-panel" id="teamForm" style="display:none;">
           <div class="fp-title" id="teamFormTitle">Add Team Member</div>
           <input type="hidden" id="editTeamId">
@@ -1318,13 +1327,23 @@ async function loadTeam() {
     el.innerHTML = '<div class="empty-state"><div class="es-title">No team members</div><div class="es-sub">Click "+ Add Member" to add your first team member.</div></div>';
     return;
   }
-  el.innerHTML = `<table class="data-table"><thead><tr><th>Photo</th><th>Name</th><th>Role</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>${team.map(m=>`
-    <tr>
+  // Store team list for reordering
+  window._teamList = team;
+  el.innerHTML = `<table class="data-table"><thead><tr><th>Photo</th><th>Name</th><th>Role</th><th>Order</th><th>Visible</th><th>Actions</th></tr></thead><tbody>${team.map((m,i)=>`
+    <tr id="tr-${m.id}">
       <td>${m.photo_url?`<img src="${m.photo_url}" style="width:36px;height:36px;object-fit:cover;border-radius:2px;">` : '<div style="width:36px;height:36px;background:rgba(255,255,255,0.06);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--txt2);">◎</div>'}</td>
-      <td>${m.name}</td>
-      <td>${m.role||'—'}</td>
-      <td>${m.display_order||'—'}</td>
-      <td><span class="tag ${m.active?'tag-active':'tag-inactive'}">${m.active?'Active':'Hidden'}</span></td>
+      <td><strong style="color:var(--txt)">${m.name}</strong>${m.name==='Amanpreet Singh'?'<span style="font-size:9px;letter-spacing:0.1em;color:var(--accent);margin-left:8px;">FOUNDER</span>':''}</td>
+      <td style="color:var(--txt2)">${m.role||'—'}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span style="font-size:13px;color:var(--txt2);min-width:24px;">${m.display_order||'—'}</span>
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <button class="btn btn-secondary btn-sm" style="padding:2px 6px;font-size:10px;" onclick="moveTeamMember('${m.id}',-1)" ${i===0?'disabled':''}>▲</button>
+            <button class="btn btn-secondary btn-sm" style="padding:2px 6px;font-size:10px;" onclick="moveTeamMember('${m.id}',1)" ${i===team.length-1?'disabled':''}>▼</button>
+          </div>
+        </div>
+      </td>
+      <td><button class="btn btn-sm ${m.active?'btn-primary':'btn-secondary'}" onclick="toggleTeamActive('${m.id}',${m.active})" style="font-size:10px;padding:4px 10px;">${m.active?'Visible':'Hidden'}</button></td>
       <td><div class="td-actions">
         <button class="btn btn-secondary btn-sm" onclick="editTeamMember('${m.id}')">Edit</button>
         <button class="btn btn-danger btn-sm" onclick="confirmDelete('team','${m.id}','${m.name}')">Delete</button>
@@ -1391,6 +1410,36 @@ function clearTeamForm() {
   document.getElementById('teamFormTitle').textContent = 'Add Team Member';
 }
 
+
+async function moveTeamMember(id, direction) {
+  const team = window._teamList;
+  const idx = team.findIndex(m => m.id === id);
+  if(idx < 0) return;
+  const swapIdx = idx + direction;
+  if(swapIdx < 0 || swapIdx >= team.length) return;
+  const a = team[idx], b = team[swapIdx];
+  const orderA = a.display_order || idx + 1;
+  const orderB = b.display_order || swapIdx + 1;
+  // Swap orders
+  await Promise.all([
+    fetch(`${SUPABASE_URL}/rest/v1/team?id=eq.${a.id}`, {method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({display_order:orderB})}),
+    fetch(`${SUPABASE_URL}/rest/v1/team?id=eq.${b.id}`, {method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({display_order:orderA})})
+  ]);
+  showNotif('Order updated', 'success');
+  loadTeam();
+}
+
+async function toggleTeamActive(id, currentActive) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/team?id=eq.${id}`, {
+    method:'PATCH',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json'},
+    body:JSON.stringify({active:!currentActive})
+  });
+  if(res.ok) {
+    showNotif(!currentActive ? 'Member now visible on site' : 'Member hidden from site', 'success');
+    loadTeam();
+  }
+}
 
 // ── TESTIMONIALS ──
 async function loadTestimonials() {
