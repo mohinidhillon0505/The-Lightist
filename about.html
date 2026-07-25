@@ -72,8 +72,8 @@ body{background:var(--stone);color:var(--charcoal);font-family:'Jost',sans-serif
 .founder-section{background:var(--charcoal);}
 .founder-card{display:grid;grid-template-columns:420px 1fr;overflow:hidden;}
 .fc-img{position:relative;background:linear-gradient(160deg,#1C1A17,#0F0E0C);overflow:hidden;min-height:480px;display:flex;align-items:center;justify-content:center;}
-.fc-img img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:grayscale(15%) contrast(1.05);display:none;transition:opacity 0.5s;}
-.fc-img img.loaded{display:block;}
+.fc-img img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:grayscale(15%) contrast(1.05);display:block;opacity:0;transition:opacity 0.5s;position:absolute;inset:0;}
+.fc-img img.loaded{opacity:1;}
 .fc-img-placeholder{position:absolute;inset:0;background:linear-gradient(160deg,#1C1A17,#0F0E0C);}
 .fc-body{padding:72px 80px;display:flex;flex-direction:column;justify-content:center;border-left:0.5px solid rgba(200,196,188,0.08);}
 .fc-eyebrow{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(200,196,188,0.3);margin-bottom:24px;display:flex;align-items:center;gap:12px;}
@@ -437,11 +437,25 @@ async function loadTeam() {
 
 function renderTeam(team) {
   const grid = document.getElementById('teamGrid');
-  const founder = team.find(m => m.name === 'Amanpreet Singh');
+  // Debug: log all names to console so we can check for mismatches
+  console.log("Team names from DB:", team.map(m => JSON.stringify(m.name)));
+  // Match founder by name (trim whitespace just in case)
+  const founder = team.find(m => m.name && m.name.trim() === 'Amanpreet Singh');
   if(founder && founder.photo_url) {
     const wrap = document.getElementById('founderCardImg');
-    wrap.innerHTML = `<img src="${founder.photo_url}" alt="${founder.name}" onload="this.classList.add('loaded')" onerror="this.style.display='none'"><div class="fc-img-placeholder" id="founderCardPlaceholder"></div>`;
+    const placeholder = document.getElementById('founderCardPlaceholder');
+    const img = document.createElement('img');
+    img.src = founder.photo_url;
+    img.alt = founder.name;
+    img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;filter:grayscale(15%) contrast(1.05);opacity:0;transition:opacity 0.6s;';
+    img.onload = () => {
+      img.style.opacity = '1';
+      if(placeholder) placeholder.style.opacity = '0';
+    };
+    img.onerror = () => { img.remove(); };
+    wrap.appendChild(img);
   }
+  if(founder && founder.bio) document.getElementById('founderBio').textContent = founder.bio;
   if(founder && founder.bio) document.getElementById('founderBio').textContent = founder.bio;
 
   const rest = team.filter(m => m.name !== 'Amanpreet Singh');
