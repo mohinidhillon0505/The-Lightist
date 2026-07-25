@@ -112,8 +112,8 @@ body{background:var(--stone);color:var(--charcoal);font-family:'Jost',sans-serif
 .team-card{background:rgba(255,255,255,0.04);overflow:hidden;transition:all 0.25s;position:relative;}
 .team-card:hover .tc-img-wrap img{transform:scale(1.04);}
 .team-card:hover .tc-overlay{opacity:1;}
-.tc-img-wrap{height:260px;overflow:hidden;background:rgba(255,255,255,0.03);position:relative;display:flex;align-items:center;justify-content:center;}
-.tc-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:grayscale(10%);transition:transform 0.5s ease;display:none;}
+.tc-img-wrap{aspect-ratio:3/4;overflow:hidden;background:rgba(255,255,255,0.03);position:relative;display:flex;align-items:center;justify-content:center;}
+.tc-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center 15%;filter:grayscale(10%);transition:transform 0.5s ease;display:none;}
 .tc-img-wrap img.loaded{display:block;}
 .tc-placeholder{position:absolute;inset:0;background:rgba(255,255,255,0.03);}
 .tc-overlay{position:absolute;inset:0;background:rgba(26,26,26,0.75);opacity:0;transition:opacity 0.25s;display:flex;align-items:flex-end;}
