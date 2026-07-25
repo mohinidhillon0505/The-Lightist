@@ -659,8 +659,11 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
               <input class="form-input" id="tmOrder" type="number" placeholder="1, 2, 3..." value="10">
             </div>
             <div class="form-group">
-              <label class="form-label">Photo URL</label>
-              <input class="form-input" id="tmPhotoUrl" placeholder="https://... or upload below">
+              <label class="form-label">Active</label>
+              <select class="form-input" id="tmActive">
+                <option value="true">Visible on site</option>
+                <option value="false">Hidden</option>
+              </select>
             </div>
           </div>
           <div class="form-group" style="margin-bottom:16px;">
@@ -669,12 +672,20 @@ body{background:var(--bg);color:var(--txt);font-family:'Jost',sans-serif;font-we
           </div>
           <div class="form-group" style="margin-bottom:16px;">
             <label class="form-label">Upload Photo</label>
-            <div class="img-upload-zone" onclick="document.getElementById('tmPhotoFile').click()">
-              <img id="tmPhotoPreview" class="img-preview">
-              <div class="iuz-icon">⬆</div>
-              <div class="iuz-text"><strong>Click to upload photo</strong>Square crop, JPG — will be stored in Supabase</div>
+            <div style="display:flex;gap:16px;align-items:flex-start;">
+              <div id="tmPhotoPreviewWrap" style="width:120px;height:120px;flex-shrink:0;background:rgba(255,255,255,0.04);border:0.5px solid var(--bdr);border-radius:2px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                <img id="tmPhotoPreview" style="width:100%;height:100%;object-fit:cover;display:none;" alt="Photo preview">
+                <span id="tmPhotoIcon" style="font-size:24px;color:rgba(200,196,188,0.15);">◎</span>
+              </div>
+              <div style="flex:1;">
+                <div class="img-upload-zone" onclick="document.getElementById('tmPhotoFile').click()" style="margin-bottom:8px;">
+                  <div class="iuz-icon">⬆</div>
+                  <div class="iuz-text"><strong>Click to upload photo</strong>Square crop recommended · JPG or PNG</div>
+                </div>
+                <input type="file" id="tmPhotoFile" accept="image/*" style="display:none" onchange="handleTeamPhotoUpload(event)">
+                <input class="form-input" id="tmPhotoUrl" placeholder="Or paste photo URL directly" style="font-size:11px;" oninput="previewTeamPhotoUrl()">
+              </div>
             </div>
-            <input type="file" id="tmPhotoFile" accept="image/*" style="display:none" onchange="handleTeamPhotoUpload(event)">
           </div>
           <div class="form-actions">
             <button class="btn btn-primary" onclick="saveTeamMember()">Save Member</button>
@@ -1126,7 +1137,7 @@ async function saveProduct() {
     description: document.getElementById('pDesc').value,
     image_url: imageUrl,
     badge: document.getElementById('pBadge').value || null,
-    active: true
+    active: document.getElementById('tmActive').value !== 'false' 
   };
   if(!data.brand || !data.name) { showNotif('Brand and name are required', 'error'); return; }
   let result;
@@ -1195,7 +1206,7 @@ async function saveBrand() {
     country: document.getElementById('bCountry').value,
     region: document.getElementById('bRegion').value,
     description: document.getElementById('bDesc').value,
-    active: true
+    active: document.getElementById('tmActive').value !== 'false' 
   };
   if(!data.name) { showNotif('Brand name is required', 'error'); return; }
   const method = editId ? 'PATCH' : 'POST';
@@ -1354,12 +1365,38 @@ async function loadTeam() {
 async function handleTeamPhotoUpload(event) {
   const file = event.target.files[0];
   if(!file) return;
+  // Show local preview immediately — don't wait for upload
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('tmPhotoPreview');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    document.getElementById('tmPhotoIcon').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+  // Upload in background
   showNotif('Uploading photo...', 'success');
   const url = await uploadImage(file, 'product-images');
   if(url) {
     document.getElementById('tmPhotoUrl').value = url;
-    previewImage(event, 'tmPhotoPreview');
-    showNotif('Photo uploaded ✓', 'success');
+    showNotif('Photo uploaded ✓ — click Save Member to apply', 'success');
+  } else {
+    showNotif('Upload failed — try again or paste a URL', 'error');
+  }
+}
+
+function previewTeamPhotoUrl() {
+  const url = document.getElementById('tmPhotoUrl').value.trim();
+  const img = document.getElementById('tmPhotoPreview');
+  const icon = document.getElementById('tmPhotoIcon');
+  if(url) {
+    img.src = url;
+    img.style.display = 'block';
+    icon.style.display = 'none';
+    img.onerror = () => { img.style.display = 'none'; icon.style.display = 'block'; };
+  } else {
+    img.style.display = 'none';
+    icon.style.display = 'block';
   }
 }
 
@@ -1371,7 +1408,7 @@ async function saveTeamMember() {
     bio: document.getElementById('tmBio').value,
     photo_url: document.getElementById('tmPhotoUrl').value,
     display_order: parseInt(document.getElementById('tmOrder').value) || 10,
-    active: true
+    active: document.getElementById('tmActive').value !== 'false' 
   };
   if(!data.name) { showNotif('Name is required', 'error'); return; }
   const method = editId ? 'PATCH' : 'POST';
@@ -1396,8 +1433,11 @@ async function editTeamMember(id) {
   document.getElementById('tmOrder').value = m.display_order||10;
   if(m.photo_url) {
     const prev = document.getElementById('tmPhotoPreview');
-    prev.src = m.photo_url; prev.style.display = 'block';
+    prev.src = m.photo_url;
+    prev.style.display = 'block';
+    document.getElementById('tmPhotoIcon').style.display = 'none';
   }
+  document.getElementById('tmActive').value = m.active === false ? 'false' : 'true';
   document.getElementById('teamFormTitle').textContent = 'Edit Team Member';
   document.getElementById('teamForm').style.display = 'block';
   document.getElementById('teamForm').scrollIntoView({behavior:'smooth'});
@@ -1406,7 +1446,11 @@ async function editTeamMember(id) {
 function clearTeamForm() {
   ['editTeamId','tmName','tmRole','tmBio','tmPhotoUrl'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('tmOrder').value = '10';
-  document.getElementById('tmPhotoPreview').style.display = 'none';
+  document.getElementById('tmActive').value = 'true';
+  const img = document.getElementById('tmPhotoPreview');
+  img.src = ''; img.style.display = 'none';
+  document.getElementById('tmPhotoIcon').style.display = 'block';
+  document.getElementById('tmPhotoFile').value = '';
   document.getElementById('teamFormTitle').textContent = 'Add Team Member';
 }
 
@@ -1527,7 +1571,7 @@ async function saveTestimonial() {
     quote,
     photo_url: document.getElementById('tsPhotoUrl').value.trim() || null,
     display_order: parseInt(document.getElementById('tsOrder').value) || 10,
-    active: true
+    active: document.getElementById('tmActive').value !== 'false' 
   };
   let result;
   if(editId) {
