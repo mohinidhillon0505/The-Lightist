@@ -545,6 +545,7 @@ const BRANDS = [
 // ── PRODUCT DATA ──
 // Products are loaded from Supabase — add them via the Admin Panel
 let PRODUCTS = [];
+let _activeProductId = null; // set when drawer opens
 
 async function loadProductsFromDB() {
   try {
@@ -784,6 +785,7 @@ function buildThumbStrip(imgs) {
 }
 
 function openDrawer(productId) {
+  _activeProductId = productId;
   const p = PRODUCTS.find(x => x.id === productId);
   if(!p) return;
   const brand = BRANDS.find(b => b.id === p.brand);
@@ -814,9 +816,9 @@ function openDrawer(productId) {
     '</div>' +
     buildThumbStrip(allImages) +
     '<div style="margin-top:auto;padding-top:16px;display:flex;flex-direction:column;gap:10px;">' +
-      (p.brand_website ? '<a href="' + p.brand_website + '" target="_blank" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;display:flex;align-items:center;gap:8px;border-bottom:0.5px solid var(--border);padding-bottom:16px;margin-bottom:4px;">View on Brand Site <span style="font-size:14px;">→</span></a>' : '') +
-      '<button onclick="openEnquiry(' + '\'' + p.id + '\'' + ')"' style="width:100%;padding:14px;background:var(--charcoal);color:var(--stone);border:none;font-family:\'Jost\',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;">Enquire About This Product →</button>' +
-      '<button onclick="openWhatsAppProduct(' + '\'' + p.id + '\'' + ')"' style="width:100%;padding:12px;background:transparent;color:var(--charcoal);border:0.5px solid var(--border);font-family:\'Jost\',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;">✉ WhatsApp</button>' +
+      (p.brand_website ? '<a href="' + p.brand_website + '" target="_blank" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;display:flex;align-items:center;gap:8px;border-bottom:0.5px solid var(--border);padding-bottom:16px;margin-bottom:4px;">View on Brand Site &#8594;</a>' : '') +
+      '<button onclick="openEnquiry(_activeProductId)" style="width:100%;padding:14px;background:var(--charcoal);color:var(--stone);border:none;font-family:Jost,sans-serif;font-size:10px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;">Enquire About This Product</button>' +
+      '<button onclick="openWhatsAppProduct(_activeProductId)" style="width:100%;padding:12px;background:transparent;color:var(--charcoal);border:0.5px solid var(--border);font-family:Jost,sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;">WhatsApp Enquiry</button>' +
     '</div>';
 
   document.getElementById('drawerOverlay').classList.add('open');
@@ -867,10 +869,10 @@ function openEnquiry(productId) {
     '<textarea class="modal-textarea" id="eq-notes" placeholder="Project type, quantity needed, finish preference, installation timeline, budget range..."></textarea>' +
     '</div>' +
     '<div class="modal-send-row">' +
-    '<button class="ms-btn wa" data-pid="' + productId + '" onclick="sendEnquiryWA(this.dataset.pid)">✉ WhatsApp</button>' +
-    '<button class="ms-btn email" data-pid="' + productId + '" onclick="sendEnquiryEmail(this.dataset.pid)">Send Enquiry →</button>' +
+    '<button class="ms-btn wa" onclick="sendEnquiryWA(_activeProductId)">&#10003; WhatsApp</button>' +
+    '<button class="ms-btn email" onclick="sendEnquiryEmail(_activeProductId)">Send Enquiry</button>' +
     '</div>' +
-    '<div class="modal-note">Our team responds within 24 hours with pricing, availability, and lead times from ' + p.brandName + ''s European warehouse.</div>';
+    '<div class="modal-note">Our team responds within 24 hours with pricing, availability, and lead times from ' + p.brandName + '&#39;s European warehouse.</div>';
   document.getElementById('modalBody').innerHTML = body;
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
