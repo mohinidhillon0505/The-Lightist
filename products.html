@@ -563,6 +563,14 @@ async function loadProductsFromDB() {
       cct: Array.isArray(p.cct) ? p.cct : (p.cct||'').split(',').map(s=>s.trim()).filter(Boolean),
       desc: p.description || '',
       image: p.image_url || '',
+      image2: p.image_url_2 || '',
+      image3: p.image_url_3 || '',
+      image4: p.image_url_4 || '',
+      collection: p.collection || '',
+      dimensions: p.dimensions || '',
+      ip_rating: p.ip_rating || '',
+      designer: p.designer || '',
+      brand_website: p.brand_website || '',
       badge: p.badge || ''
     }));
     applyFilters();
@@ -755,9 +763,21 @@ function openDrawer(productId) {
   const brand = BRANDS.find(b => b.id === p.brand);
 
   const img = document.getElementById('drawerImg');
-  const placeholder = document.getElementById('drawerImgPlaceholder');
-  if(p.image) {
-    img.innerHTML = `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" onload="this.classList.add('loaded')" onerror="this.style.display='none'"><div class="drawer-img-placeholder" id="drawerImgPlaceholder"><div class="dip-icon">◎</div><div class="dip-text">Product image coming soon</div></div>`;
+  const allImages = [p.image, p.image2, p.image3, p.image4].filter(Boolean);
+  
+  if(allImages.length > 0) {
+    img.innerHTML = `
+      <div id="mainImgWrap" style="position:relative;width:100%;height:100%;">
+        <img id="mainImg" src="${allImages[0]}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+        <div class="drawer-img-placeholder" style="display:none" id="drawerImgPlaceholder"><div class="dip-icon">◎</div><div class="dip-text">Image coming soon</div></div>
+      </div>
+      ${allImages.length > 1 ? `
+      <div id="imgThumbs" style="position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:10;padding:0 12px;">
+        ${allImages.map((url,i) => `
+          <div onclick="switchImg('${url}')" style="width:44px;height:44px;border:2px solid ${i===0?'#fff':'rgba(255,255,255,0.4)'};overflow:hidden;cursor:pointer;flex-shrink:0;transition:border-color 0.2s;" id="thumb-${i}">
+            <img src="${url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display='none'">
+          </div>`).join('')}
+      </div>` : ''}`;
   } else {
     img.innerHTML = `<div class="drawer-img-placeholder"><div class="dip-icon">◎</div><div class="dip-text">Product image coming soon</div></div>`;
   }
@@ -770,9 +790,13 @@ function openDrawer(productId) {
       <div class="dr-section-label">Specifications</div>
       <div class="dr-spec-grid">
         <div class="dr-spec"><div class="dr-spec-label">Type</div><div class="dr-spec-val">${p.type.charAt(0).toUpperCase()+p.type.slice(1)}</div></div>
-        <div class="dr-spec"><div class="dr-spec-label">Colour Temp</div><div class="dr-spec-val">${p.cct.join(' / ')}K</div></div>
+        ${p.cct.length ? `<div class="dr-spec"><div class="dr-spec-label">Colour Temp</div><div class="dr-spec-val">${p.cct.join(' / ')}K</div></div>` : ''}
+        ${p.dimensions ? `<div class="dr-spec"><div class="dr-spec-label">Dimensions</div><div class="dr-spec-val">${p.dimensions}</div></div>` : ''}
+        ${p.ip_rating ? `<div class="dr-spec"><div class="dr-spec-label">IP Rating</div><div class="dr-spec-val">${p.ip_rating}</div></div>` : ''}
         <div class="dr-spec"><div class="dr-spec-label">Materials</div><div class="dr-spec-val">${p.materials.join(', ')}</div></div>
+        ${p.designer ? `<div class="dr-spec"><div class="dr-spec-label">Designer</div><div class="dr-spec-val">${p.designer}</div></div>` : ''}
         <div class="dr-spec"><div class="dr-spec-label">Origin</div><div class="dr-spec-val">${brand?.country || ''}</div></div>
+        ${p.collection ? `<div class="dr-spec"><div class="dr-spec-label">Collection</div><div class="dr-spec-val">${p.collection}</div></div>` : ''}
       </div>
     </div>
     <div class="dr-section">
@@ -783,18 +807,26 @@ function openDrawer(productId) {
       <div class="dr-section-label">About ${p.brandName}</div>
       <div class="dr-desc">${brand.desc}</div>
     </div>` : ''}
-    <div class="dr-image-note">
-      Product photography will be available once the full catalogue is live. Our team can share high-resolution images and detailed specifications on enquiry.
-    </div>
+
     <div class="dr-actions">
       <button class="dr-btn primary" onclick="openEnquiry('${p.id}')">Enquire About This Product →</button>
       <button class="dr-btn wa" onclick="openWhatsAppProduct('${p.id}')">✉ WhatsApp Enquiry</button>
       <button class="dr-btn secondary" onclick="openMoodStudio('${p.id}')">Add to Mood Board</button>
+      ${p.brand_website ? `<a class="dr-btn secondary" href="${p.brand_website}" target="_blank" style="text-align:center;text-decoration:none;">View on Brand Website ↗</a>` : ''}
     </div>`;
 
   document.getElementById('drawerOverlay').classList.add('open');
   document.getElementById('drawer').classList.add('open');
   document.body.style.overflow = 'hidden';
+}
+
+
+function switchImg(url) {
+  const main = document.getElementById('mainImg');
+  if(main) { main.src = url; main.style.display = 'block'; }
+  document.querySelectorAll('#imgThumbs div').forEach(t => {
+    t.style.borderColor = t.querySelector('img')?.src === url ? '#fff' : 'rgba(255,255,255,0.4)';
+  });
 }
 
 function closeDrawer() {
