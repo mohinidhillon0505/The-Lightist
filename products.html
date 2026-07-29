@@ -720,7 +720,7 @@ function renderProductCard(p) {
       ${p.badge ? `<div class="pc-badge badge-${p.badge}">${p.badge}</div>` : ''}
       <div class="pc-img-wrap">
         ${p.image
-          ? `<img class="pc-img" src="${p.image}" alt="${p.name}" onload="this.classList.add('loaded')" onerror="this.style.display='none'">`
+          ? `<img class="pc-img" src="${p.image}" alt="${p.name}" onload="this.classList.add('loaded')" onerror="this.style.display=&apos;none&apos;">`
           : ''}
         <div class="pc-placeholder" ${p.image ? 'style="display:none"' : ''} id="placeholder-${p.id}">
           <div class="pc-placeholder-icon">◎</div>
@@ -763,7 +763,7 @@ function buildHeroThumbs(imgs) {
   imgs.forEach(function(url, i) {
     var border = i===0 ? '2px solid #fff' : '2px solid rgba(255,255,255,0.4)';
     html += '<div onclick="switchImg(this.dataset.url)" data-url="' + url + '" style="width:44px;height:44px;border:' + border + ';overflow:hidden;cursor:pointer;flex-shrink:0;" id="thumb-' + i + '">';
-    html += '<img src="' + url + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display='none'">';
+    html += '<img src="' + url + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display=&apos;none&apos;">';
     html += '</div>';
   });
   html += '</div>';
@@ -776,7 +776,7 @@ function buildThumbStrip(imgs) {
   imgs.forEach(function(url, i) {
     var border = i===0 ? 'var(--charcoal)' : 'var(--border)';
     html += '<div onclick="switchImg(this.dataset.url)" data-url="' + url + '" style="width:52px;height:52px;border:1.5px solid ' + border + ';overflow:hidden;cursor:pointer;flex-shrink:0;" id="dthumb-' + i + '">';
-    html += '<img src="' + url + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display='none'">';
+    html += '<img src="' + url + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display=&apos;none&apos;">';
     html += '</div>';
   });
   html += '</div>';
@@ -794,7 +794,7 @@ function openDrawer(productId) {
   if(allImages.length > 0) {
     img.innerHTML = 
       '<div id="mainImgWrap" style="position:relative;width:100%;height:100%;">' +
-      '<img id="mainImg" src="' + allImages[0] + '" alt="' + p.name + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">' +
+      '<img id="mainImg" src="' + allImages[0] + '" alt="' + p.name + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=&apos;none&apos;">' +
       '<div class="drawer-img-placeholder" style="display:none" id="drawerImgPlaceholder"><div class="dip-icon">◎</div><div class="dip-text">Image coming soon</div></div>' +
       '</div>' + buildHeroThumbs(allImages)
   } else {
