@@ -763,7 +763,10 @@ function buildThumbStrip(imgs) {
   if(imgs.length < 2) return '';
   var html = '<div style="display:flex;gap:8px;margin-bottom:24px;">';
   imgs.forEach(function(url, i) {
-    html += '<div onclick="switchImg('' + url + '')" style="width:52px;height:52px;border:1.5px solid ' + (i===0?'var(--charcoal)':'var(--border)') + ';overflow:hidden;cursor:pointer;flex-shrink:0;" id="dthumb-' + i + '"><img src="' + url + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display='none'"></div>';
+    var border = i===0 ? 'var(--charcoal)' : 'var(--border)';
+    html += '<div onclick="switchImg(this.dataset.url)" data-url="' + url + '" style="width:52px;height:52px;border:1.5px solid ' + border + ';overflow:hidden;cursor:pointer;flex-shrink:0;" id="dthumb-' + i + '">';
+    html += '<img src="' + url + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display='none'">';
+    html += '</div>';
   });
   html += '</div>';
   return html;
@@ -821,13 +824,11 @@ function openDrawer(productId) {
 function switchImg(url) {
   const main = document.getElementById('mainImg');
   if(main) { main.src = url; main.style.display = 'block'; }
-  // Update hero thumbs (if on image panel)
   document.querySelectorAll('#imgThumbs div').forEach(t => {
     t.style.borderColor = t.querySelector('img')?.src === url ? '#fff' : 'rgba(255,255,255,0.4)';
   });
-  // Update drawer thumbs
   document.querySelectorAll('[id^="dthumb-"]').forEach(t => {
-    t.style.borderColor = t.querySelector('img')?.src === url ? 'var(--charcoal)' : 'var(--border)';
+    t.style.borderColor = (t.dataset.url === url) ? 'var(--charcoal)' : 'var(--border)';
   });
 }
 
