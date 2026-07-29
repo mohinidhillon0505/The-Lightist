@@ -759,6 +759,16 @@ function renderBrandIndex() {
 }
 
 // ── DRAWER ──
+function buildThumbStrip(imgs) {
+  if(imgs.length < 2) return '';
+  var html = '<div style="display:flex;gap:8px;margin-bottom:24px;">';
+  imgs.forEach(function(url, i) {
+    html += '<div onclick="switchImg('' + url + '')" style="width:52px;height:52px;border:1.5px solid ' + (i===0?'var(--charcoal)':'var(--border)') + ';overflow:hidden;cursor:pointer;flex-shrink:0;" id="dthumb-' + i + '"><img src="' + url + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display='none'"></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
 function openDrawer(productId) {
   const p = PRODUCTS.find(x => x.id === productId);
   if(!p) return;
@@ -784,23 +794,23 @@ function openDrawer(productId) {
     img.innerHTML = `<div class="drawer-img-placeholder"><div class="dip-icon">◎</div><div class="dip-text">Product image coming soon</div></div>`;
   }
 
-  document.getElementById('drawerBody').innerHTML = `
-    <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:10px;">${p.brandName}${brand?.country ? ' · ' + brand.country : ''}</div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--charcoal);line-height:1.05;margin-bottom:6px;">${p.name}</div>
-    ${p.collection ? `<div style="font-size:12px;color:var(--mid);margin-bottom:24px;">Collection: ${p.collection}</div>` : '<div style="margin-bottom:24px;"></div>'}
-    <div style="border-top:0.5px solid var(--border);padding-top:20px;display:flex;flex-direction:column;gap:14px;margin-bottom:24px;">
-      ${p.dimensions ? `<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;"><span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);flex-shrink:0;">Dimensions</span><span style="font-size:13px;color:var(--charcoal);text-align:right;">${p.dimensions}</span></div><div style="height:0.5px;background:var(--border);"></div>` : ''}
-      ${p.materials.length ? `<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;"><span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);flex-shrink:0;">Material</span><span style="font-size:13px;color:var(--charcoal);text-align:right;">${p.materials.join(', ')}</span></div><div style="height:0.5px;background:var(--border);"></div>` : ''}
-      ${p.ip_rating ? `<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;"><span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);flex-shrink:0;">IP Rating</span><span style="font-size:13px;color:var(--charcoal);">${p.ip_rating}</span></div><div style="height:0.5px;background:var(--border);"></div>` : ''}
-      ${p.designer ? `<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;"><span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);flex-shrink:0;">Designer</span><span style="font-size:13px;color:var(--charcoal);text-align:right;">${p.designer}</span></div>` : ''}
-      ${p.cct.length ? `<div style="height:0.5px;background:var(--border);"></div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;"><span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);flex-shrink:0;">Colour Temp</span><span style="font-size:13px;color:var(--charcoal);">${p.cct.join(' / ')}K</span></div>` : ''}
-    </div>
-    ${allImages.length > 1 ? `<div style="display:flex;gap:8px;margin-bottom:24px;">${allImages.map((url,i) => `<div onclick="switchImg('${url}')" style="width:52px;height:52px;border:1.5px solid ${i===0?'var(--charcoal)':'var(--border)'};overflow:hidden;cursor:pointer;flex-shrink:0;transition:border-color 0.2s;" id="dthumb-${i}"><img src="${url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display='none'"></div>`).join('')}</div>` : ''}
-    <div style="margin-top:auto;padding-top:16px;display:flex;flex-direction:column;gap:10px;">
-      ${p.brand_website ? `<a href="${p.brand_website}" target="_blank" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;display:flex;align-items:center;gap:8px;border-bottom:0.5px solid var(--border);padding-bottom:16px;margin-bottom:4px;">View on Brand Site <span style="font-size:14px;">→</span></a>` : ''}
-      <button onclick="openEnquiry('${p.id}')" style="width:100%;padding:14px;background:var(--charcoal);color:var(--stone);border:none;font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;">Enquire About This Product →</button>
-      <button onclick="openWhatsAppProduct('${p.id}')" style="width:100%;padding:12px;background:transparent;color:var(--charcoal);border:0.5px solid var(--border);font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;">✉ WhatsApp</button>
-    </div>`;
+  document.getElementById('drawerBody').innerHTML = 
+    '<div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:10px;">' + p.brandName + (brand?.country ? ' · ' + brand.country : '') + '</div>' +
+    '<div style="font-family:\'Cormorant Garamond\',serif;font-size:36px;font-weight:300;color:var(--charcoal);line-height:1.05;margin-bottom:6px;">' + p.name + '</div>' +
+    (p.collection ? '<div style="font-size:12px;color:var(--mid);margin-bottom:20px;">Collection: ' + p.collection + '</div>' : '<div style="margin-bottom:20px;"></div>') +
+    '<div style="border-top:0.5px solid var(--border);padding-top:20px;display:flex;flex-direction:column;gap:14px;margin-bottom:24px;">' +
+      (p.dimensions ? '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;"><span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);flex-shrink:0;">Dimensions</span><span style="font-size:13px;color:var(--charcoal);text-align:right;">' + p.dimensions + '</span></div><div style="height:0.5px;background:var(--border);"></div>' : '') +
+      (p.materials.length ? '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;"><span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);flex-shrink:0;">Material</span><span style="font-size:13px;color:var(--charcoal);text-align:right;">' + p.materials.join(', ') + '</span></div><div style="height:0.5px;background:var(--border);"></div>' : '') +
+      (p.ip_rating ? '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;"><span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);flex-shrink:0;">IP Rating</span><span style="font-size:13px;color:var(--charcoal);">' + p.ip_rating + '</span></div><div style="height:0.5px;background:var(--border);"></div>' : '') +
+      (p.designer ? '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;"><span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);flex-shrink:0;">Designer</span><span style="font-size:13px;color:var(--charcoal);text-align:right;">' + p.designer + '</span></div>' : '') +
+      (p.cct.length ? '<div style="height:0.5px;background:var(--border);"></div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;"><span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);flex-shrink:0;">Colour Temp</span><span style="font-size:13px;color:var(--charcoal);">' + p.cct.join(' / ') + 'K</span></div>' : '') +
+    '</div>' +
+    buildThumbStrip(allImages) +
+    '<div style="margin-top:auto;padding-top:16px;display:flex;flex-direction:column;gap:10px;">' +
+      (p.brand_website ? '<a href="' + p.brand_website + '" target="_blank" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;display:flex;align-items:center;gap:8px;border-bottom:0.5px solid var(--border);padding-bottom:16px;margin-bottom:4px;">View on Brand Site <span style="font-size:14px;">→</span></a>' : '') +
+      '<button onclick="openEnquiry('' + p.id + '')" style="width:100%;padding:14px;background:var(--charcoal);color:var(--stone);border:none;font-family:\'Jost\',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;">Enquire About This Product →</button>' +
+      '<button onclick="openWhatsAppProduct('' + p.id + '')" style="width:100%;padding:12px;background:transparent;color:var(--charcoal);border:0.5px solid var(--border);font-family:\'Jost\',sans-serif;font-size:10px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;">✉ WhatsApp</button>' +
+    '</div>';
 
   document.getElementById('drawerOverlay').classList.add('open');
   document.getElementById('drawer').classList.add('open');
