@@ -335,6 +335,15 @@ body{background:var(--stone);color:var(--charcoal);font-family:'Jost',sans-serif
   <div class="drawer-body" id="drawerBody"></div>
 </div>
 
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="if(event.target===this)closeLightbox()" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.95);align-items:center;justify-content:center;">
+  <button onclick="closeLightbox()" style="position:absolute;top:20px;right:28px;background:none;border:none;color:rgba(255,255,255,0.6);font-size:28px;cursor:pointer;z-index:1;line-height:1;">×</button>
+  <button id="lbPrev" onclick="lightboxStep(-1)" style="position:absolute;left:20px;background:none;border:none;color:rgba(255,255,255,0.5);font-size:36px;cursor:pointer;padding:12px;z-index:1;line-height:1;">‹</button>
+  <img id="lbImg" src="" style="max-width:90vw;max-height:90vh;object-fit:contain;display:block;" />
+  <button id="lbNext" onclick="lightboxStep(1)" style="position:absolute;right:20px;background:none;border:none;color:rgba(255,255,255,0.5);font-size:36px;cursor:pointer;padding:12px;z-index:1;line-height:1;">›</button>
+  <div id="lbCounter" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.4);font-size:11px;letter-spacing:0.2em;font-family:Jost,sans-serif;"></div>
+</div>
+
 <!-- ENQUIRY MODAL -->
 <div class="modal-overlay" id="enquiryModal" onclick="closeModalOutside(event)">
   <div class="modal">
@@ -546,6 +555,8 @@ const BRANDS = [
 // Products are loaded from Supabase — add them via the Admin Panel
 let PRODUCTS = [];
 let _activeProductId = null; // set when drawer opens
+let _allImages = []; // all images for current product (for lightbox)
+let _lbIndex = 0; // current lightbox image index
 
 async function loadProductsFromDB() {
   try {
@@ -792,11 +803,12 @@ function openDrawer(productId) {
 
   const img = document.getElementById('drawerImg');
   const allImages = [p.image, p.image2, p.image3, p.image4].filter(Boolean);
+  _allImages = allImages; // store for lightbox
   
   if(allImages.length > 0) {
     img.innerHTML = 
       '<div id="mainImgWrap" style="position:relative;width:100%;height:100%;">' +
-      '<img id="mainImg" src="' + allImages[0] + '" alt="' + p.name + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=&apos;none&apos;">' +
+      '<img id="mainImg" src="' + allImages[0] + '" alt="' + p.name + '" style="width:100%;height:100%;object-fit:cover;cursor:zoom-in;" onclick="openLightbox(this.src)" onerror="this.style.display=&apos;none&apos;">' +
       '<div class="drawer-img-placeholder" style="display:none" id="drawerImgPlaceholder"><div class="dip-icon">◎</div><div class="dip-text">Image coming soon</div></div>' +
       '</div>' + buildHeroThumbs(allImages)
   } else {
@@ -836,6 +848,40 @@ function switchImg(url) {
   document.querySelectorAll('[id^="dthumb-"]').forEach(t => {
     t.style.borderColor = (t.dataset.url === url) ? 'var(--charcoal)' : 'var(--border)';
   });
+}
+
+
+// ── LIGHTBOX ──
+function openLightbox(url) {
+  var lb = document.getElementById('lightbox');
+  var imgs = _allImages.length ? _allImages : [url];
+  _lbIndex = imgs.indexOf(url);
+  if(_lbIndex < 0) _lbIndex = 0;
+  var lbImg = document.getElementById('lbImg');
+  lbImg.src = imgs[_lbIndex];
+  document.getElementById('lbPrev').style.display = imgs.length > 1 ? 'block' : 'none';
+  document.getElementById('lbNext').style.display = imgs.length > 1 ? 'block' : 'none';
+  updateLbCounter(imgs);
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function lightboxStep(dir) {
+  var imgs = _allImages;
+  if(!imgs.length) return;
+  _lbIndex = (_lbIndex + dir + imgs.length) % imgs.length;
+  document.getElementById('lbImg').src = imgs[_lbIndex];
+  updateLbCounter(imgs);
+}
+
+function updateLbCounter(imgs) {
+  var el = document.getElementById('lbCounter');
+  if(el) el.textContent = imgs.length > 1 ? (_lbIndex + 1) + ' / ' + imgs.length : '';
 }
 
 function closeDrawer() {
@@ -981,7 +1027,7 @@ const fadeObserver = new IntersectionObserver(entries => {
 renderBrandGrid();
 renderBrandIndex();
 loadProductsFromDB(); // loads from Supabase then calls applyFilters()
-document.addEventListener('keydown', e => { if(e.key==='Escape'){closeDrawer();closeModal();closeMobileMenu();} });
+document.addEventListener('keydown', e => { if(e.key==='Escape'){closeDrawer();closeModal();closeMobileMenu();closeLightbox();} });
 
 function toggleMobileMenu() {
   const d = document.getElementById('mobileDrawer');
