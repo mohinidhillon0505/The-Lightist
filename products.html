@@ -222,20 +222,18 @@ body{background:var(--stone);color:var(--charcoal);font-family:'Jost',sans-serif
 .rc-btn:hover{border-color:rgba(200,196,188,0.5);color:var(--stone);}
 
 /* ── PRODUCT DETAIL DRAWER ── */
-.drawer-overlay{position:fixed;inset:0;z-index:200;background:rgba(10,8,6,0.88);opacity:0;pointer-events:none;transition:opacity 0.3s;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;}
+.drawer-overlay{position:fixed;inset:0;z-index:200;background:rgba(10,8,6,0.85);opacity:0;pointer-events:none;transition:opacity 0.3s;backdrop-filter:blur(3px);}
 .drawer-overlay.open{opacity:1;pointer-events:all;}
-.drawer{position:relative;width:90vw;max-width:1100px;height:82vh;max-height:780px;background:var(--stone);z-index:201;display:grid;grid-template-columns:1fr 420px;transform:translateY(24px);opacity:0;transition:transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94),opacity 0.3s;overflow:hidden;}
-.drawer.open{transform:translateY(0);opacity:1;}
-.drawer-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:20px;color:var(--mid);cursor:pointer;z-index:10;line-height:1;padding:4px 8px;transition:color 0.2s;}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:560px;background:var(--stone);z-index:201;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94);overflow-y:auto;display:flex;flex-direction:column;}
+.drawer.open{transform:translateX(0);}
+.drawer-close{position:absolute;top:20px;right:24px;background:none;border:none;font-size:22px;color:var(--mid);cursor:pointer;z-index:5;transition:color 0.2s;}
 .drawer-close:hover{color:var(--charcoal);}
-.drawer-img{width:100%;height:100%;background:#0f0e0c;overflow:hidden;position:relative;}
-.drawer-img img{width:100%;height:100%;object-fit:cover;display:none;transition:opacity 0.4s;}
+.drawer-img{width:100%;height:380px;background:#0f0e0c;overflow:hidden;position:relative;flex-shrink:0;}
+.drawer-img img{width:100%;height:100%;object-fit:cover;display:none;}
 .drawer-img img.loaded{display:block;}
 .drawer-img-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:100%;height:100%;}
-.drawer-body{overflow-y:auto;padding:40px 36px 32px;display:flex;flex-direction:column;border-left:0.5px solid var(--border);}
-.dip-icon{font-size:48px;color:var(--border);}
-.dip-text{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--border);}
-/* drawer-body defined above */
+.drawer-body{padding:32px 36px;flex:1;display:flex;flex-direction:column;}
+
 .dr-brand{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid);margin-bottom:8px;}
 .dr-name{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--charcoal);line-height:1.1;margin-bottom:4px;}
 .dr-type{font-size:11px;color:var(--mid);margin-bottom:24px;}
@@ -311,7 +309,7 @@ body{background:var(--stone);color:var(--charcoal);font-family:'Jost',sans-serif
   .catalogue-sidebar{display:none;}
   .products-col{padding:32px 24px;}
   .products-grid{grid-template-columns:repeat(2,1fr);}
-  .drawer{width:100%;max-width:100%;height:92vh;grid-template-columns:1fr;grid-template-rows:50% 1fr;}
+  .drawer{width:100%;}
 }
 @media(max-width:600px){
   .products-grid{grid-template-columns:1fr;}
@@ -325,7 +323,7 @@ body{background:var(--stone);color:var(--charcoal);font-family:'Jost',sans-serif
 <div class="toast" id="toast"></div>
 
 <!-- DRAWER OVERLAY -->
-<div class="drawer-overlay" id="drawerOverlay" onclick="if(event.target===this)closeDrawer()"></div>
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
   <button class="drawer-close" onclick="closeDrawer()">×</button>
   <div class="drawer-img" id="drawerImg">
